@@ -1,4 +1,9 @@
 @media (max-width: 768px) {
+  body {
+    overflow: visible;
+    background-color: var(--bg);
+  }
+
   .main-wrapper {
     width: 100vw;
     overflow: auto;
@@ -6,13 +11,13 @@
     position: absolute;
     display: block;
     z-index: 5;
-    transition: height .5s ease-out;
+    transition: height 0.5s ease-out;
     height: fit-content !important;
     padding-bottom: 100px !important;
     background-color: lightgrey !important;
     top: 20%;
   }
-  .scrollTopButton{
+  .scrollTopButton {
     height: 20px;
     width: 20px;
     position: fixed;
@@ -20,20 +25,20 @@
     right: 3vw;
     z-index: 100;
     display: block !important;
-    background-image: url("data/arrow_upward-24px.svg")
+    background-image: url("data/arrow_upward-24px.svg");
   }
   #mainContentSection {
     position: absolute;
     overflow: scroll !important;
     width: 100% !important;
-    transition: height .4s ease-out;
+    transition: height 0.4s ease-out;
     opacity: 0;
     top: 1vh !important;
   }
-  #projectTextNames{
+  #projectTextNames {
     height: 50vh !important;
   }
-  #myGalleryRange{
+  #myGalleryRange {
     display: none;
   }
   .sectionElementContainer {
@@ -46,10 +51,10 @@
     width: 100% !important;
     height: auto !important;
   }
-  .videoDiv{
+  .videoDiv {
     padding-right: 0px;
   }
-  .videoIframe{
+  .videoIframe {
     width: 95vw;
     height: 52vw;
   }
@@ -58,19 +63,18 @@
     position: absolute !important;
     top: 25% !important;
   }
-  .main-wrapper :first-child{
+  .main-wrapper :first-child {
     padding-right: 0 !important;
   }
-  #navContainer{
+  #navContainer {
     z-index: 1;
   }
-  #mobileProjectNameDisplay{
+  #mobileProjectNameDisplay {
     display: block;
   }
-  .closeButton{
+  .closeButton {
     top: 0vh;
   }
-
 
   #sectionContainer {
     padding-left: 0px !important;
@@ -82,7 +86,6 @@
     opacity: 0;
     height: fit-content !important;
     transform: translateY(0%) !important;
-
   }
 
   .descriptionParagraph {
@@ -103,7 +106,7 @@
   }
 
   .hiddenDescriptionDiv {
-    position: initial !important
+    position: initial !important;
   }
 
   .img_div {
@@ -128,7 +131,6 @@
     padding-bottom: 10px !important;
     position: initial !important;
     margin: auto !important;
-
   }
 
   .descriptionPaddingContainer {
@@ -141,7 +143,6 @@
   #tempVideo {
     width: 100vw !important;
     padding-bottom: 50px !important;
-
   }
 
   .section {
@@ -151,9 +152,6 @@
 
   .landingVideo {
     object-fit: contain !important;
-  }
-
-  .body {
-    overflow: visible;
+    display: none;
   }
 }

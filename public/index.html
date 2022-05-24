@@ -15,7 +15,7 @@
   <meta charset="UTF-8">
   <meta http-equiv='X-UA-Compatible' content='ie-edge'>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-  <meta name="author" content="Webb Hinton">
+  <meta name="author" content="Ayla Gizlice">
   <meta property="og:image" content="data/OGImage.jpg">
   <meta property="og:title" content="Ayla Gizlice">
   <meta property="og:description" content="Ayla Gizlice is a Turkish-American artist working in Raleigh, NC.">
@@ -33,6 +33,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/smooth-scrollbar/8.5.3/smooth-scrollbar.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/5.2.1/simplebar.min.js" integrity="sha512-jBhCdCCdbZ8l7FrZg15L1dUTgcAfnR1HXBcvU4LBUp9/T17ktq3hRjzY1t9h6RNJRjzDQyo9fmoehfDR1kqApw==" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
   <script src="dataFetch.js" charset="utf-8"></script>
   <script src="plugins/easingScript.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/css/lightbox.css">
@@ -41,7 +42,7 @@
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Pragati+Narrow" as="style">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pragati+Narrow&text=ABCDEFGHIJKLMNOPQRSTUVWXYZylaizce">
   <link rel="stylesheet" type="text/css" media="screen" href="navStyle.css" SameSite='Strict'>
-  <link rel="stylesheet" type="text/css" media="screen" href="mystyle.css" SameSite='Strict'>
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css" SameSite='Strict'>
   <link rel="stylesheet" type="text/css" media="screen" href="mobileStyle.css" SameSite='Strict'>
 
 </head>
@@ -113,16 +114,22 @@
     import { checkBrowser, createClassIdAppend, loopIntroVideo, setElemAttribute, addListenerToClass } from './utils.js'
     import { setDescriptionContent, generateDescriptString } from './projDescriptions.js'
     import { galleryScroll } from './gallery.js'
-    const projectAssetSheetURL = 'https://spreadsheets.google.com/feeds/cells/1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM/1/public/full?alt=json'
-    const aboutAssetSheetURL = 'https://spreadsheets.google.com/feeds/cells/17-59RkABiXT4-odN7PGxUOVX1CWOBQb3t-SzqBkG5q0/1/public/full?alt=json'
+
+    const projectAssetSheetURL = '1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM'
+    // const aboutAssetSheetURL = 'https://spreadsheets.google.com/feeds/cells/17-59RkABiXT4-odN7PGxUOVX1CWOBQb3t-SzqBkG5q0/1/public/full?alt=json'
+    const aboutAssetSheetURL = '17-59RkABiXT4-odN7PGxUOVX1CWOBQb3t-SzqBkG5q0'
     const mobileWidth = 768
+    const Papa = window.Papa;
+    console.log(Papa);
+
+    const projectRows = fetchSheet(projectAssetSheetURL);
+    const aboutRows = fetchSheet(aboutAssetSheetURL);
 
     var projectNames = []
     var allProjObjs = [];
     var curSubProjects = []
     var projHTMLObjSections = [];
     var parentObjCol = [];
-
 
     //NAV ELEMENTS
     var projectNav = document.getElementById('projectHolder');
@@ -153,12 +160,42 @@
     var galleryActive = false;
     var activeProjectNavText;
 
-
     var scrollCount = 1;
     var lastScrollTop = 0;
     var h = window.innerHeight;
     var w;
     var activeBrowser;
+    var test = projectRows.then(r=>console.log(r))
+
+    
+
+    //fetch the projects sheet and create nav html
+    var realProjObjs = projectRows.then((r)=>{
+      const returnData = r;
+      projectNames = generateNavBarContents(returnData.rows.data)
+      console.log(projectRows);
+      for (var i = 0; i < parentObjCol.length; i++) {
+        let curParentObj = parentObjCol[i]
+        let projObj = generateProjectStructure(curParentObj.id, i, realProjObjs[i])
+        allProjObjs.push(projObj);
+      }
+      mobileDesktop(enableLightBoxes(false), enableLightBoxes(true))
+
+      if (w < mobileWidth) {
+        $('#landingArea').css('display', 'none')
+        showProjectsNav()
+        setTimeout(function() {revealProjectSection()}, 2000)
+        $('#navContainer').animate({opacity: 1}, 'easeOutSine')
+        $('#projectTextNames').animate({top: 0}, 1000)
+        $('#projectTextNames').fadeIn()
+        $('body').css('background-color', 'rgb(208, 208, 208)')
+      }
+      addListenerToClass('.projectNameContainer', handleProjNavClick)
+   
+    });
+
+    //set the cv link
+    var aboutPage = aboutRows.then(r=>setCVLink(r.rows.data))
 
     export var newOffsetAmount;
     $(document).ready(function() {
@@ -186,6 +223,32 @@
       $('#landingVideo').width($(window).width());
     });
 
+
+
+    function fetchSheet(sheet_url) {
+
+      function parseData(url, sheetTitle){
+          let data = [];
+          return new Promise((resolve, reject) => {
+            Papa.parse(url, {
+              download: true,
+              header: true,
+              delimiter: ',',
+              dynamicTyping: true,
+              complete: (results) => {
+                data = results.data;
+                resolve({rows: results, sheetTitle: sheetTitle});
+              }
+            });
+          });
+      }
+      // https://docs.google.com/spreadsheets/d/1o-R04VC8cIbcmqM68q4ESguaaNYb-0jhoPNgEuKa0i4/export?format=csv&gid=0
+      const getCardDataResponse = parseData(`https://docs.google.com/spreadsheets/d/${sheet_url}/export?format=csv&gid=0`, "assets");
+      return getCardDataResponse
+    }
+
+
+
     function generateBlankGallerySections(numSections) {
       for (var i = 0; i < numSections; i++) {
         let newSect = generateSection(sectionContainer, i)
@@ -204,34 +267,6 @@
         ifDesktop
       }
     }
-
-    var realProjObjs = generateObjectFromSpreadData(projectAssetSheetURL).then(function(returnData) {
-
-      projectNames = generateNavBarContents(returnData)
-
-      for (var i = 0; i < parentObjCol.length; i++) {
-        let curParentObj = parentObjCol[i]
-        let projObj = generateProjectStructure(curParentObj.id, i, realProjObjs[i])
-        allProjObjs.push(projObj);
-      }
-      mobileDesktop(enableLightBoxes(false), enableLightBoxes(true))
-
-      if (w < mobileWidth) {
-        $('#landingArea').css('display', 'none')
-        showProjectsNav()
-        setTimeout(function() {revealProjectSection()}, 2000)
-        $('#navContainer').animate({opacity: 1}, 'easeOutSine')
-        $('#projectTextNames').animate({top: 0}, 1000)
-        $('#projectTextNames').fadeIn()
-        $('body').css('background-color', 'rgb(208, 208, 208)')
-      }
-      addListenerToClass('.projectNameContainer', handleProjNavClick)
-
-    });
-
-    var aboutPage = generateObjectFromSpreadData(aboutAssetSheetURL).then(function(returnData) {
-      setCVLink(returnData)
-    });
 
     function showProjectsNav() {
       managePageLinkHovers();
