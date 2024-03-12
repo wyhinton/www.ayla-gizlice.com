@@ -10,7 +10,7 @@
     gtag('config', 'G-LYL235LN22');
   </script>
   <title>Ayla Gizlice</title>
-  <meta name="description" content="Ayla Gizlice is a sculptor living in Los Angeles">
+  <meta name="description" content="Ayla Gizlice is a Los Angeles based sculptor, ceramicist, and installation artist.">
   <meta name="keywords" content="Artist, Sculpture, Raleigh, Los Angeles, Contemporary Art, Ceramics, UCLA, UNC, Conceptual Art, Turkish, Ceramics">
   <meta charset="UTF-8">
   <meta http-equiv='X-UA-Compatible' content='ie-edge'>
@@ -69,7 +69,6 @@
         <label class="navbar__logo" id='logoMark' href=>Ayla Gizlice</label>
         <ul class="navbar__ul" id='navBarListContainer'>
           <li><a class='pageLink' id="activePageSection"><i id=indicatorSymbole> </i>Projects</a></li>
-          <li><a class='pageLink' href="contact.html">Contact</a></li>
           <li><a class='pageLink' href="about.html">About</a></li>
           <li><a class='pageLink' id='cvLink' target="_blank" rel="noreferrer">CV</a></li>
         </ul>
@@ -87,7 +86,7 @@
   </div>
   <div id='mainContentSection' class='testHeightEasingClass'>
 
-   <input type="range" min="0" max="100" value="0" class="slider" id="myGalleryRange">
+   <!-- <input type="range" min="0" max="100" value="0" class="slider" id="myGalleryRange"> -->
     <div class="testholder" id='testHolder'>
       <div class="scrollTopButton" id="scrollTopButton"></div>
       <div class="closeButton" id='galleryCloseButton'></div>
@@ -120,7 +119,6 @@
     const aboutAssetSheetURL = '17-59RkABiXT4-odN7PGxUOVX1CWOBQb3t-SzqBkG5q0'
     const mobileWidth = 768
     const Papa = window.Papa;
-    console.log(Papa);
 
     const projectRows = fetchSheet(projectAssetSheetURL);
     const aboutRows = fetchSheet(aboutAssetSheetURL);
@@ -165,15 +163,18 @@
     var h = window.innerHeight;
     var w;
     var activeBrowser;
-    var test = projectRows.then(r=>console.log(r))
 
     
+    $(document).keyup(function(e) {
+     if (e.key === "Escape") {
+          closeProject()
+    }
+    });
 
     //fetch the projects sheet and create nav html
     var realProjObjs = projectRows.then((r)=>{
       const returnData = r;
       projectNames = generateNavBarContents(returnData.rows.data)
-      console.log(projectRows);
       for (var i = 0; i < parentObjCol.length; i++) {
         let curParentObj = parentObjCol[i]
         let projObj = generateProjectStructure(curParentObj.id, i, realProjObjs[i])
@@ -223,8 +224,6 @@
       $('#landingVideo').width($(window).width());
     });
 
-
-
     function fetchSheet(sheet_url) {
 
       function parseData(url, sheetTitle){
@@ -242,12 +241,9 @@
             });
           });
       }
-      // https://docs.google.com/spreadsheets/d/1o-R04VC8cIbcmqM68q4ESguaaNYb-0jhoPNgEuKa0i4/export?format=csv&gid=0
       const getCardDataResponse = parseData(`https://docs.google.com/spreadsheets/d/${sheet_url}/export?format=csv&gid=0`, "assets");
       return getCardDataResponse
     }
-
-
 
     function generateBlankGallerySections(numSections) {
       for (var i = 0; i < numSections; i++) {
@@ -256,9 +252,6 @@
         projHTMLObjSections.push(newSect)
       }
     }
-
-    document.querySelector('#myGalleryRange').addEventListener('input',galleryScroll);
-
 
     function mobileDesktop(ifMobile, ifDesktop) {
       if (w < mobileWidth) {
@@ -314,7 +307,6 @@
     function managePageLinkHovers() {
       $('.pageLink').each(function() {
         $(this).removeClass('pageLink')
-        // if (this.id !== 'activePageSection') {
         $(this).hover(
           function() {
             $(this).css('text-decoration', 'underline');
@@ -323,7 +315,6 @@
             $(this).css('text-decoration', 'none')
           }
         );
-        // }
       })
     }
 
@@ -333,10 +324,8 @@
     var mobileNavVisible = false;
 
     function showHamburgerNavSection() {
-      console.log('hamburger clicked');
       if (w < mobileWidth && mobileNavVisible == false) {
         $('#navBarListContainer').animate({'right': '0%'}, 500, 'easeOutCirc')
-        // $('#innerNavButtonCircle').animate({height: 13,width: 13}, 500, 'easeOutQuad')
       }
 
       if (w < mobileWidth && mobileNavVisible == true) {
@@ -344,8 +333,6 @@
           'right': '-100%'
         })
         $('#innerNavButtonCircle').animate({
-          // height: 9,
-          // width: 9
         }, 500, 'easeOutSine')
       }
       mobileNavVisible = !mobileNavVisible
@@ -356,8 +343,6 @@
         'right': '-100%'
       })
       $('#innerNavButtonCircle').animate({
-        // height: 9,
-        // width: 9
       }, 500, 'easeOutCirc')
       newCloseButton.removeEventListener('click', closeProject)
       $(newCloseButton).toggleClass('activeCloseButton')
@@ -625,8 +610,6 @@
 
           if (obj.id !== parentId) {
             if (activeBrowser == 'Firefox') {
-              console.log('got hereeeeeee!!!');
-              console.log(obj);
               obj.style.opacity = 0;
             } else {
               $(obj).css('pointer-events', 'none')
