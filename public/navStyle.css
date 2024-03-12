@@ -8,7 +8,7 @@ nav {
  .navbar__hamburger-btn {
   font-size: 2rem;
   /* color: black; */
-  color: #7f7f7f
+  color: #7f7f7f;
   float: right;
   line-height: 4rem;
   margin-right: 2rem;
@@ -23,7 +23,7 @@ nav {
   font-family: 'Pragati Narrow';
   font-size: 45px;
   text-transform: capitalize;
-  color: #d59494;
+  color: #7c5336;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
   transition: margin .5s ease-out;
