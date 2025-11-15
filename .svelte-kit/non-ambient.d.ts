@@ -1,0 +1,43 @@
+
+// this file is generated — do not edit it
+
+
+declare module "svelte/elements" {
+	export interface HTMLAttributes<T> {
+		'data-sveltekit-keepfocus'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-noscroll'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-preload-code'?:
+			| true
+			| ''
+			| 'eager'
+			| 'viewport'
+			| 'hover'
+			| 'tap'
+			| 'off'
+			| undefined
+			| null;
+		'data-sveltekit-preload-data'?: true | '' | 'hover' | 'tap' | 'off' | undefined | null;
+		'data-sveltekit-reload'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-replacestate'?: true | '' | 'off' | undefined | null;
+	}
+}
+
+export {};
+
+
+declare module "$app/types" {
+	export interface AppTypes {
+		RouteId(): "/" | "/about" | "/contact";
+		RouteParams(): {
+			
+		};
+		LayoutParams(): {
+			"/": Record<string, never>;
+			"/about": Record<string, never>;
+			"/contact": Record<string, never>
+		};
+		Pathname(): "/" | "/about" | "/about/" | "/contact" | "/contact/";
+		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
+		Asset(): "/data/arrow_upward-24px.svg" | "/data/highlight_off-24px.svg" | "/data/introVideo.mp4" | "/data/menu-24px.svg" | "/data/OGImage.jpg" | "/favicon/android-chrome-192x192.png" | "/favicon/android-chrome-512x512.png" | "/favicon/apple-touch-icon.png" | "/favicon/browserconfig.xml" | "/favicon/favicon-16x16.png" | "/favicon/favicon-32x32.png" | "/favicon/favicon.ico" | "/favicon/mstile-144x144.png" | "/favicon/mstile-150x150.png" | "/favicon/mstile-310x150.png" | "/favicon/mstile-310x310.png" | "/favicon/mstile-70x70.png" | "/favicon/safari-pinned-tab.svg" | "/favicon/site.webmanifest" | "/images/close.png" | "/images/loading.gif" | "/images/next.png" | "/images/ooo.png" | "/images/prev.png" | string & {};
+	}
+}
