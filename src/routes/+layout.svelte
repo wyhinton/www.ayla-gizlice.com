@@ -78,13 +78,6 @@
 
 <!-- <Navigation /> -->
 
-<div
-  on:click={() => {
-    console.log("HELLO");
-  }}
->
-  HELLO
-</div>
 <main
   on:click={() => {
     console.log("CLICKED MAIN");

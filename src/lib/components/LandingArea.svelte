@@ -16,9 +16,10 @@
     }
 
     // Fade in landing area
-    setTimeout(() => {
-      landingAreaLoaded = true;
-    }, 100);
+    // setTimeout(() => {
+    // landingAreaLoaded = true;
+    // }, 100);
+    landingAreaLoaded = true;
   });
 
   function handleClick(e: MouseEvent) {

@@ -1,13 +1,13 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { browser } from '$app/environment';
-  import { dev } from '$app/environment';
-  import { projectState, uiState } from '../stores/projectStore.js';
-  import Prism from 'prismjs';
+  import { onMount, onDestroy } from "svelte";
+  import { browser } from "$app/environment";
+  import { dev } from "$app/environment";
+  import { projectState, uiState } from "../stores/projectStore.js";
+  import Prism from "prismjs";
   // Import Prism CSS and JavaScript language support
-  import 'prismjs/themes/prism-tomorrow.css';
-  import 'prismjs/components/prism-json.min.js';
+  import "prismjs/themes/prism-tomorrow.css";
+  import "prismjs/components/prism-json.min.js";
 
   let isVisible = false;
   let projectStateValue: any = {};
@@ -20,18 +20,18 @@
     if (unsubscribeProject) unsubscribeProject();
     if (unsubscribeUI) unsubscribeUI();
 
-    unsubscribeProject = projectState.subscribe(value => {
+    unsubscribeProject = projectState.subscribe((value) => {
       projectStateValue = value;
     });
 
-    unsubscribeUI = uiState.subscribe(value => {
+    unsubscribeUI = uiState.subscribe((value) => {
       uiStateValue = value;
     });
   }
 
   function handleKeydown(event: KeyboardEvent) {
     // Check for Ctrl+Shift+Space
-    if (event.ctrlKey && event.shiftKey && event.code === 'Space') {
+    if (event.ctrlKey && event.shiftKey && event.code === "Space") {
       event.preventDefault();
       toggleDebugPanel();
     }
@@ -55,13 +55,13 @@
     // Only enable in development mode
     if (dev && browser) {
       subscribeToStores();
-      document.addEventListener('keydown', handleKeydown);
+      document.addEventListener("keydown", handleKeydown);
     }
   });
 
   onDestroy(() => {
     if (browser) {
-      document.removeEventListener('keydown', handleKeydown);
+      document.removeEventListener("keydown", handleKeydown);
       if (unsubscribeProject) unsubscribeProject();
       if (unsubscribeUI) unsubscribeUI();
     }
@@ -72,23 +72,29 @@
   <div class="debug-panel">
     <div class="debug-header">
       <h3>🐛 Store Debug Panel</h3>
-      <button class="close-btn" on:click={() => isVisible = false}>×</button>
+      <button class="close-btn" on:click={() => (isVisible = false)}>×</button>
     </div>
-    
+
     <div class="debug-content">
       <div class="state-section">
         <h4>📊 Project State</h4>
-        <pre><code class="language-json">{formatStateForDisplay(projectStateValue)}</code></pre>
+        <pre><code class="language-json"
+            >{formatStateForDisplay(projectStateValue)}</code
+          ></pre>
       </div>
-      
+
       <div class="state-section">
         <h4>🎛️ UI State</h4>
-        <pre><code class="language-json">{formatStateForDisplay(uiStateValue)}</code></pre>
+        <pre><code class="language-json"
+            >{formatStateForDisplay(uiStateValue)}</code
+          ></pre>
       </div>
     </div>
-    
+
     <div class="debug-footer">
-      <small>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Space</kbd> to toggle</small>
+      <small
+        >Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Space</kbd> to toggle</small
+      >
     </div>
   </div>
 {/if}
@@ -105,7 +111,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     z-index: 9999;
-    font-family: 'Fira Code', 'Monaco', 'Menlo', monospace;
+    font-family: "Fira Code", "Monaco", "Menlo", monospace;
     backdrop-filter: blur(10px);
     overflow: hidden;
   }

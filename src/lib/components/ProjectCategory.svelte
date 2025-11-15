@@ -1,30 +1,49 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
-  import type { Project } from '../../types.js';
-  
-  export let project: Project;
+  import {
+    projectsInSelectedCategory,
+    selectCategory,
+    uiState,
+  } from "$lib/stores/projectStore.js";
+  import type { Project } from "../../types.js";
+  import ProjectSection from "./ProjectGallery.svelte";
+
+  export let projectName: string;
   export let index: number;
   export let onProjectClick: (project: Project, index: number) => void;
-  
+
   function handleClick() {
-    onProjectClick(project, index);
+    console.log(`%cHERE LINE :12 %c`, "color: yellow; font-weight: bold", "");
+
+    selectCategory(projectName);
+    // onProjectClick(project, index);
   }
-  
+
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleClick();
     }
   }
 </script>
 
-<div 
-  class="projectListItem" 
+<div
+  class="projectListItem"
   on:click={handleClick}
   on:keydown={handleKeydown}
   role="button"
   tabindex="0"
 >
-  <h1 class="projectTitle">{project.project_name || `Project ${index + 1}`}</h1>
+  {#if !$uiState.selectedCategory || $uiState.selectedCategory == projectName}
+    <h1 class="projectTitle">
+      {projectName || `Project ${index + 1}`}
+    </h1>
+  {/if}
+  {$projectsInSelectedCategory.length}
+  {#if $uiState.selectedCategory == projectName && $projectsInSelectedCategory.length > 0}
+    {#each $projectsInSelectedCategory as project}
+      <ProjectSection {project} {index}></ProjectSection>
+    {/each}
+  {/if}
 </div>
 
 <style>
@@ -38,17 +57,13 @@
 
   .projectListItem:hover {
     color: black;
-    /* background-color: rgba(255, 255, 255, 0.3); */
-    /* transform: translateY(-2px); */
-
-
   }
 
   .projectTitle {
     font-size: clamp(3rem, 8vw, 8rem);
     /* font-weight: bold; */
     font-weight: 400;
-    font-family: 'auto';
+    font-family: "auto";
     color: rgb(208, 208, 208);
     -webkit-text-stroke: 1px black;
     margin: 0;

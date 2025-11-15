@@ -1,123 +1,158 @@
-import { writable, derived } from 'svelte/store';
-import Papa from 'papaparse';
-import type { Project } from '../../types.js';
+import { writable, derived, get } from "svelte/store";
+import Papa from "papaparse";
+import type { Project } from "../../types.js";
 
-// State interfaces
-interface ProjectState {
+// Unified state interface
+interface AppState {
+  // Project data
   projects: Project[];
   loading: boolean;
   error: string | null;
-}
-
-interface UIState {
-  selectedProject: Project | null;
+  
+  // UI state
+  selectedCategory: string | null;
   showGallery: boolean;
   galleryVisible: boolean;
   showProjectsList: boolean;
 }
 
-// Create writable stores
-export const projectState = writable<ProjectState>({
+// Create unified writable store
+export const appState = writable<AppState>({
+  // Project data
   projects: [],
   loading: false,
-  error: null
-});
-
-export const uiState = writable<UIState>({
-  selectedProject: null,
+  error: null,
+  
+  // UI state
+  selectedCategory: null,
   showGallery: false,
   galleryVisible: false,
-  showProjectsList: false
+  showProjectsList: false,
 });
 
 // Derived stores for convenience
-export const projects = derived(projectState, $state => $state.projects);
-export const loading = derived(projectState, $state => $state.loading);
-export const error = derived(projectState, $state => $state.error);
-export const selectedProject = derived(uiState, $state => $state.selectedProject);
-export const isGalleryOpen = derived(uiState, $state => $state.showGallery);
-export const galleryVisible = derived(uiState, $state => $state.galleryVisible);
-export const showProjectsList = derived(uiState, $state => $state.showProjectsList);
+export const projects = derived(appState, ($state) => $state.projects);
+export const loading = derived(appState, ($state) => $state.loading);
+export const error = derived(appState, ($state) => $state.error);
+export const selectedProject = derived(appState, ($state) => $state.selectedCategory);
+export const isGalleryOpen = derived(appState, ($state) => $state.showGallery);
+export const galleryVisible = derived(appState, ($state) => $state.galleryVisible);
+export const showProjectsList = derived(appState, ($state) => $state.showProjectsList);
+
+export const projectsInSelectedCategory = derived(appState, ($state) => {
+  console.log($state.selectedCategory?.toUpperCase());
+  const sel = $state.projects.filter(
+    (p: Project) =>
+      p.category?.toUpperCase() === $state.selectedCategory?.toUpperCase()
+  );
+  console.log(sel);
+  return sel;
+});
+
+// Derived store for unique categories
+export const uniqueCategories = derived(projects, ($projects: Project[]) => {
+  const categories = new Set<string>();
+
+  $projects.forEach((project: Project) => {
+    if (project.category && typeof project.category === "string") {
+      // Split by comma and trim whitespace in case there are multiple categories
+      const projectCategories = project.category
+        .split(",")
+        .map((cat: string) => cat.trim());
+      projectCategories.forEach((cat: string) => {
+        if (cat) categories.add(cat);
+      });
+    }
+  });
+
+  return Array.from(categories).sort();
+});
 
 // Actions
 class ProjectStoreActions {
   // Data fetching
   async fetchProjects(sheetUrl: string) {
-    projectState.update(state => ({ ...state, loading: true, error: null }));
-    
+    appState.update((state: AppState) => ({ ...state, loading: true, error: null }));
+
     try {
       const projects = await this.fetchSheet(sheetUrl);
-      projectState.update(state => ({ ...state, projects, loading: false }));
+      appState.update((state: AppState) => ({ ...state, projects, loading: false }));
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      projectState.update(state => ({ 
-        ...state, 
-        loading: false, 
-        error: errorMessage, 
-        projects: [] 
+      const errorMessage =
+        err instanceof Error ? err.message : "Unknown error occurred";
+      appState.update((state: AppState) => ({
+        ...state,
+        loading: false,
+        error: errorMessage,
+        projects: [],
       }));
     }
   }
 
   private fetchSheet(sheet_url: string): Promise<Project[]> {
-    function parseData(url: string, sheetTitle: string): Promise<{rows: any, sheetTitle: string}> {
+    function parseData(
+      url: string,
+      sheetTitle: string
+    ): Promise<{ rows: any; sheetTitle: string }> {
       return new Promise((resolve, reject) => {
         Papa.parse(url, {
           download: true,
           header: true,
-          delimiter: ',',
+          delimiter: ",",
           dynamicTyping: true,
           complete: (results: any) => {
-            resolve({rows: results, sheetTitle: sheetTitle});
+            resolve({ rows: results, sheetTitle: sheetTitle });
           },
           error: (error: any) => {
             reject(error);
-          }
+          },
         });
       });
     }
-    
+
     const csvUrl = `https://docs.google.com/spreadsheets/d/${sheet_url}/export?format=csv&gid=0`;
-    return parseData(csvUrl, "assets").then(response => response.rows.data as Project[]);
+    return parseData(csvUrl, "assets").then(
+      (response) => response.rows.data as Project[]
+    );
   }
 
   // Project selection
-  selectProject(project: Project) {
-    uiState.update(state => ({ 
-      ...state, 
-      selectedProject: project,
+  selectCategory(category: string) {
+    appState.update((state: AppState) => ({
+      ...state,
+      selectedCategory: category,
       showGallery: true,
-      showProjectsList: false
+      showProjectsList: false,
     }));
   }
 
   // Gallery management
   showProjectGallery() {
-    uiState.update(state => ({
+    appState.update((state: AppState) => ({
       ...state,
       showProjectsList: true,
-      showGallery: false
+      showGallery: false,
     }));
   }
 
   closeGallery() {
-    uiState.update(state => ({ 
-      ...state, 
+    appState.update((state: AppState) => ({
+      ...state,
       showGallery: false,
       galleryVisible: false,
-      selectedProject: null,
-      showProjectsList: true
+      selectedCategory: null,
+      showProjectsList: true,
     }));
   }
 
   setGalleryVisible(visible: boolean) {
-    uiState.update(state => ({ ...state, galleryVisible: visible }));
+    appState.update((state: AppState) => ({ ...state, galleryVisible: visible }));
   }
 
   // Helper method to get current projects
   private getCurrentProjects(): Project[] {
     let currentProjects: Project[] = [];
-    projectState.subscribe(state => {
+    appState.subscribe((state: AppState) => {
       currentProjects = state.projects;
     })();
     return currentProjects;
@@ -125,17 +160,17 @@ class ProjectStoreActions {
 
   // Reset all state
   reset() {
-    projectState.set({
+    appState.set({
+      // Project data
       projects: [],
       loading: false,
-      error: null
-    });
-    
-    uiState.set({
-      selectedProject: null,
+      error: null,
+      
+      // UI state
+      selectedCategory: null,
       showGallery: false,
       galleryVisible: false,
-      showProjectsList: false
+      showProjectsList: false,
     });
   }
 }
@@ -144,8 +179,11 @@ class ProjectStoreActions {
 export const projectActions = new ProjectStoreActions();
 
 // Export convenience methods for common operations
-export const loadProjects = (sheetUrl: string) => projectActions.fetchProjects(sheetUrl);
-export const selectProject = (project: Project) => projectActions.selectProject(project);
+export const loadProjects = (sheetUrl: string) =>
+  projectActions.fetchProjects(sheetUrl);
+export const selectCategory = (category: string) =>
+  projectActions.selectCategory(category);
 export const showGallery = () => projectActions.showProjectGallery();
 export const closeGallery = () => projectActions.closeGallery();
-export const setGalleryVisible = (visible: boolean) => projectActions.setGalleryVisible(visible);
+export const setGalleryVisible = (visible: boolean) =>
+  projectActions.setGalleryVisible(visible);

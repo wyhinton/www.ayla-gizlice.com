@@ -54,5 +54,23 @@
   "files.watcherExclude": {
     "**/node_modules": true
   },
+  "favorites.resources": [
+    {
+      "filePath": "src\\routes\\+page.svelte",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\routes\\+layout.svelte",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\lib\\stores\\projectStore.ts",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\lib\\components\\ProjectItem.svelte",
+      "group": "Default"
+    }
+  ],
 
 }
