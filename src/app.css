@@ -7,11 +7,10 @@ body {
   width: 100%;
   height: 100vh;
   margin: 0px;
-  background-color: var(--green);
+  background-color: var(--bg);
   overflow: hidden;
   scroll-behavior: smooth;
   scrollbar-width: none !important;
-  font-family: 'Pragati Narrow', sans-serif;
 }
 
 #mainHolder {
@@ -68,124 +67,10 @@ img {
   justify-content: center;
 }
 
-#projectDescriptionSection {
-  width: 100%;
-  border-right: 1px solid black;
-  background-color: var(--bg);
-}
 
-.descriptionPaddingContainer {
-  position: relative;
-  min-width: 300px;
-}
 
-.projInfo {
-  text-align: left;
-  display: block;
-  margin: 0px;
-  font-style: italic;
-}
 
-.lightBoxLink {
-  position: relative;
-}
 
-.sectionElementContainer {
-  height: 78vh;
-  display: flex;
-  flex-direction: row;
-}
-
-.descriptionDiv {
-  display: block;
-  margin: 5% 3% 0 0;
-  font-family: 'Pragati Narrow';
-  padding-right: 50px;
-  padding-left: 50px;
-  max-width: 280px;
-  margin-left: 0px;
-  padding-top: 15px;
-  border-right: 1px solid black;
-  background-color: var(--bg);
-}
-
-.project__title {
-  font-size: 31px;
-  margin-top: 0px;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: bold;
-  color: black;
-  -webkit-text-stroke-width: 0px;
-  -webkit-text-stroke-color: white;
-}
-
-.descriptionParagraph {
-  font-size: 16px;
-  margin: 0px;
-  margin-bottom: 15px;
-  line-height: 1.3;
-  color: black;
-  text-align: left;
-}
-
-.img_div {
-  width: auto;
-  height: 100%;
-  position: relative;
-  overflow: auto;
-  display: flex;
-  flex-direction: row;
-}
-
-.imageContainerPadding {
-  min-width: 333px;
-  width: 333px;
-  height: 100%;
-  padding-left: 15px;
-  padding-right: 15px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.singleImageContainer {
-  width: 100%;
-  height: auto;
-  position: relative;
-  overflow: hidden;
-  background-color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.heroImage {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  cursor: pointer;
-}
-
-.videoDiv {
-  width: 333px;
-  height: 100%;
-  padding-left: 15px;
-  padding-right: 15px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.videoIframe {
-  width: 100%;
-  height: 60%;
-  border: none;
-}
 
 #landingArea {
   position: absolute;
@@ -275,32 +160,14 @@ img {
 
 /* Mobile styles */
 @media (max-width: 768px) {
-  .sectionElementContainer {
+  /* .sectionElementContainer {
     flex-direction: column;
     height: auto;
-  }
+  } */
   
-  .descriptionDiv {
-    border-right: none;
-    border-bottom: 1px solid black;
-    max-width: none;
-    padding: 20px;
-  }
+
   
-  .img_div {
-    flex-direction: column;
-  }
-  
-  .imageContainerPadding {
-    min-width: 100%;
-    width: 100%;
-    padding: 10px;
-  }
-  
-  .videoDiv {
-    width: 100%;
-    padding: 10px;
-  }
+
   
   #projectTextNames {
     flex-wrap: wrap;

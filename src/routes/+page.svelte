@@ -60,9 +60,10 @@
   #projectsListContainer {
     width: 100%;
     min-height: 100vh;
-    overflow-y: auto;
-    padding: 80px 20px 20px; /* Top padding to account for navbar */
-    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    margin-top: 90px;
+    /* overflow-y: auto; */
+    /* padding: 80px 20px 20px; Top padding to account for navbar */
+    /* background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%); */
   }
 
   .projectListItem.loading,

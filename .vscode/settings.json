@@ -70,6 +70,14 @@
     {
       "filePath": "src\\lib\\components\\ProjectItem.svelte",
       "group": "Default"
+    },
+    {
+      "filePath": "src\\lib\\components\\ProjectCategory.svelte",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\lib\\components\\ProjectDescription.svelte",
+      "group": "Default"
     }
   ],
 

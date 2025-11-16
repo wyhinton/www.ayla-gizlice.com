@@ -8,7 +8,7 @@ interface AppState {
   projects: Project[];
   loading: boolean;
   error: string | null;
-  
+
   // UI state
   selectedCategory: string | null;
   showGallery: boolean;
@@ -22,7 +22,7 @@ export const appState = writable<AppState>({
   projects: [],
   loading: false,
   error: null,
-  
+
   // UI state
   selectedCategory: null,
   showGallery: false,
@@ -34,10 +34,19 @@ export const appState = writable<AppState>({
 export const projects = derived(appState, ($state) => $state.projects);
 export const loading = derived(appState, ($state) => $state.loading);
 export const error = derived(appState, ($state) => $state.error);
-export const selectedProject = derived(appState, ($state) => $state.selectedCategory);
+export const selectedProject = derived(
+  appState,
+  ($state) => $state.selectedCategory
+);
 export const isGalleryOpen = derived(appState, ($state) => $state.showGallery);
-export const galleryVisible = derived(appState, ($state) => $state.galleryVisible);
-export const showProjectsList = derived(appState, ($state) => $state.showProjectsList);
+export const galleryVisible = derived(
+  appState,
+  ($state) => $state.galleryVisible
+);
+export const showProjectsList = derived(
+  appState,
+  ($state) => $state.showProjectsList
+);
 
 export const projectsInSelectedCategory = derived(appState, ($state) => {
   console.log($state.selectedCategory?.toUpperCase());
@@ -72,11 +81,20 @@ export const uniqueCategories = derived(projects, ($projects: Project[]) => {
 class ProjectStoreActions {
   // Data fetching
   async fetchProjects(sheetUrl: string) {
-    appState.update((state: AppState) => ({ ...state, loading: true, error: null }));
+    appState.update((state: AppState) => ({
+      ...state,
+      loading: true,
+      error: null,
+    }));
 
     try {
       const projects = await this.fetchSheet(sheetUrl);
-      appState.update((state: AppState) => ({ ...state, projects, loading: false }));
+      console.log(projects);
+      appState.update((state: AppState) => ({
+        ...state,
+        projects,
+        loading: false,
+      }));
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Unknown error occurred";
@@ -146,7 +164,10 @@ class ProjectStoreActions {
   }
 
   setGalleryVisible(visible: boolean) {
-    appState.update((state: AppState) => ({ ...state, galleryVisible: visible }));
+    appState.update((state: AppState) => ({
+      ...state,
+      galleryVisible: visible,
+    }));
   }
 
   // Helper method to get current projects
@@ -165,7 +186,7 @@ class ProjectStoreActions {
       projects: [],
       loading: false,
       error: null,
-      
+
       // UI state
       selectedCategory: null,
       showGallery: false,

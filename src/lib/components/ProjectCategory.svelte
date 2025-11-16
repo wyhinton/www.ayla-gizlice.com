@@ -3,10 +3,10 @@
   import {
     projectsInSelectedCategory,
     selectCategory,
-    uiState,
+    appState,
   } from "$lib/stores/projectStore.js";
   import type { Project } from "../../types.js";
-  import ProjectSection from "./ProjectGallery.svelte";
+  import ProjectSection from "./ProjectSection.svelte";
 
   export let projectName: string;
   export let index: number;
@@ -33,26 +33,31 @@
   role="button"
   tabindex="0"
 >
-  {#if !$uiState.selectedCategory || $uiState.selectedCategory == projectName}
+  {#if !$appState.selectedCategory || $appState.selectedCategory == projectName}
     <h1 class="projectTitle">
       {projectName || `Project ${index + 1}`}
     </h1>
   {/if}
-  {$projectsInSelectedCategory.length}
-  {#if $uiState.selectedCategory == projectName && $projectsInSelectedCategory.length > 0}
-    {#each $projectsInSelectedCategory as project}
-      <ProjectSection {project} {index}></ProjectSection>
-    {/each}
-  {/if}
+  <div class="projectSectionWrapper">
+    {#if $appState.selectedCategory == projectName && $projectsInSelectedCategory.length > 0}
+      {#each $projectsInSelectedCategory as project}
+        <ProjectSection {project} {index}></ProjectSection>
+      {/each}
+    {/if}
+  </div>
 </div>
 
 <style>
+  .projectSectionWrapper {
+    display: flex;
+    /* overflow: scroll; */
+  }
   .projectListItem {
-    margin: 20px 0;
-    padding: 40px 20px;
+    /* padding: 40px 20px; */
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
+    /* overflow: scroll; */
   }
 
   .projectListItem:hover {

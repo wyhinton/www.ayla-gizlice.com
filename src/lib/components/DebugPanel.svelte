@@ -3,29 +3,22 @@
   import { onMount, onDestroy } from "svelte";
   import { browser } from "$app/environment";
   import { dev } from "$app/environment";
-  import { projectState, uiState } from "../stores/projectStore.js";
+  import { appState } from "../stores/projectStore.js";
   import Prism from "prismjs";
   // Import Prism CSS and JavaScript language support
   import "prismjs/themes/prism-tomorrow.css";
   import "prismjs/components/prism-json.min.js";
 
   let isVisible = false;
-  let projectStateValue: any = {};
-  let uiStateValue: any = {};
-  let unsubscribeProject: (() => void) | null = null;
-  let unsubscribeUI: (() => void) | null = null;
+  let appStateValue: any = {};
+  let unsubscribeApp: (() => void) | null = null;
 
   // Subscribe to store changes
   function subscribeToStores() {
-    if (unsubscribeProject) unsubscribeProject();
-    if (unsubscribeUI) unsubscribeUI();
+    if (unsubscribeApp) unsubscribeApp();
 
-    unsubscribeProject = projectState.subscribe((value) => {
-      projectStateValue = value;
-    });
-
-    unsubscribeUI = uiState.subscribe((value) => {
-      uiStateValue = value;
+    unsubscribeApp = appState.subscribe((value) => {
+      appStateValue = value;
     });
   }
 
@@ -62,8 +55,7 @@
   onDestroy(() => {
     if (browser) {
       document.removeEventListener("keydown", handleKeydown);
-      if (unsubscribeProject) unsubscribeProject();
-      if (unsubscribeUI) unsubscribeUI();
+      if (unsubscribeApp) unsubscribeApp();
     }
   });
 </script>
@@ -77,16 +69,9 @@
 
     <div class="debug-content">
       <div class="state-section">
-        <h4>📊 Project State</h4>
+        <h4>🏪 App State</h4>
         <pre><code class="language-json"
-            >{formatStateForDisplay(projectStateValue)}</code
-          ></pre>
-      </div>
-
-      <div class="state-section">
-        <h4>🎛️ UI State</h4>
-        <pre><code class="language-json"
-            >{formatStateForDisplay(uiStateValue)}</code
+            >{formatStateForDisplay(appStateValue)}</code
           ></pre>
       </div>
     </div>
