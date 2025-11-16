@@ -77,6 +77,22 @@ export const uniqueCategories = derived(projects, ($projects: Project[]) => {
   return Array.from(categories).sort();
 });
 
+// URL utility functions
+function categoryToSlug(category: string): string {
+  return category
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "");
+}
+
+function slugToCategory(slug: string): string {
+  // Convert slug back to title case
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 // Actions
 class ProjectStoreActions {
   // Data fetching
@@ -135,13 +151,43 @@ class ProjectStoreActions {
   }
 
   // Project selection
-  selectCategory(category: string) {
+  selectCategory(category: string, updateUrl: boolean = true) {
     appState.update((state: AppState) => ({
       ...state,
       selectedCategory: category,
       showGallery: true,
       showProjectsList: false,
     }));
+
+    // Update URL if requested (default behavior)
+    if (updateUrl && typeof window !== "undefined") {
+      const slug = categoryToSlug(category);
+      const newUrl = `/${slug}`;
+      window.history.pushState({ category }, "", newUrl);
+    }
+  }
+
+  // Initialize category from URL slug
+  initializeCategoryFromUrl(slug: string, availableCategories: string[]) {
+    if (!slug || slug === "/") return;
+
+    // Remove leading slash
+    const cleanSlug = slug.startsWith("/") ? slug.slice(1) : slug;
+
+    // Try to match slug to available categories
+    const potentialCategory = slugToCategory(cleanSlug);
+
+    // Find exact match or closest match
+    const matchedCategory = availableCategories.find(
+      (cat) =>
+        categoryToSlug(cat) === cleanSlug ||
+        cat.toLowerCase() === potentialCategory.toLowerCase()
+    );
+
+    if (matchedCategory) {
+      // Select category but don't update URL (we're already at the right URL)
+      this.selectCategory(matchedCategory, false);
+    }
   }
 
   // Gallery management
@@ -161,6 +207,11 @@ class ProjectStoreActions {
       selectedCategory: null,
       showProjectsList: true,
     }));
+
+    // Update URL back to home when closing gallery
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", "/");
+    }
   }
 
   setGalleryVisible(visible: boolean) {
@@ -202,9 +253,16 @@ export const projectActions = new ProjectStoreActions();
 // Export convenience methods for common operations
 export const loadProjects = (sheetUrl: string) =>
   projectActions.fetchProjects(sheetUrl);
-export const selectCategory = (category: string) =>
-  projectActions.selectCategory(category);
+export const selectCategory = (category: string, updateUrl?: boolean) =>
+  projectActions.selectCategory(category, updateUrl);
+export const initializeCategoryFromUrl = (
+  slug: string,
+  availableCategories: string[]
+) => projectActions.initializeCategoryFromUrl(slug, availableCategories);
 export const showGallery = () => projectActions.showProjectGallery();
 export const closeGallery = () => projectActions.closeGallery();
 export const setGalleryVisible = (visible: boolean) =>
   projectActions.setGalleryVisible(visible);
+
+// Export utility functions
+export { categoryToSlug, slugToCategory };

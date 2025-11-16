@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Project } from "../../types.js";
   import {
+    cleanGooglePhotosUrl,
     getProjectImages,
     hasProjectImages,
-    cleanGooglePhotosUrl,
+    type Project,
   } from "../../types.js";
   import ProjectDescription from "./ProjectDescription.svelte";
   import ProjectImage from "./ProjectImage.svelte";
@@ -36,51 +36,38 @@
   $: projectImages = getProjectImages(project);
 </script>
 
-<section
-  class="section"
-  id="section_{index}"
-  bind:this={sectionElement}
-  class:visible
->
-  <div class="d-flex" id="sectionElementContainer_{index}">
-    <ProjectDescription {project} {index} />
+<div class="projectSectionWrapper">
+  <section
+    class="section"
+    id="section_{index}"
+    bind:this={sectionElement}
+    class:visible
+  >
+    <div class="d-flex g-2" id="sectionElementContainer_{index}">
+      <ProjectDescription {project} {index} />
+      <div class="d-flex g-2">
+        {#if hasProjectImages(project) || hasVideo(project)}
+          {#each projectImages as image, imageIndex}
+            <ProjectImage {image} {project} sectionIndex={index} {imageIndex} />
+          {/each}
 
-    {#if hasProjectImages(project) || hasVideo(project)}
-      <div
-        class="d-flex flex-row flex-md-row flex-column overflow-auto w-100 h-100"
-        id="img_div{index}"
-      >
-        {#each projectImages as image, imageIndex}
-          <div
-            class="d-flex align-items-center justify-content-center px-3 px-md-3 p-sm-2"
-            style="min-width: 333px; width: 333px; height: 100%;"
-            id="imageContainerPadding{image.index}_{index}"
-          >
-            <div
-              class="w-100 h-auto position-relative overflow-hidden bg-dark d-flex align-items-center justify-content-center"
-              class:first={imageIndex === 0}
-            >
-              <ProjectImage {image} {project} sectionIndex={index} />
-            </div>
-          </div>
-        {/each}
-
-        <!-- {#if hasVideo(project)}
-          <div class="videoDiv" id="videoDiv_{index}">
-            <iframe
-              class="videoIframe"
-              id="videoIframe_{index}"
-              src={getVideoUrl(project)}
-              title="Project Video"
-              frameborder="0"
-              allowfullscreen
-            ></iframe>
-          </div>
-        {/if} -->
+          <!-- {#if hasVideo(project)}
+              <div class="videoDiv" id="videoDiv_{index}">
+                <iframe
+                  class="videoIframe"
+                  id="videoIframe_{index}"
+                  src={getVideoUrl(project)}
+                  title="Project Video"
+                  frameborder="0"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            {/if} -->
+        {/if}
       </div>
-    {/if}
-  </div>
-</section>
+    </div>
+  </section>
+</div>
 
 <style>
   .section {

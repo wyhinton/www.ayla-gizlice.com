@@ -16,10 +16,9 @@
     }
 
     // Fade in landing area
-    // setTimeout(() => {
-    // landingAreaLoaded = true;
-    // }, 100);
-    landingAreaLoaded = true;
+    setTimeout(() => {
+      landingAreaLoaded = true;
+    }, 100);
   });
 
   function handleClick(e: MouseEvent) {
@@ -70,8 +69,8 @@
     height: 100vh !important;
     opacity: 0;
     transform: scale(0.95);
-    /* pointer-events: auto !important; */
-    /* z-index: 10 !important; */
+    pointer-events: auto !important;
+    z-index: 10 !important;
     overflow: visible !important;
   }
 
@@ -81,12 +80,13 @@
   }
 
   #landingArea:hover {
-    /* transform: scale(1.02); */
+    transform: scale(1.02);
   }
 
   .landingVideo {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none; /* Prevent video from intercepting clicks */
   }
 </style>

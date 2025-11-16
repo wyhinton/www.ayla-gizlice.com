@@ -1,28 +1,32 @@
 <script>
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
-  
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+
   let mobileMenuOpen = false;
-  
+
   function toggleMobileMenu() {
     mobileMenuOpen = !mobileMenuOpen;
   }
-  
+
   onMount(() => {
     // Add Google Fonts
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css?family=Pragati+Narrow';
-    link.rel = 'stylesheet';
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css?family=Pragati+Narrow";
+    link.rel = "stylesheet";
     document.head.appendChild(link);
   });
 </script>
 
-<div id="navContainer" on:click={(e)=>console.log(e)}>
+<div id="navContainer" on:click={(e) => console.log(e)}>
   <div class="navBarSection">
     <nav class="navbar" id="navbar">
       <a class="navbar__logo" id="logoMark" href="/">Ayla Gizlice</a>
-      
-      <label class="navbar__hamburger-btn" on:click={toggleMobileMenu} on:keydown={toggleMobileMenu}>
+
+      <label
+        class="navbar__hamburger-btn"
+        on:click={toggleMobileMenu}
+        on:keydown={toggleMobileMenu}
+      >
         <i id="navButton">
           <div id="navSymbolContainer">
             <div id="innerNavButtonCircle"></div>
@@ -30,34 +34,41 @@
           </div>
         </i>
       </label>
-      
-      <ul class="navbar__ul" id="navBarListContainer" class:open={mobileMenuOpen}>
+
+      <ul
+        class="navbar__ul"
+        id="navBarListContainer"
+        class:open={mobileMenuOpen}
+      >
         <li>
-          <a 
-            class="pageLink projects-link" 
-            href="/" 
-            class:active={$page.url.pathname === '/' || $page.url.pathname.startsWith('/') && $page.url.pathname !== '/about' && $page.url.pathname !== '/contact'}
-            on:click={() => mobileMenuOpen = false}
+          <a
+            class="pageLink projects-link"
+            href="/"
+            class:active={$page.url.pathname === "/" ||
+              ($page.url.pathname.startsWith("/") &&
+                $page.url.pathname !== "/about" &&
+                $page.url.pathname !== "/contact")}
+            on:click={() => (mobileMenuOpen = false)}
           >
             <i id="indicatorSymbole"> </i>Projects
           </a>
         </li>
         <li>
-          <a 
-            class="pageLink" 
+          <a
+            class="pageLink"
             href="/about"
-            class:active={$page.url.pathname === '/about'}
-            on:click={() => mobileMenuOpen = false}
+            class:active={$page.url.pathname === "/about"}
+            on:click={() => (mobileMenuOpen = false)}
           >
             About
           </a>
         </li>
         <li>
-          <a 
-            class="pageLink" 
+          <a
+            class="pageLink"
             href="/contact"
-            class:active={$page.url.pathname === '/contact'}
-            on:click={() => mobileMenuOpen = false}
+            class:active={$page.url.pathname === "/contact"}
+            on:click={() => (mobileMenuOpen = false)}
           >
             Contact
           </a>
@@ -94,13 +105,13 @@
   .navbar__logo {
     line-height: 4rem;
     margin-left: 3rem;
-    font-family: 'Pragati Narrow';
+    font-family: "Pragati Narrow";
     font-size: 45px;
     text-transform: capitalize;
     color: #d59494;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
-    transition: margin .5s ease-out;
+    transition: margin 0.5s ease-out;
     text-decoration: none;
   }
 
@@ -132,7 +143,7 @@
     -webkit-text-fill-color: rgb(208, 208, 208);
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
-    font-family: 'Pragati Narrow';
+    font-family: "Pragati Narrow";
     z-index: 101;
   }
 
@@ -172,7 +183,7 @@
     .navbar__hamburger-btn {
       display: block;
     }
-    
+
     nav ul {
       position: fixed;
       top: 0;
@@ -186,20 +197,20 @@
       transition: right 0.3s ease;
       display: flex;
     }
-    
+
     nav ul.open {
       right: 0;
     }
-    
+
     nav ul li {
       margin: 1rem 0;
       line-height: 2rem;
     }
-    
+
     nav ul li a {
       font-size: 2rem;
     }
-    
+
     .navbar__logo {
       font-size: 35px;
       margin-left: 1rem;

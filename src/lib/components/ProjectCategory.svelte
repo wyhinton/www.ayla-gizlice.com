@@ -1,12 +1,17 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte";
   import {
     projectsInSelectedCategory,
     selectCategory,
     appState,
+    closeGallery,
+    isGalleryOpen,
   } from "$lib/stores/projectStore.js";
   import type { Project } from "../../types.js";
   import ProjectSection from "./ProjectSection.svelte";
+
+  let categoryElement: HTMLElement;
 
   export let projectName: string;
   export let index: number;
@@ -24,10 +29,28 @@
       handleClick();
     }
   }
+
+  function handleClickOutside(event: MouseEvent) {
+    if (
+      $isGalleryOpen &&
+      categoryElement &&
+      !categoryElement.contains(event.target as Node)
+    ) {
+      closeGallery();
+    }
+  }
+
+  onMount(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  });
 </script>
 
 <div
-  class="projectListItem"
+  class="categoryItem"
+  bind:this={categoryElement}
   on:click={handleClick}
   on:keydown={handleKeydown}
   role="button"
@@ -38,7 +61,7 @@
       {projectName || `Project ${index + 1}`}
     </h1>
   {/if}
-  <div class="projectSectionWrapper">
+  <div class="d-flex">
     {#if $appState.selectedCategory == projectName && $projectsInSelectedCategory.length > 0}
       {#each $projectsInSelectedCategory as project}
         <ProjectSection {project} {index}></ProjectSection>
@@ -48,11 +71,7 @@
 </div>
 
 <style>
-  .projectSectionWrapper {
-    display: flex;
-    /* overflow: scroll; */
-  }
-  .projectListItem {
+  .categoryItem {
     /* padding: 40px 20px; */
     cursor: pointer;
     transition: all 0.3s ease;
@@ -60,7 +79,7 @@
     /* overflow: scroll; */
   }
 
-  .projectListItem:hover {
+  .categoryItem:hover {
     color: black;
   }
 
@@ -88,7 +107,7 @@
 
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .projectListItem {
+    .categoryItem {
       padding: 20px 10px;
     }
   }

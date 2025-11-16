@@ -59,7 +59,7 @@
 
   .projInfo {
     font-size: 14px;
-    color: #666;
+    color: black;
     margin: 0 0 16px 0;
     line-height: 1.4;
   }

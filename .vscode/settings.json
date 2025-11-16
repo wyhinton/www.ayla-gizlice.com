@@ -82,6 +82,10 @@
     {
       "filePath": "src\\lib\\components\\ProjectSection.svelte",
       "group": "Default"
+    },
+    {
+      "filePath": "src\\lib\\components\\ProjectList.svelte",
+      "group": "Default"
     }
   ],
 

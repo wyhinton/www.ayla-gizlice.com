@@ -25,6 +25,8 @@ export interface Project {
   Video_Link: string;
 }
 
+interface CSVRow {}
+
 export interface ProjectImage {
   small: string;
   large: string;
@@ -123,5 +125,3 @@ export function getProjectImages(project: Project): ProjectImage[] {
 export function hasProjectImages(project: Project): boolean {
   return getProjectImages(project).length > 0;
 }
-
-interface CSVRow {}
