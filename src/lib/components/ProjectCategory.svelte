@@ -1,6 +1,8 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
+  import { crossfade } from "svelte/transition";
+  import { quintOut } from "svelte/easing";
   import {
     projectsInSelectedCategory,
     selectCategory,
@@ -17,6 +19,15 @@
   let titleElement: HTMLElement;
   let scrollContainer: HTMLElement;
   let overlayScrollbars: any;
+
+  // Create crossfade for shared element transitions
+  const [send, receive] = crossfade({
+    duration: 600,
+    easing: quintOut,
+  });
+
+  // Unique key for crossfade animation
+  $: titleKey = `title-${projectName}`;
 
   export let projectName: string;
   export let index: number;
@@ -123,23 +134,49 @@
   role="button"
   tabindex="0"
 >
-  {#if !$appState.selectedCategory || $appState.selectedCategory == projectName}
+  {#if !$appState.selectedCategory}
+    <!-- Default state: center position -->
     <h1
+      in:receive={{ key: titleKey }}
+      out:send={{ key: titleKey }}
       on:click={handleCategoryTitleClick}
-      class="categoryTitle"
+      class="categoryTitle center-position"
       bind:this={titleElement}
       on:mouseenter={handleMouseEnter}
     >
       {projectName || `Project ${index + 1}`}
     </h1>
-  {/if}
+  {:else if $appState.selectedCategory == projectName}
+    <!-- Selected state: left position with gallery -->
+    <h1
+      in:receive={{ key: titleKey }}
+      out:send={{ key: titleKey }}
+      on:click={handleCategoryTitleClick}
+      class="categoryTitle selected-position"
+      bind:this={titleElement}
+      on:mouseenter={handleMouseEnter}
+    >
+      {projectName || `Project ${index + 1}`}
+    </h1>
 
-  {#if $appState.selectedCategory == projectName && $projectsInSelectedCategory.length > 0}
-    <div class="scroll-container d-flex" bind:this={scrollContainer}>
-      {#each $projectsInSelectedCategory as project}
-        <ProjectSection {project} {index}></ProjectSection>
-      {/each}
-    </div>
+    {#if $projectsInSelectedCategory.length > 0}
+      <div class="scroll-container d-flex" bind:this={scrollContainer}>
+        <div class="d-flex">
+          {#each $projectsInSelectedCategory as project}
+            <ProjectSection {project} {index}></ProjectSection>
+          {/each}
+        </div>
+      </div>
+    {/if}
+  {:else}
+    <!-- Non-selected category: blurred state -->
+    <h1
+      class="categoryTitle center-position blurred"
+      bind:this={titleElement}
+      on:mouseenter={handleMouseEnter}
+    >
+      {projectName || `Project ${index + 1}`}
+    </h1>
   {/if}
 </div>
 
@@ -184,6 +221,34 @@
   .categoryTitle:hover {
     color: black;
     -webkit-text-fill-color: black;
+  }
+
+  .categoryTitle.center-position {
+    text-align: center;
+    width: 100%;
+  }
+
+  .categoryTitle.selected-position {
+    text-align: left;
+    /* width: auto;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    transform: scale(0.7);
+    transform-origin: left center; */
+  }
+
+  .categoryTitle.blurred {
+    filter: blur(3px);
+    opacity: 0.4;
+    transition:
+      filter 0.3s ease,
+      opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .categoryTitle.blurred:hover {
+    filter: blur(1px);
+    opacity: 0.7;
   }
 
   /* Responsive adjustments */

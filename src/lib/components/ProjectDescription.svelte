@@ -62,6 +62,7 @@
     color: black;
     margin: 0 0 16px 0;
     line-height: 1.4;
+    font-style: italic;
   }
 
   .projInfo a {
@@ -75,7 +76,7 @@
 
   .descriptionParagraph {
     font-size: 16px;
-    color: #444;
+    color: #1a1a1a;
     margin: 0;
   }
 
