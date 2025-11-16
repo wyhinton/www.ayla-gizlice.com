@@ -3,6 +3,8 @@
   --green: rgb(33, 116, 107);
 }
 
+
+
 body {
   width: 100%;
   height: 100vh;
@@ -11,6 +13,10 @@ body {
   overflow: hidden;
   scroll-behavior: smooth;
   scrollbar-width: none !important;
+}
+
+.w-max-content{
+  width: max-content !important;
 }
 
 #mainHolder {

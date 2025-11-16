@@ -12,7 +12,7 @@
   class:first={imageIndex === 0}
 >
   <a
-    class="lightBoxLink"
+    class="lightBoxLink w-max-content"
     href={image.large}
     target="_blank"
     rel="noopener noreferrer"

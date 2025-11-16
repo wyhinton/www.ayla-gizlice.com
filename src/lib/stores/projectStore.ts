@@ -74,7 +74,7 @@ export const uniqueCategories = derived(projects, ($projects: Project[]) => {
     }
   });
 
-  return Array.from(categories).sort();
+  return Array.from(categories);
 });
 
 // URL utility functions
