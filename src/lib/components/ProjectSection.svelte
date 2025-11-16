@@ -7,6 +7,7 @@
     cleanGooglePhotosUrl,
   } from "../../types.js";
   import ProjectDescription from "./ProjectDescription.svelte";
+  import ProjectImage from "./ProjectImage.svelte";
 
   export let project: Project;
   export let index: number;
@@ -59,26 +60,7 @@
               class="w-100 h-auto position-relative overflow-hidden bg-dark d-flex align-items-center justify-content-center"
               class:first={imageIndex === 0}
             >
-              <a
-                class="lightBoxLink"
-                href={image.large}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  class="heroImage"
-                  id="lightBoxImage_{index}_{image.index}"
-                  src={image.small}
-                  alt={project.project_name || "Ayla Gizlice Art"}
-                  loading="lazy"
-                  on:error={(e) => {
-                    console.warn("Image failed to load:", image.small);
-                    // Hide the container if image fails to load
-                    e.target.parentElement.parentElement.parentElement.style.display =
-                      "none";
-                  }}
-                />
-              </a>
+              <ProjectImage {image} {project} sectionIndex={index} />
             </div>
           </div>
         {/each}
@@ -112,14 +94,6 @@
   .section.visible {
     opacity: 1;
     transform: translateX(0);
-  }
-
-  .heroImage {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    cursor: pointer;
   }
 
   .videoDiv {

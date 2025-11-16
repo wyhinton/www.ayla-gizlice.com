@@ -28,7 +28,7 @@
       {/if}
     </p>
     <p class="descriptionParagraph" id="descriptionParagraph_{index}">
-      {project.project_description || ""}
+      {@html project.project_description || ""}
     </p>
   </div>
 </div>

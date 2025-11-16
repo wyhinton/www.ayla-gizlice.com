@@ -34,9 +34,9 @@
       <ul class="navbar__ul" id="navBarListContainer" class:open={mobileMenuOpen}>
         <li>
           <a 
-            class="pageLink" 
+            class="pageLink projects-link" 
             href="/" 
-            class:active={$page.url.pathname === '/'}
+            class:active={$page.url.pathname === '/' || $page.url.pathname.startsWith('/') && $page.url.pathname !== '/about' && $page.url.pathname !== '/contact'}
             on:click={() => mobileMenuOpen = false}
           >
             <i id="indicatorSymbole"> </i>Projects
@@ -143,6 +143,11 @@
 
   nav ul li a.active {
     -webkit-text-fill-color: white;
+  }
+
+  /* Projects link should be black when active (on home/project pages) */
+  nav ul li a.projects-link.active {
+    -webkit-text-fill-color: black;
   }
 
   .navBarSection {
