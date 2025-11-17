@@ -1,7 +1,7 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { crossfade } from "svelte/transition";
+  import { crossfade, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import {
     projectsInSelectedCategory,
@@ -160,7 +160,12 @@
     </h1>
 
     {#if $projectsInSelectedCategory.length > 0}
-      <div class="scroll-container d-flex" bind:this={scrollContainer}>
+      <div
+        class="scroll-container d-flex"
+        bind:this={scrollContainer}
+        in:fly={{ y: 100, duration: 600, delay: 200 }}
+        out:fly={{ y: 100, duration: 400 }}
+      >
         <div class="d-flex">
           {#each $projectsInSelectedCategory as project}
             <ProjectSection {project} {index}></ProjectSection>
@@ -186,6 +191,9 @@
     min-height: 50px; /* Ensure minimum height for OverlayScrollbars */
     flex-wrap: nowrap; /* Prevent wrapping */
     overflow-x: auto; /* Allow horizontal overflow */
+    position: absolute;
+    top: 140px;
+    z-index: 100;
   }
   .categoryItem {
     /* padding: 40px 20px; */
@@ -195,6 +203,7 @@
     /* width: 100vw; */
     width: 100%;
     /* overflow: scroll; */
+    margin-left: var(--page-margin);
   }
 
   .categoryItem:hover {
@@ -230,6 +239,10 @@
 
   .categoryTitle.selected-position {
     text-align: left;
+    position: absolute;
+    top: 0;
+    left: var(--page-margin);
+
     /* width: auto;
     margin-left: 2rem;
     margin-bottom: 2rem;

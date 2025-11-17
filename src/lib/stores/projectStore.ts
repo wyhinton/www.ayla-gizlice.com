@@ -4,9 +4,7 @@ import type { Project } from "../../types.js";
 
 // Unified state interface
 interface AppState {
-  // Project data
-  projects: Project[];
-  loading: boolean;
+    loading: boolean;
   error: string | null;
 
   // UI state
@@ -14,6 +12,9 @@ interface AppState {
   showGallery: boolean;
   galleryVisible: boolean;
   showProjectsList: boolean;
+  // Project data
+  projects: Project[];
+
 }
 
 // Create unified writable store
@@ -160,7 +161,7 @@ class ProjectStoreActions {
     }));
 
     // Update URL if requested (default behavior)
-    if (updateUrl && typeof window !== "undefined") {
+    if (updateUrl && typeof `window` !== "undefined") {
       const slug = categoryToSlug(category);
       const newUrl = `/${slug}`;
       window.history.pushState({ category }, "", newUrl);

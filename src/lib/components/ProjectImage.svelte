@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
   import type { Project } from "../../types.js";
 
   export let image: { small: string; large: string; index: number };
@@ -10,6 +11,7 @@
 <div
   class="h-auto position-relative d-flex align-items-center justify-content-center me-2"
   class:first={imageIndex === 0}
+  in:fade={{ duration: 600, delay: imageIndex * 100 }}
 >
   <a
     class="lightBoxLink w-max-content"

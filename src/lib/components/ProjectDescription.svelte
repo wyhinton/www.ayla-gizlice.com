@@ -35,7 +35,7 @@
 
 <style>
   .descriptionPaddingContainer {
-    padding: 20px;
+    padding-right: 20px;
     min-width: 300px;
   }
 
