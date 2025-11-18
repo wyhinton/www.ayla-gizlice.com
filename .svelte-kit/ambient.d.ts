@@ -38,7 +38,6 @@ declare module '$env/static/private' {
 	export const CommonProgramW6432: string;
 	export const COMPUTERNAME: string;
 	export const ComSpec: string;
-	export const CONSOLE_NINJA_WELCOME_SHOWN: string;
 	export const CUDA_PATH: string;
 	export const CUDA_PATH_V11_7: string;
 	export const DriverData: string;
@@ -75,6 +74,7 @@ declare module '$env/static/private' {
 	export const NDI_RUNTIME_DIR_V3: string;
 	export const NDI_RUNTIME_DIR_V4: string;
 	export const nextlimit_LICENSE: string;
+	export const NINJA_ENV: string;
 	export const NODE: string;
 	export const NODE_ENV: string;
 	export const NODE_EXE: string;
@@ -191,7 +191,6 @@ declare module '$env/dynamic/private' {
 		CommonProgramW6432: string;
 		COMPUTERNAME: string;
 		ComSpec: string;
-		CONSOLE_NINJA_WELCOME_SHOWN: string;
 		CUDA_PATH: string;
 		CUDA_PATH_V11_7: string;
 		DriverData: string;
@@ -228,6 +227,7 @@ declare module '$env/dynamic/private' {
 		NDI_RUNTIME_DIR_V3: string;
 		NDI_RUNTIME_DIR_V4: string;
 		nextlimit_LICENSE: string;
+		NINJA_ENV: string;
 		NODE: string;
 		NODE_ENV: string;
 		NODE_EXE: string;

@@ -62,7 +62,6 @@
             About
           </a>
         </li>
-
       </ul>
     </nav>
   </div>
