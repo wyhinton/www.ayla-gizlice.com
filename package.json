@@ -5,7 +5,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite dev",
-    "preview": "vite preview",
+    "preview:local": "vite preview",
+    "preview": "npm run build && firebase hosting:channel:deploy preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
     "deploy:test": "npm run build && firebase deploy --only hosting:aylahomepage",
