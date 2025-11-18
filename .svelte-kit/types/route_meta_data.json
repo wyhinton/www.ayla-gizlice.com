@@ -5,5 +5,8 @@
 	"/about": [],
 	"/api/image-proxy": [
 		"src/routes/api/image-proxy/+server.ts"
+	],
+	"/[slug]": [
+		"src/routes/[slug]/+page.server.js"
 	]
 }
