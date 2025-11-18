@@ -46,8 +46,7 @@
             href="/"
             class:active={$page.url.pathname === "/" ||
               ($page.url.pathname.startsWith("/") &&
-                $page.url.pathname !== "/about" &&
-                $page.url.pathname !== "/contact")}
+                $page.url.pathname !== "/about")}
             on:click={() => (mobileMenuOpen = false)}
           >
             <i id="indicatorSymbole"> </i>Projects
@@ -63,16 +62,7 @@
             About
           </a>
         </li>
-        <li>
-          <a
-            class="pageLink"
-            href="/contact"
-            class:active={$page.url.pathname === "/contact"}
-            on:click={() => (mobileMenuOpen = false)}
-          >
-            Contact
-          </a>
-        </li>
+
       </ul>
     </nav>
   </div>

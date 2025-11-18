@@ -9,6 +9,7 @@
   import ProjectDescription from "./ProjectDescription.svelte";
   import ProjectImage from "./ProjectImage.svelte";
   import { closeGallery, appState } from "$lib/stores/projectStore.js";
+  import { fade } from "svelte/transition";
 
   export let project: Project;
   export let index: number;
@@ -80,13 +81,21 @@
     id="section_{index}"
     bind:this={sectionElement}
     class:visible={isInSelectedProject}
+    in:fade={{ duration: 600, delay: 1000 }}
   >
     <div class="d-flex g-2" id="sectionElementContainer_{index}">
       <ProjectDescription {project} {index} />
       <div class="d-flex g-2">
         {#if hasProjectImages(project) || hasVideo(project)}
           {#each projectImages as image, imageIndex}
-            <ProjectImage {image} {project} sectionIndex={index} {imageIndex} />
+            <div in:fade={{ duration: 600, delay: imageIndex * 150 + 400 }}>
+              <ProjectImage
+                {image}
+                {project}
+                sectionIndex={index}
+                {imageIndex}
+              />
+            </div>
           {/each}
 
           <!-- {#if hasVideo(project)}

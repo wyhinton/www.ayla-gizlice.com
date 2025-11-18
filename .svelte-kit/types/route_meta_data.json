@@ -5,6 +5,5 @@
 	"/about": [],
 	"/api/image-proxy": [
 		"src/routes/api/image-proxy/+server.ts"
-	],
-	"/contact": []
+	]
 }

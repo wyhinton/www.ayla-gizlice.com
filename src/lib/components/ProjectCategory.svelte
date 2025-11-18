@@ -76,7 +76,21 @@
       categoryElement &&
       !categoryElement.contains(event.target as Node)
     ) {
-      closeGallery();
+      // Check if PhotoSwipe is currently open
+      const isPhotoSwipeOpen = document.querySelector(".pswp--open") !== null;
+      if (isPhotoSwipeOpen) {
+        return; // Don't close gallery if PhotoSwipe lightbox is open
+      }
+
+      // Check if the click is within any project section
+      const clickedElement = event.target as HTMLElement;
+      const isWithinProjectSection =
+        clickedElement.closest(".projectSectionWrapper") !== null;
+
+      // Only close gallery if not clicking within a project section
+      if (!isWithinProjectSection) {
+        closeGallery();
+      }
     }
   }
 
@@ -131,6 +145,9 @@
         bind:this={scrollContainer}
         in:fade={{ duration: 600, delay: 300 }}
         out:fade={{ duration: 400 }}
+        style="pointer-events: {$appState.selectedCategory === projectName
+          ? 'auto'
+          : 'none'};"
       >
         <div bind:this={viewport} class="scroll-viewport">
           <div bind:this={contents} class="scroll-contents">
@@ -207,7 +224,7 @@
 
   .scroll-viewport::-webkit-scrollbar {
     /* hide scrollbar */
-    /* display: none; */
+    display: none;
   }
 
   .scroll-contents {
