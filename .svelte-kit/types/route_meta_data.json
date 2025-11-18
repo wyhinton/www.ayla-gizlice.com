@@ -3,5 +3,8 @@
 		"src/routes/+page.server.js"
 	],
 	"/about": [],
+	"/api/image-proxy": [
+		"src/routes/api/image-proxy/+server.ts"
+	],
 	"/contact": []
 }

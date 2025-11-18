@@ -6,6 +6,20 @@
   export let project: Project;
   export let sectionIndex: number;
   export let imageIndex: number;
+
+  // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
+  function getProxiedImageUrl(originalUrl: string): string {
+    if (
+      originalUrl.includes("googleusercontent.com") ||
+      originalUrl.includes("googleapis.com")
+    ) {
+      return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
+    }
+    return originalUrl;
+  }
+
+  $: proxyImageUrl = getProxiedImageUrl(image.small);
+  $: proxyLargeUrl = getProxiedImageUrl(image.large);
 </script>
 
 <div
@@ -15,19 +29,18 @@
 >
   <a
     class="lightBoxLink w-max-content"
-    href={image.large}
+    href={proxyLargeUrl}
     target="_blank"
     rel="noopener noreferrer"
   >
     <img
       class="heroImage"
       id="lightBoxImage_{sectionIndex}_{image.index}"
-      src={image.small}
+      src={proxyImageUrl}
       alt={project.project_name || "Ayla Gizlice Art"}
       referrerPolicy="no-referrer"
-      loading="lazy"
       on:error={(e) => {
-        console.warn("Image failed to load:", image.small);
+        console.warn("Image failed to load:", proxyImageUrl);
         // Hide the container if image fails to load
         const target = e.target;
         const container = target?.parentElement?.parentElement?.parentElement;

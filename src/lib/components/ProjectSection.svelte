@@ -16,11 +16,13 @@
   let sectionElement: HTMLElement;
   let visible: boolean = false;
 
+  $: isInSelectedProject = project.category == $appState.selectedCategory;
+
   onMount(() => {
     // Animate in the section
-    setTimeout(() => {
-      visible = true;
-    }, index * 100);
+    // setTimeout(() => {
+    //   visible = true;
+    // }, index * 100);
   });
 
   function getVideoUrl(project: Project): string {
@@ -74,10 +76,10 @@
   {/if}
 
   <section
-    class="section"
+    class="section me-4"
     id="section_{index}"
     bind:this={sectionElement}
-    class:visible
+    class:visible={isInSelectedProject}
   >
     <div class="d-flex g-2" id="sectionElementContainer_{index}">
       <ProjectDescription {project} {index} />

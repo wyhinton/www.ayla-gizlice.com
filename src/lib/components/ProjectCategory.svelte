@@ -1,7 +1,7 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { crossfade, fly } from "svelte/transition";
+  import { crossfade, fade, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import {
     projectsInSelectedCategory,
@@ -106,7 +106,7 @@
 
   // Watch for category selection changes
   $: if (
-    $appState.selectedCategory === projectName &&
+    $appState.selectedCategory == projectName &&
     $projectsInSelectedCategory.length > 0
   ) {
     // Wait for DOM to update, then initialize scrollbars
@@ -114,7 +114,9 @@
       initializeScrollbars();
     }, 100);
   } else {
-    destroyScrollbars();
+    setTimeout(() => {
+      destroyScrollbars();
+    }, 1000);
   }
 
   onMount(() => {
@@ -163,8 +165,8 @@
       <div
         class="scroll-container d-flex"
         bind:this={scrollContainer}
-        in:fly={{ y: 100, duration: 600, delay: 200 }}
-        out:fly={{ y: 100, duration: 400 }}
+        in:fade={{ duration: 600, delay: 300 }}
+        out:fade={{ duration: 400 }}
       >
         <div class="d-flex">
           {#each $projectsInSelectedCategory as project}
