@@ -23,6 +23,7 @@
   "type": "module",
   "dependencies": {
     "papaparse": "^5.5.3",
+    "photoswipe": "^5.4.4",
     "prismjs": "^1.30.0",
     "svrollbar": "^0.12.0"
   }
