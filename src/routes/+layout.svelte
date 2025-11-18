@@ -3,8 +3,14 @@
   import Navigation from "$lib/components/Navigation.svelte";
   import DebugPanel from "$lib/components/DebugPanel.svelte";
   import { onMount } from "svelte";
+  import { loadProjects } from "$lib/stores/projectStore";
 
-  onMount(() => {
+  const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
+
+  onMount(async () => {
+    // Load projects globally so they're available for all routes
+    await loadProjects(GOOGLE_SHEETS_URL);
+
     // Add Google Analytics
     if (typeof window !== "undefined") {
       window.dataLayer = window.dataLayer || [];

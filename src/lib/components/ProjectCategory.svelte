@@ -9,7 +9,7 @@
     appState,
     closeGallery,
     isGalleryOpen,
-  } from "$lib/stores/projectStore.js";
+  } from "$lib/stores/projectStore";
   import type { Project } from "../../types.js";
   import ProjectSection from "./ProjectSection.svelte";
   import { Svrollbar } from "svrollbar";

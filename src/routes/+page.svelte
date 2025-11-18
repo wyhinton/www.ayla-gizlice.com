@@ -9,16 +9,11 @@
     error,
     loadProjects,
     uniqueCategories,
-  } from "$lib/stores/projectStore.js";
+  } from "$lib/stores/projectStore";
 
   export let data: any;
 
-  const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
-
-  onMount(async () => {
-    // Fetch Google Sheets data using store
-    await loadProjects(GOOGLE_SHEETS_URL);
-  });
+  // Projects are now loaded globally in +layout.svelte
 
   function handleProjectClick(project: Project, index: number) {
     console.log("Project clicked:", project.project_name);
