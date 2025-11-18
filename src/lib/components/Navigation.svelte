@@ -55,9 +55,9 @@
         </li>
         <li>
           <a
+            class:active={$page.url.pathname.includes("about")}
             class="pageLink"
             href="/about"
-            class:active={$page.url.pathname === "/about"}
             on:click={() => (mobileMenuOpen = false)}
           >
             About
@@ -153,7 +153,7 @@
   }
 
   nav ul li a.active {
-    -webkit-text-fill-color: white;
+    -webkit-text-fill-color: black;
   }
 
   /* Projects link should be black when active (on home/project pages) */

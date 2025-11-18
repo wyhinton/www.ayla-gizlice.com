@@ -12,13 +12,13 @@
   } from "$lib/stores/projectStore.js";
   import type { Project } from "../../types.js";
   import ProjectSection from "./ProjectSection.svelte";
-  import { OverlayScrollbars } from "overlayscrollbars";
-  import "overlayscrollbars/overlayscrollbars.css";
+  import { Svrollbar } from "svrollbar";
 
   let categoryElement: HTMLElement;
   let titleElement: HTMLElement;
   let scrollContainer: HTMLElement;
-  let overlayScrollbars: any;
+  let viewport: HTMLElement;
+  let contents: HTMLElement;
 
   // Create crossfade for shared element transitions
   const [send, receive] = crossfade({
@@ -80,50 +80,14 @@
     }
   }
 
-  function initializeScrollbars() {
-    if (scrollContainer && !overlayScrollbars) {
-      overlayScrollbars = OverlayScrollbars(scrollContainer, {
-        scrollbars: {
-          theme: "os-theme-dark",
-          visibility: "auto",
-          autoHide: "never",
-          autoHideDelay: 1300,
-        },
-        overflow: {
-          x: "scroll",
-          y: "hidden",
-        },
-      });
-    }
-  }
+  // Svrollbar doesn't require initialization/destruction like OverlayScrollbars
 
-  function destroyScrollbars() {
-    if (overlayScrollbars) {
-      overlayScrollbars.destroy();
-      overlayScrollbars = null;
-    }
-  }
-
-  // Watch for category selection changes
-  $: if (
-    $appState.selectedCategory == projectName &&
-    $projectsInSelectedCategory.length > 0
-  ) {
-    // Wait for DOM to update, then initialize scrollbars
-    setTimeout(() => {
-      initializeScrollbars();
-    }, 100);
-  } else {
-    setTimeout(() => {
-      destroyScrollbars();
-    }, 1000);
-  }
+  // Svrollbar handles scrollbar management automatically
 
   onMount(() => {
     document.addEventListener("click", handleClickOutside, true);
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
-      destroyScrollbars();
     };
   });
 </script>
@@ -163,16 +127,31 @@
 
     {#if $projectsInSelectedCategory.length > 0}
       <div
-        class="scroll-container d-flex"
+        class="scroll-wrapper"
         bind:this={scrollContainer}
         in:fade={{ duration: 600, delay: 300 }}
         out:fade={{ duration: 400 }}
       >
-        <div class="d-flex">
-          {#each $projectsInSelectedCategory as project}
-            <ProjectSection {project} {index}></ProjectSection>
-          {/each}
+        <div bind:this={viewport} class="scroll-viewport">
+          <div bind:this={contents} class="scroll-contents">
+            <div class="d-flex section-wrapper">
+              {#each $projectsInSelectedCategory as project, projectIndex}
+                <div
+                  class:last-section={projectIndex ===
+                    $projectsInSelectedCategory.length - 1}
+                >
+                  <ProjectSection {project} {index}></ProjectSection>
+                </div>
+              {/each}
+            </div>
+          </div>
         </div>
+        <Svrollbar
+          {viewport}
+          {contents}
+          alwaysVisible={true}
+          initiallyVisible
+        />
       </div>
     {/if}
   {:else}
@@ -188,14 +167,52 @@
 </div>
 
 <style>
-  .scroll-container {
+  .last-section {
+    padding-right: 50px;
+  }
+
+  .section-wrapper {
+    flex-wrap: nowrap;
+    /* white-space: nowrap; */
+  }
+
+  .scroll-wrapper {
+    position: relative;
     width: 100%;
-    min-height: 50px; /* Ensure minimum height for OverlayScrollbars */
-    flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: auto; /* Allow horizontal overflow */
     position: absolute;
     top: 140px;
     z-index: 100;
+    margin-left: var(--page-margin);
+    margin-right: 140px;
+    --svrollbar-track-width: 20px;
+    --svrollbar-track-background: #ec4f27;
+    --svrollbar-track-opacity: 1;
+
+    --svrollbar-thumb-width: 10px;
+    --svrollbar-thumb-background: orange;
+    --svrollbar-thumb-opacity: 1;
+  }
+
+  .scroll-viewport {
+    position: relative;
+    width: 100%;
+    height: 800px;
+    overflow: scroll;
+    box-sizing: border-box;
+
+    /* hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scroll-viewport::-webkit-scrollbar {
+    /* hide scrollbar */
+    /* display: none; */
+  }
+
+  .scroll-contents {
+    /* This will contain the actual scrollable content */
+    min-width: max-content;
   }
   .categoryItem {
     /* padding: 40px 20px; */
@@ -205,7 +222,7 @@
     /* width: 100vw; */
     width: 100%;
     /* overflow: scroll; */
-    margin-left: var(--page-margin);
+    /* margin-left: var(--page-margin); */
   }
 
   .categoryItem:hover {

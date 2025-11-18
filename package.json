@@ -22,8 +22,8 @@
   },
   "type": "module",
   "dependencies": {
-    "overlayscrollbars": "^2.12.0",
     "papaparse": "^5.5.3",
-    "prismjs": "^1.30.0"
+    "prismjs": "^1.30.0",
+    "svrollbar": "^0.12.0"
   }
 }
