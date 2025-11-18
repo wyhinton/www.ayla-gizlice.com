@@ -24,7 +24,7 @@
 
   function handleKeydown(event: KeyboardEvent) {
     // Check for Ctrl+Shift+Space
-    if (event.ctrlKey && event.shiftKey && event.code === "Space") {
+    if (event.ctrlKey && event.shiftKey && event.code === "KeyF") {
       event.preventDefault();
       toggleDebugPanel();
     }
