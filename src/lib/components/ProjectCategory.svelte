@@ -168,9 +168,14 @@
         in:fade={{ duration: 600, delay: 300 }}
         out:fade={{ duration: 400 }}
       >
-        <div class="d-flex">
-          {#each $projectsInSelectedCategory as project}
-            <ProjectSection {project} {index}></ProjectSection>
+        <div class="d-flex section-wrapper">
+          {#each $projectsInSelectedCategory as project, projectIndex}
+            <div
+              class:last-section={projectIndex ===
+                $projectsInSelectedCategory.length - 1}
+            >
+              <ProjectSection {project} {index}></ProjectSection>
+            </div>
           {/each}
         </div>
       </div>
@@ -188,6 +193,9 @@
 </div>
 
 <style>
+  .last-section {
+    padding-right: 50px;
+  }
   .scroll-container {
     width: 100%;
     min-height: 50px; /* Ensure minimum height for OverlayScrollbars */
@@ -196,6 +204,9 @@
     position: absolute;
     top: 140px;
     z-index: 100;
+    /* padding-left: 40px; */
+    margin-left: var(--page-margin);
+    margin-right: 140px;
   }
   .categoryItem {
     /* padding: 40px 20px; */
@@ -205,7 +216,7 @@
     /* width: 100vw; */
     width: 100%;
     /* overflow: scroll; */
-    margin-left: var(--page-margin);
+    /* margin-left: var(--page-margin); */
   }
 
   .categoryItem:hover {
