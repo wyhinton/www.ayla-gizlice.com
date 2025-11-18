@@ -56,13 +56,16 @@
     {
       year: "2025",
       content:
-        "Provisional Support Structures, UCLA New Wight Gallery, Los Angeles, CA",
+        "<em>Provisional Support Structures</em>, UCLA New Wight Gallery, Los Angeles, CA",
     },
-    { year: "2020", content: "Çukurova Plain, Anchorlight, Raleigh, NC" },
+    {
+      year: "2020",
+      content: "<em>Çukurova Plain</em>, Anchorlight, Raleigh, NC",
+    },
     {
       year: "2019",
       content:
-        "Natura Naturans, John and June Allcott Gallery, UNC Chapel Hill",
+        "<em>Natura Naturans</em>, John and June Allcott Gallery, UNC Chapel Hill",
     },
   ];
 
@@ -70,30 +73,32 @@
     {
       year: "2025",
       content:
-        "Then and There, Here and Now, North Carolina Museum of Art, Raleigh, NC<br />Kite Show with HYPERSPACE Gallery in Other Places Art Fair, San Pedro, CA<br />Something to Hold, Kita Gallery, Los Angeles, CA<br />Nightlife, The Grange, Big Sur, CA",
+        "<em>Then and There, Here and Now</em>, North Carolina Museum of Art, Raleigh, NC<br /><em>Kite Show</em> with HYPERSPACE Gallery in Other Places Art Fair, San Pedro, CA<br /><em>Something to Hold</em>, Kita Gallery, Los Angeles, CA<br /><em>Nightlife</em>, The Grange, Big Sur, CA",
     },
     {
       year: "2024",
-      content: "2024 MFA Preview Show, UCLA New Wight Gallery, Los Angeles, CA",
+      content:
+        "<em>2024 MFA Preview Show</em>, UCLA New Wight Gallery, Los Angeles, CA",
     },
     {
       year: "2022",
       content:
-        "Reckoning and Resilience: North Carolina Art Now, Nasher Museum of Art, Durham, NC<br />WHEN, Sertoma Arts Center, Raleigh, NC<br />Not in Repose, Goodyear Arts, Charlotte, NC<br />Limestone Almanac, BASEMENT Art Space, Raleigh, NC",
+        "<em>Reckoning and Resilience: North Carolina Art Now</em>, Nasher Museum of Art, Durham, NC<br /><em>WHEN</em>, Sertoma Arts Center, Raleigh, NC<br /><em>Not in Repose</em>, Goodyear Arts, Charlotte, NC<br /><em>Limestone Almanac</em>, BASEMENT Art Space, Raleigh, NC",
     },
     {
       year: "2021",
-      content: "Approaching Maximum: The Climate Crisis Now, VAE, Raleigh, NC",
+      content:
+        "<em>Approaching Maximum: The Climate Crisis Now</em>, VAE, Raleigh, NC",
     },
     {
       year: "2019",
       content:
-        "Reclaiming My Time, National Humanities Center, Durham, NC<br />UNREAL, United Arts Center of Wake County, Raleigh, NC<br />Senior Show, Allcott and SAMPLE Galleries, UNC Chapel Hill<br />Undergraduate Art Awards Show, John and June Allcott Gallery, UNC Chapel Hill",
+        "<em>Reclaiming My Time</em>, National Humanities Center, Durham, NC<br /><em>UNREAL</em>, United Arts Center of Wake County, Raleigh, NC<br /><em>Senior Show</em>, Allcott and SAMPLE Galleries, UNC Chapel Hill<br /><em>Undergraduate Art Awards Show</em>, John and June Allcott Gallery, UNC Chapel Hill",
     },
     {
       year: "2018",
       content:
-        "Occluded Front, John and June Allcott Gallery, UNC Chapel Hill<br />The Breakroom, John and June Allcott Gallery, UNC Chapel Hill<br />Monumenta, John and June Allcott Gallery, UNC Chapel Hill",
+        "<em>Occluded Front</em>, John and June Allcott Gallery, UNC Chapel Hill<br /><em>The Breakroom</em>, John and June Allcott Gallery, UNC Chapel Hill<br /><em>Monumenta</em>, John and June Allcott Gallery, UNC Chapel Hill",
     },
   ];
 
@@ -116,24 +121,25 @@
     {
       year: "2017",
       content:
-        "Anderson Award<br />Sculpture Garden Award and Commission<br />Kachergis Award<br />Scholarship to attend Penland School of Crafts<br />Incubator Award Grant to fund creative projects using the UNC library special collections",
+        "Incubator Award Grant to fund creative projects using the UNC library special collections",
     },
   ];
 
   const press = [
     {
       year: "2025",
-      content: "Exhibition Review of MFA Thesis Show in HyperAllergic Magazine",
+      content:
+        "<a href='https://hyperallergic.com/1010854/the-ucla-mfa-show-proves-we-have-got-to-learn-from-students/'>Exhibition Review of MFA Thesis Show in HyperAllergic Magazine",
     },
     {
       year: "2022",
       content:
-        "Article on Kilim Kite Event in the Sisters, Oregon Nugget Newspaper<br />Exhibition Review of Reckoning and Resilience in Indy Week Newspaper<br />Exhibition Review of Limestone Almanac in The Local Reporter Newspaper",
+        "<a href='https://www.nuggetnews.com/story/2022/07/19/news/artist-soars-with-traditional-weaving/33360.html'>Article on Kilim Kite Event in the Sisters, Oregon Nugget Newspaper<a/><br /> <a href='https://indyweek.com/culture/art/the-nasher-reckoning-and-resilience-review/'>Exhibition Review of Reckoning and Resilience in Indy Week Newspaper</a><br /><a href='https://thelocalreporter.press/artist-run-art-space-showcases-experimental-art/'>Exhibition Review of Limestone Almanac in The Local Reporter Newspaper</a>",
     },
     {
       year: "2019",
       content:
-        "Photo Essay on Natura Naturans in UNC's Research Magazine, Endeavors<br />UNC Sculpture Garden Catalog",
+        "<a href='https://endeavors.unc.edu/artifacts-of-alteration/'>Photo Essay on Natura Naturans in UNC's Research Magazine, Endeavors<br />UNC Sculpture Garden Catalog</a>",
     },
   ];
 
@@ -141,42 +147,40 @@
     {
       year: "2023 - present",
       content:
-        "<strong>Lab Technician at UCLA Graduate Ceramics Studio, Culver City, CA</strong><br />Ran community firings, made glazes, cleaned and organized ceramics studio, troubleshot kiln problems, mediated disagreements about use of communal space. Offered technical demonstrations and advice to graduate students about a variety of techniques in ceramic construction",
+        "Lab Technician at UCLA Graduate Ceramics Studio, Culver City, CA",
     },
     {
       year: "2023 - 2025",
-      content:
-        "<strong>Teaching Fellow at UCLA, Los Angeles, CA</strong><br />Led discussion sections for modern art history classes, evaluated essays and exams (3 quarters). Advised students in the completion of their capstone projects and in professional development (1 quarter). Assisted in instructing students in the foundations of ceramics in wheel throwing and handbuilding (2 quarters). Provided individual feedback and support to advanced drawing students (1 quarter)",
+      content: "Teaching Fellow at UCLA, Los Angeles, CA",
     },
     {
       year: "2023-2024",
       content:
-        "<strong>Visiting Artist Lecture Series Co-Coordinator at UCLA, Los Angeles, California</strong><br />Curated, organized, and promoted lecture series about varying approaches to place in art. Organized studio visits, invited and coordinated with artists, promoted lectures",
+        "Visiting Artist Lecture Series Co-Coordinator at UCLA, Los Angeles, California",
     },
     {
       year: "2023-2024",
-      content:
-        "<strong>Visiting Artist at People's Pottery Project, Los Angeles, CA</strong><br />Assisted in organizing and streamlining pottery studio, helped fill and mail out orders. Instructed formerly incarcerated women in handbuilding, wheel throwing, and glazing techniques",
+      content: "Visiting Artist at People's Pottery Project, Los Angeles, CA",
+    },
+    {
+      year: "2019-2022",
+      content: "Teaching Artist at various art centers, North Carolina",
     },
     {
       year: "2020 - 2022",
-      content:
-        "<strong>Sertoma Art Center Front Desk Staff, Raleigh, NC</strong><br />Checked visitors into classes and studios, coordinated class and rental registration, oversaw daily program and staff activities, maintained records, developed and distributed promotional information",
+      content: "Sertoma Art Center Front Desk Staff, Raleigh, NC",
     },
     {
       year: "2020 & 2021",
-      content:
-        "<strong>Coop Caretaker at the Hen Institute, Raleigh, NC</strong><br />Provided regular care to the feathered residents of the Hen Institute as a part of a public installation by artist Adam Carlin",
+      content: "Coop Caretaker at the Hen Institute, Raleigh, NC",
     },
     {
       year: "2017 - 2019",
-      content:
-        "<strong>Student Assistant at Sloane Art Library, UNC-CH</strong><br />Helped patrons with research questions, checked books in and out, cataloged books. Familiarized myself with numerous contemporary and historical artists and movements",
+      content: "Student Assistant at Sloane Art Library, UNC-CH",
     },
     {
       year: "2018",
-      content:
-        "<strong>Summer Intern at Artspace, Raleigh, NC</strong><br />Managed supplies for summer arts programs, acted as liaison between instructors and staff, oversaw volunteers",
+      content: "Summer Intern at Artspace, Raleigh, NC",
     },
   ];
 
@@ -200,11 +204,6 @@
       year: "2019",
       content:
         "<strong>Advisor to Southeast Raleigh High School Art Club, Raleigh, NC</strong><br />Advised students in the creation of artwork and exhibition planning for a group show",
-    },
-    {
-      year: "2017",
-      content:
-        "<strong>Solar Spring Break, Washington, DC</strong><br />Assisted in the installation of solar panels for low-income housing",
     },
   ];
 
@@ -338,7 +337,7 @@
     color: #666;
     text-align: right;
     padding-right: 1rem;
-    border-right: 1px solid #eee;
+    border-right: 1px solid #a4a4a4;
   }
 
   .timeline-item .content {
