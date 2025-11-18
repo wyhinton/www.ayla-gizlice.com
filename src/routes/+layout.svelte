@@ -4,6 +4,7 @@
   import DebugPanel from "$lib/components/DebugPanel.svelte";
   import { onMount } from "svelte";
   import { loadProjects } from "$lib/stores/projectStore";
+  import { page } from '$app/stores';
 
   const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
 
@@ -90,7 +91,7 @@
 
 <Navigation />
 
-<main>
+<main class:about-page={$page.route.id === '/about'}>
   <slot />
 </main>
 
@@ -102,5 +103,9 @@
     width: 100%;
     height: 100vh;
     position: relative;
+  }
+
+  main.about-page {
+    overflow-y: auto;
   }
 </style>
