@@ -4,7 +4,7 @@ import type { Project } from "../../types.js";
 
 // Unified state interface
 interface AppState {
-    loading: boolean;
+  loading: boolean;
   error: string | null;
 
   // UI state
@@ -14,7 +14,6 @@ interface AppState {
   showProjectsList: boolean;
   // Project data
   projects: Project[];
-
 }
 
 // Create unified writable store
@@ -112,6 +111,9 @@ class ProjectStoreActions {
         projects,
         loading: false,
       }));
+
+      // Initialize category from current URL after projects are loaded
+      this.initializeFromCurrentUrl();
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Unknown error occurred";
@@ -161,27 +163,25 @@ class ProjectStoreActions {
     }));
 
     // Update URL if requested (default behavior)
-    if (updateUrl && typeof `window` !== "undefined") {
+    if (updateUrl && typeof window !== "undefined") {
       const slug = categoryToSlug(category);
-      const newUrl = `/${slug}`;
-      window.history.pushState({ category }, "", newUrl);
+      const url = new URL(window.location.href);
+      url.searchParams.set('category', slug);
+      window.history.pushState({ category }, "", url.toString());
     }
   }
 
-  // Initialize category from URL slug
-  initializeCategoryFromUrl(slug: string, availableCategories: string[]) {
-    if (!slug || slug === "/") return;
-
-    // Remove leading slash
-    const cleanSlug = slug.startsWith("/") ? slug.slice(1) : slug;
+  // Initialize category from URL parameter
+  initializeCategoryFromParam(categorySlug: string, availableCategories: string[]) {
+    if (!categorySlug) return;
 
     // Try to match slug to available categories
-    const potentialCategory = slugToCategory(cleanSlug);
+    const potentialCategory = slugToCategory(categorySlug);
 
     // Find exact match or closest match
     const matchedCategory = availableCategories.find(
       (cat) =>
-        categoryToSlug(cat) === cleanSlug ||
+        categoryToSlug(cat) === categorySlug ||
         cat.toLowerCase() === potentialCategory.toLowerCase()
     );
 
@@ -189,6 +189,34 @@ class ProjectStoreActions {
       // Select category but don't update URL (we're already at the right URL)
       this.selectCategory(matchedCategory, false);
     }
+  }
+
+  // Add this new method to handle initial page load
+  initializeFromCurrentUrl() {
+    if (typeof window === "undefined") return;
+
+    const url = new URL(window.location.href);
+    const categoryParam = url.searchParams.get('category');
+
+    if (!categoryParam) return;
+
+    // Get current available categories
+    const currentState = get(appState);
+    const categories = new Set<string>();
+
+    currentState.projects.forEach((project: Project) => {
+      if (project.category && typeof project.category === "string") {
+        const projectCategories = project.category
+          .split(",")
+          .map((cat: string) => cat.trim());
+        projectCategories.forEach((cat: string) => {
+          if (cat) categories.add(cat);
+        });
+      }
+    });
+
+    const availableCategories = Array.from(categories);
+    this.initializeCategoryFromParam(categoryParam, availableCategories);
   }
 
   // Gallery management
@@ -209,9 +237,11 @@ class ProjectStoreActions {
       showProjectsList: true,
     }));
 
-    // Update URL back to home when closing gallery
+    // Remove category parameter from URL when closing gallery
     if (typeof window !== "undefined") {
-      window.history.pushState({}, "", "/");
+      const url = new URL(window.location.href);
+      url.searchParams.delete('category');
+      window.history.pushState({}, "", url.toString());
     }
   }
 
@@ -256,10 +286,12 @@ export const loadProjects = (sheetUrl: string) =>
   projectActions.fetchProjects(sheetUrl);
 export const selectCategory = (category: string, updateUrl?: boolean) =>
   projectActions.selectCategory(category, updateUrl);
-export const initializeCategoryFromUrl = (
+export const initializeCategoryFromParam = (
   slug: string,
   availableCategories: string[]
-) => projectActions.initializeCategoryFromUrl(slug, availableCategories);
+) => projectActions.initializeCategoryFromParam(slug, availableCategories);
+export const initializeFromCurrentUrl = () =>
+  projectActions.initializeFromCurrentUrl();
 export const showGallery = () => projectActions.showProjectGallery();
 export const closeGallery = () => projectActions.closeGallery();
 export const setGalleryVisible = (visible: boolean) =>
