@@ -117,7 +117,7 @@
       content:
         "Awesome Foundation Grant to fund innovative projects that engage the local community",
     },
-    { year: "2017, 2018", content: "UNC Studio Art Undergraduate Art Awards" },
+    { year: "2017, 2018", content: "UNC Undergraduate Art Award Winner" },
     {
       year: "2017",
       content:
@@ -129,17 +129,19 @@
     {
       year: "2025",
       content:
-        "<a href='https://hyperallergic.com/1010854/the-ucla-mfa-show-proves-we-have-got-to-learn-from-students/'>Exhibition Review of MFA Thesis Show in HyperAllergic Magazine",
+        "<a href='https://hyperallergic.com/1010854/the-ucla-mfa-show-proves-we-have-got-to-learn-from-students/' target='_blank' rel='noopener'>Exhibition Review</a> of MFA Thesis Show in HyperAllergic Magazine",
     },
     {
       year: "2022",
       content:
-        "<a href='https://www.nuggetnews.com/story/2022/07/19/news/artist-soars-with-traditional-weaving/33360.html'>Article on Kilim Kite Event in the Sisters, Oregon Nugget Newspaper<a/><br /> <a href='https://indyweek.com/culture/art/the-nasher-reckoning-and-resilience-review/'>Exhibition Review of Reckoning and Resilience in Indy Week Newspaper</a><br /><a href='https://thelocalreporter.press/artist-run-art-space-showcases-experimental-art/'>Exhibition Review of Limestone Almanac in The Local Reporter Newspaper</a>",
+        "<a href='https://www.nuggetnews.com/story/2022/07/19/news/artist-soars-with-traditional-weaving/33360.html' target='_blank' rel='noopener'>Article</a> on Kilim Kite Event in the Sisters, Oregon Nugget Newspaper<br />" +
+        "<a href='https://indyweek.com/culture/art/the-nasher-reckoning-and-resilience-review/' target='_blank' rel='noopener'>Exhibition Review</a> of Reckoning and Resilience in Indy Week Newspaper<br />" +
+        "<a href='https://thelocalreporter.press/artist-run-art-space-showcases-experimental-art/' target='_blank' rel='noopener'>Exhibition Review</a> of Limestone Almanac in The Local Reporter Newspaper",
     },
     {
       year: "2019",
       content:
-        "<a href='https://endeavors.unc.edu/artifacts-of-alteration/'>Photo Essay on Natura Naturans in UNC's Research Magazine, Endeavors<br />UNC Sculpture Garden Catalog</a>",
+        "<a href='https://endeavors.unc.edu/artifacts-of-alteration/' target='_blank' rel='noopener'>Photo Essay</a> on Natura Naturans in UNC's Research Magazine, Endeavors<br />UNC Sculpture Garden Catalog",
     },
   ];
 
@@ -156,7 +158,7 @@
     {
       year: "2023-2024",
       content:
-        "Visiting Artist Lecture Series Co-Coordinator at UCLA, Los Angeles, California",
+        "Visiting Artist Lecture Series Co-Coordinator at UCLA, Los Angeles, CA",
     },
     {
       year: "2023-2024",
@@ -164,7 +166,7 @@
     },
     {
       year: "2019-2022",
-      content: "Teaching Artist at various art centers, North Carolina",
+      content: "Teaching Artist at various art centers, NC",
     },
     {
       year: "2020 - 2022",
@@ -176,7 +178,7 @@
     },
     {
       year: "2017 - 2019",
-      content: "Student Assistant at Sloane Art Library, UNC-CH",
+      content: "Student Assistant at Sloane Art Library, UNC-CH, NC",
     },
     {
       year: "2018",
@@ -188,22 +190,19 @@
     {
       year: "2025",
       content:
-        "<strong>Wheel Throwing Demonstrations for Boğaziçi University ceramics students, Istanbul</strong><br />Held a three day workshop demonstrating throwing techniques and provided one-on-one sessions for students to practice",
+        "Wheel Throwing Demonstrations for Boğaziçi University ceramics students, Istanbul",
     },
     {
       year: "2023",
-      content:
-        "<strong>Earthquake Relief Fundraiser, Los Angeles, CA</strong><br />Created and sold ceramic tea cups and tea to provide direct aid to people impacted by the earthquakes in Turkey and Syria",
+      content: "Earthquake Relief Fundraiser, Los Angeles, CA",
     },
     {
       year: "2021 - 2022",
-      content:
-        "<strong>Imaging Specimens for UNC Herbarium, Chapel Hill, NC</strong><br />Imaged and uploaded specimens in the lichen collection to a digital archive, shelved specimens in the vascular plant collection",
+      content: "Imaging Specimens for UNC Herbarium, Chapel Hill, NC",
     },
     {
       year: "2019",
-      content:
-        "<strong>Advisor to Southeast Raleigh High School Art Club, Raleigh, NC</strong><br />Advised students in the creation of artwork and exhibition planning for a group show",
+      content: "Advisor to Southeast Raleigh High School Art Club, Raleigh, NC",
     },
   ];
 
@@ -217,7 +216,7 @@
     renderCvSection("EDUCATION", education),
     renderCvSection("RESIDENCIES", residencies),
     renderCvSection("SOLO EXHIBITIONS", soloExhibitions),
-    renderCvSection("GROUP/COLLABORATIVE EXHIBITIONS", groupExhibitions),
+    renderCvSection("GROUP EXHIBITIONS", groupExhibitions),
     renderCvSection("HONORS", honors),
     renderCvSection("PRESS", press),
     renderCvSection("WORK EXPERIENCE", workExperience),
