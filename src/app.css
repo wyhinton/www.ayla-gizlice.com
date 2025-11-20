@@ -16,6 +16,14 @@ body {
   scrollbar-width: none !important;
 }
 
+@font-face {
+  font-family: 'Pragati Narrow';
+  src: url('/fonts/PragatiNarrow-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; 
+} 
+
 .w-max-content{
   width: max-content !important;
 }

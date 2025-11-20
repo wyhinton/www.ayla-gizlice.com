@@ -48,17 +48,6 @@
     rel="stylesheet"
   />
 
-  <!-- Google Fonts -->
-  <link
-    rel="preload"
-    href="https://fonts.googleapis.com/css?family=Pragati+Narrow"
-    as="style"
-  />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Pragati+Narrow&text=ABCDEFGHIJKLMNOPQRSTUVWXYZylaizce"
-  />
-
   <!-- Favicon -->
   <link
     rel="apple-touch-icon"
