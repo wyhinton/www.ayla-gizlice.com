@@ -35,7 +35,7 @@
     content="Artist, Sculpture, Raleigh, Los Angeles, Contemporary Art, Ceramics, UCLA, UNC, Conceptual Art, Turkish, Ceramics"
   />
   <meta name="author" content="Ayla Gizlice" />
-  <meta property="og:image" content="/data/OGImage.jpg" />
+  <meta property="og:image" content="/data/OGImage.webp" />
   <meta property="og:title" content="Ayla Gizlice" />
   <meta
     property="og:description"
