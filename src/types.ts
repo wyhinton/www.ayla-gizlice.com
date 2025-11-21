@@ -23,6 +23,15 @@ export interface Project {
   Picture_Link_8_Small: string;
   Picture_Link_8_Large: string;
   Video_Link: string;
+  Image_Sizes: ImageSize[];
+}
+
+interface ImageSize {
+  image_url: string;
+  small_width: number;
+  large_width: number;
+  small_height: number;
+  large_height: number;
 }
 
 interface CSVRow {}

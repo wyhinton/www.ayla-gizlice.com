@@ -104,7 +104,12 @@ class ProjectStoreActions {
     }));
 
     try {
-      const projects = await this.fetchSheet(sheetUrl);
+      const projects = (await this.fetchSheet(sheetUrl)).map((p) => ({
+        ...p,
+        //@ts-ignore
+        Image_Sizes: JSON.parse(p.Image_Sizes),
+      }));
+
       console.log(projects);
       appState.update((state: AppState) => ({
         ...state,
@@ -166,13 +171,16 @@ class ProjectStoreActions {
     if (updateUrl && typeof window !== "undefined") {
       const slug = categoryToSlug(category);
       const url = new URL(window.location.href);
-      url.searchParams.set('category', slug);
+      url.searchParams.set("category", slug);
       window.history.pushState({ category }, "", url.toString());
     }
   }
 
   // Initialize category from URL parameter
-  initializeCategoryFromParam(categorySlug: string, availableCategories: string[]) {
+  initializeCategoryFromParam(
+    categorySlug: string,
+    availableCategories: string[]
+  ) {
     if (!categorySlug) return;
 
     // Try to match slug to available categories
@@ -196,7 +204,7 @@ class ProjectStoreActions {
     if (typeof window === "undefined") return;
 
     const url = new URL(window.location.href);
-    const categoryParam = url.searchParams.get('category');
+    const categoryParam = url.searchParams.get("category");
 
     if (!categoryParam) return;
 
@@ -240,7 +248,7 @@ class ProjectStoreActions {
     // Remove category parameter from URL when closing gallery
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
-      url.searchParams.delete('category');
+      url.searchParams.delete("category");
       window.history.pushState({}, "", url.toString());
     }
   }

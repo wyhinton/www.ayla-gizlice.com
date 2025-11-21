@@ -8,13 +8,13 @@
     mobileMenuOpen = !mobileMenuOpen;
   }
 
-  onMount(() => {
-    // Add Google Fonts
-    const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css?family=Pragati+Narrow";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-  });
+  // onMount(() => {
+  //   // Add Google Fonts
+  //   const link = document.createElement("link");
+  //   link.href = "https://fonts.googleapis.com/css?family=Pragati+Narrow";
+  //   link.rel = "stylesheet";
+  //   document.head.appendChild(link);
+  // });
 </script>
 
 <div id="navContainer" on:click={(e) => console.log(e)}>
@@ -62,7 +62,6 @@
             About
           </a>
         </li>
-
       </ul>
     </nav>
   </div>

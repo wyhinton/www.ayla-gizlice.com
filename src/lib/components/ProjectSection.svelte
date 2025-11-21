@@ -40,7 +40,7 @@
   $: projectImages = getProjectImages(project);
 </script>
 
-<div class="projectSectionWrapper">
+<div in:fade={{ delay: 4000, duration: 5000 }} class="projectSectionWrapper">
   <!-- Close button - only show when a category is selected -->
   {#if $appState.selectedCategory}
     <button
@@ -81,14 +81,13 @@
     id="section_{index}"
     bind:this={sectionElement}
     class:visible={isInSelectedProject}
-    in:fade={{ duration: 600, delay: 1000 }}
   >
     <div class="d-flex g-2" id="sectionElementContainer_{index}">
       <ProjectDescription {project} {index} />
       <div class="d-flex g-2">
         {#if hasProjectImages(project) || hasVideo(project)}
           {#each projectImages as image, imageIndex}
-            <div in:fade={{ duration: 600, delay: imageIndex * 150 + 400 }}>
+            <div>
               <ProjectImage
                 {image}
                 {project}
