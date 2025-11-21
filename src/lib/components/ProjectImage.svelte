@@ -13,6 +13,8 @@
   let mounted = false;
   let smallLoaded = false;
 
+  let MAX_IMAGE_HEIGHT = 600;
+
   // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
   function getProxiedImageUrl(originalUrl: string): string {
     if (
@@ -28,8 +30,28 @@
   $: proxyLargeUrl = getProxiedImageUrl(image.large);
   $: imageSize = project.Image_Sizes?.[imageIndex];
 
-  $: ghostStyle = imageSize
-    ? `height: 600px; width: ${imageSize.small_width}px`
+  $: scaledImageSize = (() => {
+    if (!imageSize) return null;
+
+    const { small_width, small_height } = imageSize;
+
+    if (!small_width || !small_height) return imageSize;
+
+    // If already within limits, no scaling
+    if (small_height <= MAX_IMAGE_HEIGHT) return imageSize;
+
+    // scale factor so height becomes MAX_IMAGE_HEIGHT
+    const scale = MAX_IMAGE_HEIGHT / small_height;
+
+    return {
+      ...imageSize,
+      small_width: Math.round(small_width * scale),
+      small_height: MAX_IMAGE_HEIGHT,
+    };
+  })();
+
+  $: ghostStyle = scaledImageSize
+    ? `height: ${MAX_IMAGE_HEIGHT}px; width: ${scaledImageSize.small_width}px`
     : "";
 
   onMount(() => {
@@ -95,31 +117,38 @@
   class="h-auto position-relative d-flex align-items-center justify-content-center me-2"
   class:first={imageIndex === 0}
 >
-  {#if !smallLoaded}
+  <!-- {#if !smallLoaded}
     <div style={ghostStyle} class="ghost"></div>
-  {/if}
+  {/if} -->
+
   <button class="lightbox-trigger" type="button" on:click={openLightbox}>
     <div class="imager-wrapper">
       <!-- {JSON.stringify(imageSize)} -->
       <!-- {smallLoaded} -->
 
-      <img
-        class:visible={smallLoaded}
-        class="heroImage"
-        id="lightBoxImage_{sectionIndex}_{image.index}"
-        src={proxyImageUrl}
-        on:load={() => (smallLoaded = true)}
-        alt={project.project_name || "Ayla Gizlice Art"}
-        referrerPolicy="no-referrer"
-        on:error={() => {
-          console.warn("Image failed to load:", proxyImageUrl);
-        }}
-      />
+      <div style={ghostStyle} class="ghost">
+        <img
+          class:visible={smallLoaded}
+          class="heroImage"
+          style={`max-height: ${MAX_IMAGE_HEIGHT}`}
+          id="lightBoxImage_{sectionIndex}_{image.index}"
+          src={proxyImageUrl}
+          on:load={() => (smallLoaded = true)}
+          alt={project.project_name || "Ayla Gizlice Art"}
+          referrerPolicy="no-referrer"
+          on:error={() => {
+            console.warn("Image failed to load:", proxyImageUrl);
+          }}
+        />
+      </div>
     </div>
   </button>
 </div>
 
 <style>
+  img.heroImage:not(.visible) {
+    visibility: hidden;
+  }
   .heroImage {
     height: 100%;
     width: auto;
