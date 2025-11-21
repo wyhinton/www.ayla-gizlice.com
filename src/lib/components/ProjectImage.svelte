@@ -37,8 +37,7 @@
     console.log("PhotoSwipe component mounted");
   });
 
-  async function openLightbox(event: MouseEvent) {
-    const thumbnailEl = event.currentTarget as HTMLElement;
+  async function openLightbox() {
     console.log(
       "Opening lightbox, PhotoSwipe available:",
       !!PhotoSwipe,
@@ -70,9 +69,9 @@
         dataSource: items,
         index: 0,
         bgOpacity: 0.9,
+        showHideAnimationType: "fade",
         showAnimationDuration: 0,
         hideAnimationDuration: 300,
-        showHideAnimationType: "none",
         // Add padding around the image
         padding: { top: 40, bottom: 40, left: 40, right: 40 },
         // Add some additional options
@@ -81,7 +80,7 @@
         mouseMovePan: true,
         loop: false,
       });
-      createGhostAnimation(lightbox, thumbnailEl);
+
       console.log("Initializing PhotoSwipe lightbox");
       lightbox.init();
     } catch (error) {
@@ -89,37 +88,6 @@
       // Fallback to new tab if there's an error
       window.open(proxyLargeUrl, "_blank");
     }
-  }
-
-  function createGhostAnimation(pswp: any, thumbnailEl: HTMLElement) {
-    const rect = thumbnailEl.getBoundingClientRect();
-
-    const ghost = document.createElement("div");
-    ghost.className = "pswp-ghost";
-    ghost.style.position = "fixed";
-    ghost.style.left = rect.left + "px";
-    ghost.style.top = rect.top + "px";
-    ghost.style.width = rect.width + "px";
-    ghost.style.height = rect.height + "px";
-    ghost.style.backgroundImage = `url(${proxyImageUrl})`;
-    ghost.style.backgroundSize = "cover";
-    ghost.style.backgroundPosition = "center";
-    ghost.style.filter = "blur(12px)";
-    ghost.style.opacity = "0.5";
-    ghost.style.transition = "all 450ms cubic-bezier(.2, .7, .3, 1)";
-    ghost.style.zIndex = "999999";
-    document.body.appendChild(ghost);
-
-    // When PhotoSwipe starts animating:
-    pswp.on("openingAnimationStart", () => {
-      ghost.style.transform = "scale(1.6)";
-      ghost.style.opacity = "0";
-    });
-
-    // After animation finishes, remove ghost
-    pswp.on("openingAnimationEnd", () => {
-      ghost.remove();
-    });
   }
 </script>
 
@@ -152,11 +120,6 @@
 </div>
 
 <style>
-  .pswp-ghost {
-    border-radius: 12px;
-    pointer-events: none;
-    will-change: transform, opacity;
-  }
   .heroImage {
     height: 100%;
     width: auto;
