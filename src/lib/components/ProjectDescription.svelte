@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { appState } from "$lib/stores/projectStore.js";
   import type { Project } from "../../types.js";
 
   export let project: Project;

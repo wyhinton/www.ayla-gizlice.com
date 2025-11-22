@@ -9,7 +9,9 @@
     error,
     loadProjects,
     uniqueCategories,
+    appState,
   } from "$lib/stores/projectStore";
+  import ProjectGallery from "$lib/components/ProjectGallery.svelte";
 
   export let data: any;
 
@@ -47,6 +49,7 @@
         onProjectClick={handleProjectClick}
       />
     {/each}
+    <ProjectGallery></ProjectGallery>
   {/if}
 </div>
 
