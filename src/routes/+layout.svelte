@@ -3,7 +3,7 @@
   import Navigation from "$lib/components/Navigation.svelte";
   import DebugPanel from "$lib/components/DebugPanel.svelte";
   import { onMount } from "svelte";
-  import { loadProjects } from "$lib/stores/projectStore";
+  import { appState, loadProjects } from "$lib/stores/projectStore";
   import { page } from "$app/stores";
 
   const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";

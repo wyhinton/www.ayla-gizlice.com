@@ -4,6 +4,7 @@
   import type { Project } from "../../types.js";
   import PhotoSwipe from "photoswipe";
   import "photoswipe/style.css";
+  import { appState } from "$lib/stores/projectStore.js";
 
   export let image: { small: string; large: string; index: number };
   export let project: Project;
@@ -13,7 +14,21 @@
   let mounted = false;
   let smallLoaded = false;
 
-  let MAX_IMAGE_HEIGHT = 600;
+  let MAX_IMAGE_HEIGHT: number;
+
+  function updateMaxImageHeight() {
+    // Example: limit image height to 50% of the viewport height
+    MAX_IMAGE_HEIGHT = Math.round(window.innerHeight * 0.66);
+  }
+
+  onMount(() => {
+    updateMaxImageHeight();
+    window.addEventListener("resize", updateMaxImageHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateMaxImageHeight);
+    };
+  });
 
   // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
   function getProxiedImageUrl(originalUrl: string): string {
@@ -38,7 +53,7 @@
     if (!small_width || !small_height) return imageSize;
 
     // If already within limits, no scaling
-    if (small_height <= MAX_IMAGE_HEIGHT) return imageSize;
+    // if (small_height <= MAX_IMAGE_HEIGHT) return imageSize;
 
     // scale factor so height becomes MAX_IMAGE_HEIGHT
     const scale = MAX_IMAGE_HEIGHT / small_height;
@@ -116,6 +131,7 @@
 <div
   class="h-auto position-relative d-flex align-items-center justify-content-center me-2"
   class:first={imageIndex === 0}
+  style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
   <!-- {#if !smallLoaded}
     <div style={ghostStyle} class="ghost"></div>
@@ -128,6 +144,7 @@
 
       <div style={ghostStyle} class="ghost">
         <img
+          class:hidden={$appState.selectedCategory === null}
           class:visible={smallLoaded}
           class="heroImage"
           style={`max-height: ${MAX_IMAGE_HEIGHT}`}
@@ -146,6 +163,9 @@
 </div>
 
 <style>
+  .hidden {
+    opacity: 0;
+  }
   img.heroImage:not(.visible) {
     visibility: hidden;
   }
@@ -155,7 +175,7 @@
     max-width: 100%;
     object-fit: contain;
     cursor: pointer;
-    max-height: 600px;
+    max-height: var(--max-image-height);
   }
 
   .lightbox-trigger {
@@ -186,7 +206,7 @@
   }
 
   img {
-    opacity: 0;
+    /* opacity: 0; */
     transition: opacity 0.25s ease;
   }
 

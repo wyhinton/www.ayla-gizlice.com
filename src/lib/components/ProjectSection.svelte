@@ -19,13 +19,6 @@
 
   $: isInSelectedProject = project.category == $appState.selectedCategory;
 
-  onMount(() => {
-    // Animate in the section
-    // setTimeout(() => {
-    //   visible = true;
-    // }, index * 100);
-  });
-
   function getVideoUrl(project: Project): string {
     const videoUrl = project.Video_Link || "";
     return cleanGooglePhotosUrl(videoUrl);
@@ -40,9 +33,9 @@
   $: projectImages = getProjectImages(project);
 </script>
 
-<div in:fade={{ delay: 4000, duration: 5000 }} class="projectSectionWrapper">
+<div class="projectSectionWrapper">
   <!-- Close button - only show when a category is selected -->
-  {#if $appState.selectedCategory}
+  {#if $appState.selectedCategory !== null}
     <button
       class="close-button"
       on:click={(e) => {

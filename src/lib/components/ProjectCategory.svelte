@@ -1,6 +1,6 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import { crossfade, fade, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import {
@@ -13,6 +13,8 @@
   import type { Project } from "../../types.js";
   import ProjectSection from "./ProjectSection.svelte";
   import { Svrollbar } from "svrollbar";
+  import HorizontalScroll from "./HorizontalScroll.svelte";
+  import { get } from "svelte/store";
 
   let categoryElement: HTMLElement;
   let titleElement: HTMLElement;
@@ -32,6 +34,16 @@
   export let projectName: string;
   export let index: number;
   export let onProjectClick: (project: Project, index: number) => void;
+
+  let showScrollContents = false;
+  $: if ($projectsInSelectedCategory.length > 0) {
+    // Delay mounting by one tick to allow fade
+    tick().then(() => {
+      showScrollContents = true;
+    });
+  } else {
+    showScrollContents = false;
+  }
 
   // Array of different animation configurations
   const animations = [
@@ -87,9 +99,16 @@
       const isWithinProjectSection =
         clickedElement.closest(".projectSectionWrapper") !== null;
 
+      const clickedButton =
+        clickedElement.classList.contains("scroll-end-btn") ||
+        clickedElement.classList.contains("btn-svg");
+      console.log(clickedElement.classList);
+      console.log(clickedElement);
       // Only close gallery if not clicking within a project section
-      if (!isWithinProjectSection) {
+      if (!isWithinProjectSection && !clickedButton) {
         closeGallery();
+        //is null as expected
+        console.log(get(appState).selectedCategory);
       }
     }
   }
@@ -106,12 +125,14 @@
   });
 </script>
 
+<!-- in:fade={{ duration: 600 }} out:fade={{ duration: 400 }} -->
 <div
   class="categoryItem"
+  class:background-category={$appState.selectedCategory !== null &&
+    $appState.selectedCategory !== projectName}
   class:selected-category-item={$appState.selectedCategory == projectName}
   bind:this={categoryElement}
   on:keydown={handleKeydown}
-  role="button"
   tabindex="0"
 >
   {#if !$appState.selectedCategory}
@@ -138,39 +159,6 @@
     >
       {projectName || `Project ${index + 1}`}
     </h1>
-
-    {#if $projectsInSelectedCategory.length > 0}
-      <div
-        class="scroll-wrapper"
-        bind:this={scrollContainer}
-        in:fade={{ duration: 600, delay: 300 }}
-        out:fade={{ duration: 400 }}
-        style="pointer-events: {$appState.selectedCategory === projectName
-          ? 'auto'
-          : 'none'};"
-      >
-        <div bind:this={viewport} class="scroll-viewport">
-          <div bind:this={contents} class="scroll-contents">
-            <div class="d-flex section-wrapper">
-              {#each $projectsInSelectedCategory as project, projectIndex}
-                <div
-                  class:last-section={projectIndex ===
-                    $projectsInSelectedCategory.length - 1}
-                >
-                  <ProjectSection {project} {index}></ProjectSection>
-                </div>
-              {/each}
-            </div>
-          </div>
-        </div>
-        <Svrollbar
-          {viewport}
-          {contents}
-          alwaysVisible={true}
-          initiallyVisible
-        />
-      </div>
-    {/if}
   {:else}
     <!-- Non-selected category: blurred state -->
     <h1
@@ -184,33 +172,43 @@
 </div>
 
 <style>
+  .background-category {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .fade-wrapper {
+    position: relative;
+    width: 100%;
+  }
   .last-section {
     padding-right: 50px;
   }
 
   .section-wrapper {
+    position: absolute;
     flex-wrap: nowrap;
+    padding-right: 20px;
     /* white-space: nowrap; */
   }
 
   .scroll-wrapper {
-    position: relative;
     width: 100%;
     position: absolute;
     top: 140px;
     z-index: 100;
-    margin-left: var(--page-margin);
+    /* margin-left: var(--page-margin); */
     margin-right: 140px;
-    --svrollbar-track-width: 20px;
+    /* --svrollbar-track-width: 20px;
     --svrollbar-track-background: #ec4f27;
     --svrollbar-track-opacity: 1;
 
     --svrollbar-thumb-width: 10px;
     --svrollbar-thumb-background: orange;
-    --svrollbar-thumb-opacity: 1;
+    --svrollbar-thumb-opacity: 1; */
   }
 
-  .scroll-viewport {
+  /* .scroll-viewport {
     position: relative;
     width: 100%;
     height: 800px;
@@ -218,14 +216,6 @@
     box-sizing: border-box;
 
     /* hide scrollbar */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scroll-viewport::-webkit-scrollbar {
-    /* hide scrollbar */
-    display: none;
-  }
 
   .scroll-contents {
     /* This will contain the actual scrollable content */
