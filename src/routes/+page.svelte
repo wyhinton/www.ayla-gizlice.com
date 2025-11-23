@@ -12,11 +12,16 @@
     appState,
   } from "$lib/stores/projectStore";
   import ProjectGallery from "$lib/components/ProjectGallery.svelte";
+  import { isMobile } from "$lib/stores/uiStore.js";
 
   export let data: any;
 
   // Projects are now loaded globally in +layout.svelte
-
+  $: containerStyle = !$isMobile
+    ? `margin-top: 90px`
+    : $isMobile && $appState.selectedCategory === null
+      ? "margin-top: 0px"
+      : `margin-top: 80px`;
   function handleProjectClick(project: Project, index: number) {
     console.log("Project clicked:", project.project_name);
     // Add project click logic here if needed
@@ -28,7 +33,7 @@
 </svelte:head>
 
 <!-- Projects List View -->
-<div id="projectsListContainer">
+<div id="projectsListContainer" style={containerStyle}>
   {#if $loading}
     <div class="projectListItem loading">
       <h1 class="projectTitle">Loading projects...</h1>
@@ -54,14 +59,17 @@
 </div>
 
 <style>
+  @media (min-width: 567px) {
+    #projectsListContainer {
+      width: 100%;
+      min-height: 100vh;
+    }
+  }
+
   /* Projects List View Styles */
   #projectsListContainer {
     width: 100%;
     min-height: 100vh;
-    margin-top: 90px;
-    /* overflow-y: auto; */
-    /* padding: 80px 20px 20px; Top padding to account for navbar */
-    /* background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%); */
   }
 
   .projectListItem.loading,
@@ -103,9 +111,9 @@
   }
 
   /* Responsive adjustments */
-  @media (max-width: 768px) {
+  @media (min-width: 768px) {
     #projectsListContainer {
-      padding: 60px 10px 10px;
+      /* padding: 60px 10px 10px; */
     }
 
     .projectListItem.loading,

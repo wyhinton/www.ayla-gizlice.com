@@ -30,6 +30,7 @@
         <i id="navButton">
           <div id="navSymbolContainer">
             <div id="innerNavButtonCircle"></div>
+            <img src="data/menu-24px.svg" />
             <i class="fas fa-times" id="newCloseButton" aria-hidden="true"></i>
           </div>
         </i>
@@ -78,6 +79,16 @@
     z-index: 100;
   }
 
+  .navbar {
+    background: var(--bg);
+    border-bottom: 1px solid black;
+  }
+  @media (min-width: 567px) {
+    .navbar {
+      border-bottom: none;
+    }
+  }
+
   .navbar__hamburger-btn {
     font-size: 2rem;
     color: #7f7f7f;
@@ -106,7 +117,7 @@
 
   nav ul {
     float: right;
-    margin-right: 1rem;
+
     margin-top: 0;
     margin-bottom: 0;
     position: fixed;
@@ -114,6 +125,13 @@
     top: 0;
     list-style: none;
     padding: 0;
+  }
+
+  @media (min-width: 567px) {
+    nav ul {
+      margin-right: 1rem;
+      background-color: transparent;
+    }
   }
 
   nav ul li {

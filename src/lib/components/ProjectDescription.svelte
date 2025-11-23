@@ -36,14 +36,19 @@
 
 <style>
   .descriptionPaddingContainer {
-    padding-right: 20px;
     min-width: 300px;
   }
 
   .descriptionDiv {
-    max-width: 300px;
     margin: 0 auto;
     text-align: left;
+  }
+
+  @media (min-width: 568px) {
+    .descriptionDiv {
+      max-width: 300px;
+      margin: 0 auto;
+    }
   }
 
   .sectionElementContainer {
@@ -83,7 +88,6 @@
 
   @media (max-width: 768px) {
     .descriptionPaddingContainer {
-      padding: 15px;
     }
   }
 </style>

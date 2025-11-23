@@ -7,10 +7,16 @@
   import { fade, fly } from "svelte/transition";
   import HorizontalScroll from "./HorizontalScroll.svelte";
   import ProjectSection from "./ProjectSection.svelte";
+  import { isMobile } from "$lib/stores/uiStore";
+
   // $indexOfSelected
 </script>
 
-<div class:hidden={$appState.selectedCategory === null} class="scroll-wrapper">
+<div class:hidden={$appState.selectedCategory === null} class="gallery-wrapper">
+  {#if $isMobile}
+    <h1>{$appState.selectedCategory}</h1>
+    <!-- content here -->
+  {/if}
   <HorizontalScroll
     height={"auto"}
     scrollbarHeight={"20px"}
@@ -30,19 +36,29 @@
   .hidden {
     pointer-events: none;
   }
-  .scroll-wrapper {
-    width: 100%;
+  .gallery-wrapper {
     position: absolute;
-    top: 140px;
-    z-index: 100;
-    /* margin-left: var(--page-margin); */
-    margin-right: 140px;
-    /* --svrollbar-track-width: 20px;
-    --svrollbar-track-background: #ec4f27;
-    --svrollbar-track-opacity: 1;
+    top: 0px;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    background: var(--bg);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 125px;
+  }
 
-    --svrollbar-thumb-width: 10px;
-    --svrollbar-thumb-background: orange;
-    --svrollbar-thumb-opacity: 1; */
+  @media (min-width: 567px) {
+    .gallery-wrapper {
+      width: 100%;
+      overflow-y: hidden;
+      top: 140px;
+      top: 100px;
+      z-index: 100;
+      padding-left: 0px;
+      padding-right: 0px;
+      margin-right: 140px;
+      background: transparent;
+      padding-bottom: 0px;
+    }
   }
 </style>

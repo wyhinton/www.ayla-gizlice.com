@@ -15,18 +15,23 @@
   import { Svrollbar } from "svrollbar";
   import HorizontalScroll from "./HorizontalScroll.svelte";
   import { get } from "svelte/store";
+  import { isMobile } from "$lib/stores/uiStore.js";
 
   let categoryElement: HTMLElement;
   let titleElement: HTMLElement;
   let scrollContainer: HTMLElement;
   let viewport: HTMLElement;
   let contents: HTMLElement;
-
   // Create crossfade for shared element transitions
-  const [send, receive] = crossfade({
-    duration: 600,
-    easing: quintOut,
-  });
+  let send: any;
+  let receive: any;
+
+  $: if (!$isMobile) {
+    [send, receive] = crossfade({ duration: 600, easing: quintOut });
+  } else {
+    send = () => {};
+    receive = () => {};
+  }
 
   // Unique key for crossfade animation
   $: titleKey = `title-${projectName}`;
@@ -149,16 +154,18 @@
     </h1>
   {:else if $appState.selectedCategory == projectName}
     <!-- Selected state: left position with gallery -->
-    <h1
-      in:receive={{ key: titleKey }}
-      out:send={{ key: titleKey }}
-      on:click={handleCategoryTitleClick}
-      class="categoryTitle selected-position"
-      bind:this={titleElement}
-      on:mouseenter={handleMouseEnter}
-    >
-      {projectName || `Project ${index + 1}`}
-    </h1>
+    {#if !$isMobile}
+      <h1
+        in:receive={{ key: titleKey }}
+        out:send={{ key: titleKey }}
+        on:click={handleCategoryTitleClick}
+        class="categoryTitle selected-position"
+        bind:this={titleElement}
+        on:mouseenter={handleMouseEnter}
+      >
+        {projectName || `Project ${index + 1}`}
+      </h1>
+    {/if}
   {:else}
     <!-- Non-selected category: blurred state -->
     <h1
@@ -237,20 +244,28 @@
   }
 
   .categoryTitle {
-    font-size: clamp(3rem, 8vw, 8rem);
-    /* font-weight: bold; */
-    font-weight: 400;
-    font-family: "auto";
-    color: rgb(208, 208, 208);
-    -webkit-text-stroke: 1px black;
-    margin: 0;
-    line-height: 0.9;
-    letter-spacing: -0.02em;
-    /* Default transition - will be overridden by JavaScript */
-    transition:
-      color 0.3s ease-in-out,
-      -webkit-text-fill-color 0.3s ease-in-out;
-    cursor: pointer;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 40px;
+  }
+
+  @media (min-width: 567px) {
+    .categoryTitle {
+      font-size: clamp(3rem, 8vw, 6rem);
+      /* font-weight: bold; */
+      font-weight: 400;
+      font-family: "auto";
+      color: rgb(208, 208, 208);
+      -webkit-text-stroke: 1px black;
+      margin: 0;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      /* Default transition - will be overridden by JavaScript */
+      transition:
+        color 0.3s ease-in-out,
+        -webkit-text-fill-color 0.3s ease-in-out;
+      cursor: pointer;
+    }
   }
 
   .categoryTitle:hover {

@@ -15,7 +15,7 @@
   let smallLoaded = false;
 
   let MAX_IMAGE_HEIGHT: number;
-
+  let MAX_IMAGE_WIDTH: number;
   function updateMaxImageHeight() {
     // Example: limit image height to 50% of the viewport height
     MAX_IMAGE_HEIGHT = Math.round(window.innerHeight * 0.66);
@@ -29,6 +29,10 @@
       window.removeEventListener("resize", updateMaxImageHeight);
     };
   });
+
+  function isMobile() {
+    return window.innerWidth <= 567;
+  }
 
   // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
   function getProxiedImageUrl(originalUrl: string): string {
@@ -49,29 +53,45 @@
     if (!imageSize) return null;
 
     const { small_width, small_height } = imageSize;
-
     if (!small_width || !small_height) return imageSize;
 
-    // If already within limits, no scaling
-    // if (small_height <= MAX_IMAGE_HEIGHT) return imageSize;
-
-    // scale factor so height becomes MAX_IMAGE_HEIGHT
-    const scale = MAX_IMAGE_HEIGHT / small_height;
+    // individual scale factors
+    const scaleH = MAX_IMAGE_HEIGHT / small_height;
+    const scaleW = MAX_IMAGE_WIDTH / small_width;
+    let scale = MAX_IMAGE_HEIGHT / small_height;
+    // choose the smaller scale
+    if (isMobile()) {
+      scale = Math.min(scaleH, scaleW, 1);
+    }
+    // never upscale
 
     return {
       ...imageSize,
       small_width: Math.round(small_width * scale),
-      small_height: MAX_IMAGE_HEIGHT,
+      small_height: Math.round(small_height * scale),
     };
   })();
 
   $: ghostStyle = scaledImageSize
-    ? `height: ${MAX_IMAGE_HEIGHT}px; width: ${scaledImageSize.small_width}px`
+    ? `height: ${scaledImageSize.small_height}px; width: ${scaledImageSize.small_width}px`
     : "";
+
+  function updateMaxImageSizes() {
+    MAX_IMAGE_HEIGHT = Math.round(window.innerHeight * 0.66);
+
+    // 90% of viewport width on mobile, unlimited on desktop
+    if (window.innerWidth < 768) {
+      MAX_IMAGE_WIDTH = Math.round(window.innerWidth * 0.9);
+    } else {
+      MAX_IMAGE_WIDTH = Infinity;
+    }
+  }
 
   onMount(() => {
     mounted = true;
-    console.log("PhotoSwipe component mounted");
+    updateMaxImageSizes();
+    window.addEventListener("resize", updateMaxImageSizes);
+    return () => window.removeEventListener("resize", updateMaxImageSizes);
   });
 
   async function openLightbox() {
@@ -105,6 +125,7 @@
       const lightbox = new PhotoSwipe({
         dataSource: items,
         index: 0,
+        maxZoomLevel: 3,
         bgOpacity: 0.9,
         showHideAnimationType: "fade",
         showAnimationDuration: 0,
@@ -129,7 +150,7 @@
 </script>
 
 <div
-  class="h-auto position-relative d-flex align-items-center justify-content-center me-2"
+  class="h-auto position-relative d-flex align-items-center justify-content-center"
   class:first={imageIndex === 0}
   style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
@@ -176,6 +197,13 @@
     object-fit: contain;
     cursor: pointer;
     max-height: var(--max-image-height);
+  }
+
+  /* Force images to respect scaled width on mobile */
+  @media (max-width: 768px) {
+    .heroImage {
+      max-width: 90vw;
+    }
   }
 
   .lightbox-trigger {
