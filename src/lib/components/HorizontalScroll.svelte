@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fade, scale } from "svelte/transition";
+  import { fade } from "svelte/transition";
   import { onMount } from "svelte";
   import { appState } from "$lib/stores/projectStore";
 
@@ -12,26 +12,50 @@
 
   let scrollContainer: HTMLDivElement;
   let showScrollEndBtn = true;
+
+  function isMobile() {
+    return window.innerWidth <= 567;
+  }
+
   function scrollToEnd() {
-    scrollContainer.scrollTo({
-      left: scrollContainer.scrollWidth,
-      behavior: "smooth",
-    });
+    if (!scrollContainer) return;
+
+    if (isMobile()) {
+      scrollContainer.scrollTo({
+        top: scrollContainer.scrollHeight,
+        behavior: "smooth",
+      });
+    } else {
+      scrollContainer.scrollTo({
+        left: scrollContainer.scrollWidth,
+        behavior: "smooth",
+      });
+    }
   }
 
   function checkScroll() {
-    // Allow a small tolerance for floating point errors
-    showScrollEndBtn =
-      scrollContainer.scrollLeft + scrollContainer.clientWidth <
-      scrollContainer.scrollWidth - 1;
+    if (!scrollContainer) return;
 
-    console.log(showScrollEndBtn);
+    if (isMobile()) {
+      showScrollEndBtn =
+        scrollContainer.scrollTop + scrollContainer.clientHeight <
+        scrollContainer.scrollHeight - 1;
+    } else {
+      showScrollEndBtn =
+        scrollContainer.scrollLeft + scrollContainer.clientWidth <
+        scrollContainer.scrollWidth - 1;
+    }
   }
 
   onMount(() => {
-    checkScroll(); // initial check
+    checkScroll();
     scrollContainer.addEventListener("scroll", checkScroll);
-    return () => scrollContainer.removeEventListener("scroll", checkScroll);
+    window.addEventListener("resize", checkScroll);
+
+    return () => {
+      scrollContainer.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
   });
 </script>
 
@@ -47,7 +71,7 @@
       --scroll-padding: {padding};
     "
   >
-    <div class="content-wrapper">
+    <div class="content-wrapper flex-column flex-md-row gap-4">
       <slot />
     </div>
   </div>
@@ -65,15 +89,15 @@
           width="32"
           height="32"
           viewBox="0 0 24 24"
-          ><!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><path
+        >
+          <path
             fill="currentColor"
             d="M10 6L8.59 7.41L13.17 12l-4.58 4.59L10 18l6-6z"
-          /></svg
-        >
+          />
+        </svg>
       </button>
     </div>
   {/if}
-  <!-- Scroll to end button -->
 </div>
 
 <style>
@@ -83,23 +107,50 @@
 
   .content-wrapper {
     display: flex;
-    margin-right: 60px; /* space for button */
   }
 
+  @media (min-width: 567px) {
+    .content-wrapper {
+      margin-right: 60px;
+    }
+
+    .scroll-wrapper {
+      /* padding-right: 20px; */
+    }
+  }
+
+  /* Default: horizontal scrolling (desktop) */
   .scroll-container {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
     margin-left: 56px;
-    margin-right: 0;
     height: var(--scroll-height);
     padding: var(--scroll-padding);
-    scrollbar-width: thin; /* Firefox */
+    scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
   }
 
+  /* Mobile: vertical scrolling */
+  @media (max-width: 567px) {
+    .scroll-container {
+      overflow-x: hidden;
+      overflow-y: auto;
+      margin-left: 0;
+      height: auto;
+      max-height: var(--scroll-height);
+    }
+
+    .content-wrapper {
+      flex-direction: column !important;
+      margin-right: 0 !important;
+    }
+  }
+
+  /* Scrollbar (Webkit) */
   .scroll-container::-webkit-scrollbar {
     height: var(--scrollbar-height);
+    width: var(--scrollbar-height);
   }
 
   .scroll-container::-webkit-scrollbar-track {
@@ -116,7 +167,7 @@
     background-color: var(--scrollbar-hover-color);
   }
 
-  /* Scroll to end button styling */
+  /* Scroll-to-end button */
   .scroll-end-btn {
     outline: 2px solid white;
     position: absolute;
@@ -127,32 +178,27 @@
     border: none;
     color: white;
     cursor: pointer;
-    width: 40px; /* fixed width */
-    height: 40px; /* fixed height */
-    display: flex; /* make flex to center content */
+    width: 40px;
+    height: 40px;
+    display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     z-index: 10;
     transition: background 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* subtle shadow */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   }
 
   .scroll-end-btn:hover {
     background: rgba(0, 0, 0, 0.8);
   }
 
-  .scroll-end-btn svg {
-    width: 32px; /* adjust SVG size */
-    height: 32px;
-  }
-
+  /* fade gradient */
   .scroll-end-gradient {
     position: absolute;
     right: 0;
-    top: 0%;
+    top: 0;
     height: 100%;
-    background: #3e3c4a;
     background: linear-gradient(
       90deg,
       rgba(62, 60, 74, 0) 50%,
@@ -160,5 +206,13 @@
     );
     width: 50px;
     z-index: 9;
+  }
+
+  /* Hide scroll-to-end button entirely on mobile */
+  @media (max-width: 567px) {
+    .scroll-end-btn,
+    .scroll-end-gradient {
+      display: none !important;
+    }
   }
 </style>

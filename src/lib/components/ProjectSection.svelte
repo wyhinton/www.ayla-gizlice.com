@@ -9,7 +9,6 @@
   import ProjectDescription from "./ProjectDescription.svelte";
   import ProjectImage from "./ProjectImage.svelte";
   import { closeGallery, appState } from "$lib/stores/projectStore.js";
-  import { fade } from "svelte/transition";
 
   export let project: Project;
   export let index: number;
@@ -70,14 +69,17 @@
   {/if}
 
   <section
-    class="section me-4"
+    class="section"
     id="section_{index}"
     bind:this={sectionElement}
     class:visible={isInSelectedProject}
   >
-    <div class="d-flex g-2" id="sectionElementContainer_{index}">
+    <div
+      class="d-flex gap-4 flex-column flex-md-row"
+      id="sectionElementContainer_{index}"
+    >
       <ProjectDescription {project} {index} />
-      <div class="d-flex g-2">
+      <div class="d-flex flex-column flex-md-row gap-2">
         {#if hasProjectImages(project) || hasVideo(project)}
           {#each projectImages as image, imageIndex}
             <div>
@@ -128,7 +130,7 @@
     right: 30px;
     width: 50px;
     height: 50px;
-    background: rgba(255, 255, 255, 0.9);
+    background: transparent;
     border: 2px solid black;
     border-radius: 50%;
     cursor: pointer;
@@ -137,7 +139,6 @@
     justify-content: center;
     z-index: 1000;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
   }
 
   .close-button:hover {
