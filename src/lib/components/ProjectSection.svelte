@@ -126,11 +126,10 @@
 
   .close-button {
     position: fixed;
-    top: 120px;
+    top: 80px;
     right: 30px;
-    width: 50px;
-    height: 50px;
-    background: transparent;
+    width: 25px;
+    height: 25px;
     border: 2px solid black;
     border-radius: 50%;
     cursor: pointer;
@@ -139,6 +138,8 @@
     justify-content: center;
     z-index: 1000;
     transition: all 0.3s ease;
+    background: black;
+    color: white;
   }
 
   .close-button:hover {
@@ -177,7 +178,7 @@
   }
 
   /* Mobile responsive styles - now handled by Bootstrap utilities */
-  @media (max-width: 768px) {
+  @media (min-width: 768px) {
     .videoDiv {
       width: 100%;
       padding: 10px;
@@ -188,6 +189,9 @@
       right: 15px;
       width: 45px;
       height: 45px;
+      top: 120px;
+      background: transparent;
+      color: black;
     }
 
     .close-button svg {

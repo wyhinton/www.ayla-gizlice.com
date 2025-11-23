@@ -7,14 +7,6 @@
   function toggleMobileMenu() {
     mobileMenuOpen = !mobileMenuOpen;
   }
-
-  // onMount(() => {
-  //   // Add Google Fonts
-  //   const link = document.createElement("link");
-  //   link.href = "https://fonts.googleapis.com/css?family=Pragati+Narrow";
-  //   link.rel = "stylesheet";
-  //   document.head.appendChild(link);
-  // });
 </script>
 
 <div id="navContainer" on:click={(e) => console.log(e)}>
@@ -149,7 +141,7 @@
     text-decoration: none;
     -webkit-text-fill-color: rgb(208, 208, 208);
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-color: white;
     font-family: "Pragati Narrow";
     z-index: 101;
   }
@@ -160,13 +152,39 @@
   }
 
   nav ul li a.active {
-    -webkit-text-fill-color: black;
+    -webkit-text-fill-color: white;
+  }
+
+  nav ul li a.projects-link.active {
+    -webkit-text-fill-color: white;
+  }
+
+  @media (min-width: 567px) {
+    nav ul li a.active {
+      color: black;
+      -webkit-text-fill-color: black;
+    }
+
+    nav ul li a {
+      color: black;
+      font-size: 1.8rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 0.2rem;
+      letter-spacing: 0px;
+      text-decoration: none;
+      -webkit-text-fill-color: rgb(208, 208, 208);
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: black;
+      font-family: "Pragati Narrow";
+      z-index: 101;
+    }
+
+    nav ul li a.projects-link.active {
+      -webkit-text-fill-color: black;
+    }
   }
 
   /* Projects link should be black when active (on home/project pages) */
-  nav ul li a.projects-link.active {
-    -webkit-text-fill-color: black;
-  }
 
   .navBarSection {
     position: fixed;

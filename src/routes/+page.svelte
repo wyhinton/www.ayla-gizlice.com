@@ -20,7 +20,7 @@
   $: containerStyle = !$isMobile
     ? `margin-top: 90px`
     : $isMobile && $appState.selectedCategory === null
-      ? "margin-top: 0px"
+      ? "margin-top: 90px"
       : `margin-top: 80px`;
   function handleProjectClick(project: Project, index: number) {
     console.log("Project clicked:", project.project_name);

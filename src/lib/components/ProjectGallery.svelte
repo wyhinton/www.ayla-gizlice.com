@@ -13,10 +13,6 @@
 </script>
 
 <div class:hidden={$appState.selectedCategory === null} class="gallery-wrapper">
-  {#if $isMobile}
-    <h1>{$appState.selectedCategory}</h1>
-    <!-- content here -->
-  {/if}
   <HorizontalScroll
     height={"auto"}
     scrollbarHeight={"20px"}
@@ -45,6 +41,8 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 125px;
+    scrollbar-width: thin;
+    scrollbar-color: #2e2e2e99 transparent;
   }
 
   @media (min-width: 567px) {
