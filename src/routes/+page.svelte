@@ -14,9 +14,11 @@
   import ProjectGallery from "$lib/components/ProjectGallery.svelte";
   import { isMobile } from "$lib/stores/uiStore.js";
   import { fade } from "svelte/transition";
+  import VideoOverlay from "$lib/components/VideoOverlay.svelte";
 
   export let data: any;
 
+  let showVideo = true;
   // Projects are now loaded globally in +layout.svelte
   $: containerStyle = !$isMobile
     ? `margin-top: 90px`
@@ -27,14 +29,32 @@
     console.log("Project clicked:", project.project_name);
     // Add project click logic here if needed
   }
+
+  let show = false;
+
+  onMount(() => {
+    show = true;
+  });
 </script>
 
 <svelte:head>
   <title>Ayla Gizlice - Projects</title>
 </svelte:head>
+<!-- <div class:d-none={!showVideo} out:fade={{ duration: 1000 }}> -->
+
+<!-- </div> -->
 
 <!-- Projects List View -->
 <div id="projectsListContainer" style={containerStyle}>
+  {#if show && showVideo}
+    <VideoOverlay
+      on:click={() => {
+        showVideo = !showVideo;
+      }}
+      src="data/introVideo.mp4"
+    ></VideoOverlay>
+  {/if}
+
   {#if $loading}
     <div class="projectListItem loading">
       <h1 class="projectTitle">Loading projects...</h1>
