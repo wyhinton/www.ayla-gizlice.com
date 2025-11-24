@@ -89,11 +89,21 @@
     display: flex;
   }
 
-  @media (min-width: 567px) {
-    .content-wrapper {
-      margin-right: 60px;
+  @media (min-aspect-ratio: 1/1) {
+    .scroll-container {
     }
+    .content-wrapper {
+      margin-right: 0px;
+    }
+  }
 
+  @media (max-aspect-ratio: 1/1) {
+    .content-wrapper {
+      margin-left: 0;
+    }
+  }
+
+  @media (min-width: 567px) {
     .scroll-wrapper {
       /* padding-right: 20px; */
     }

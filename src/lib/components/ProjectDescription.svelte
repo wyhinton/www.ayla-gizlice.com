@@ -40,11 +40,20 @@
     text-align: left;
   }
 
+  /* landscape */
   @media (min-aspect-ratio: 1/1) {
     .descriptionDiv {
       min-width: 375px;
       max-width: 375px;
       margin: 0 auto;
+    }
+  }
+
+  /* portrait */
+  @media (max-aspect-ratio: 1/1) and (min-width: 768px) {
+    .descriptionDiv {
+      margin-left: var(--page-margin);
+      margin-right: var(--page-margin);
     }
   }
 

@@ -6,6 +6,7 @@
   import "photoswipe/style.css";
   import { appState } from "$lib/stores/projectStore.js";
   import { isMobile } from "$lib/stores/uiStore.js";
+  import CloseButton from "./CloseButton.svelte";
 
   export let image: { small: string; large: string; index: number };
   export let project: Project;
@@ -17,18 +18,29 @@
 
   let MAX_IMAGE_HEIGHT: number;
   let MAX_IMAGE_WIDTH: number;
-  function updateMaxImageHeight() {
-    // Example: limit image height to 50% of the viewport height
-    MAX_IMAGE_HEIGHT = Math.round(window.innerHeight * 0.66);
-    console.log(MAX_IMAGE_HEIGHT);
-  }
+  function updateMaxImageSizes() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
+    isLandscape = w > h;
+
+    if (isLandscape) {
+      // Landscape → height limited to 66% of viewport
+      MAX_IMAGE_HEIGHT = Math.round(h * 0.66);
+      console.log(MAX_IMAGE_HEIGHT);
+      MAX_IMAGE_WIDTH = Infinity; // width shouldn't constrain
+    } else {
+      // Portrait → no height limit, images just fill width
+      MAX_IMAGE_HEIGHT = Infinity;
+      MAX_IMAGE_WIDTH = Math.round(w * 0.9);
+    }
+  }
   onMount(() => {
-    updateMaxImageHeight();
-    window.addEventListener("resize", updateMaxImageHeight);
+    updateMaxImageSizes();
+    window.addEventListener("resize", updateMaxImageSizes);
 
     return () => {
-      window.removeEventListener("resize", updateMaxImageHeight);
+      window.removeEventListener("resize", updateMaxImageSizes);
     };
   });
 
@@ -42,7 +54,7 @@
     }
     return originalUrl;
   }
-
+  $: isLandscape = window.innerWidth > window.innerHeight;
   $: proxyImageUrl = getProxiedImageUrl(image.small);
   $: proxyLargeUrl = getProxiedImageUrl(image.large);
   $: imageSize = project.Image_Sizes?.[imageIndex];
@@ -53,19 +65,21 @@
     const { small_width, small_height } = imageSize;
     if (!small_width || !small_height) return imageSize;
 
-    // individual scale factors
-    const scaleH = MAX_IMAGE_HEIGHT / small_height;
-    const scaleW = MAX_IMAGE_WIDTH / small_width;
-    let scale = MAX_IMAGE_HEIGHT / small_height;
-    console.log(scaleH);
-    console.log(scaleW);
-    // choose the smaller scale
-    if (isMobile) {
-      console.log(`%cHERE LINE :61 %c`, "color: yellow; font-weight: bold", "");
+    // --- LANDSCAPE MODE ---
+    if (isLandscape) {
+      // Force height = MAX_IMAGE_HEIGHT
+      const scale = MAX_IMAGE_HEIGHT / small_height;
 
-      scale = Math.min(scaleH, scaleW, 1);
+      return {
+        ...imageSize,
+        small_height: MAX_IMAGE_HEIGHT,
+        small_width: Math.round(small_width * scale),
+      };
     }
-    // never upscale
+
+    // --- PORTRAIT MODE ---
+    // Width should be 90vw (or MAX_IMAGE_WIDTH)
+    const scale = MAX_IMAGE_WIDTH / small_width;
 
     return {
       ...imageSize,
@@ -75,20 +89,8 @@
   })();
 
   $: ghostStyle = scaledImageSize
-    ? `height: ${scaledImageSize.small_height}px; width: ${scaledImageSize.small_width}px`
+    ? `height: ${MAX_IMAGE_HEIGHT}px; width: ${scaledImageSize.small_width}px`
     : "";
-
-  function updateMaxImageSizes() {
-    MAX_IMAGE_HEIGHT = Math.round(window.innerHeight * 0.66);
-
-    // 90% of viewport width on mobile, unlimited on desktop
-    if (window.innerWidth < 768) {
-      MAX_IMAGE_WIDTH = Math.round(window.innerWidth * 0.9);
-      console.log(MAX_IMAGE_WIDTH);
-    } else {
-      MAX_IMAGE_WIDTH = Infinity;
-    }
-  }
 
   onMount(() => {
     mounted = true;
@@ -153,7 +155,7 @@
 </script>
 
 <div
-  class="h-auto position-relative d-flex align-items-center justify-content-center"
+  class=" position-relative d-flex align-items-center justify-content-center"
   class:first={imageIndex === 0}
   style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
@@ -165,8 +167,10 @@
         <img
           class:hidden={$appState.selectedCategory === null}
           class:visible={smallLoaded}
+          class:landscape={isLandscape}
+          class:portrait={!isLandscape}
           class="heroImage"
-          style={`max-height: ${MAX_IMAGE_HEIGHT}`}
+          style={`height: ${scaledImageSize?.small_height}px; width: ${scaledImageSize?.small_width}px;`}
           id="lightBoxImage_{sectionIndex}_{image.index}"
           src={proxyImageUrl}
           on:load={() => (smallLoaded = true)}
@@ -189,14 +193,21 @@
     visibility: hidden;
   }
   .heroImage {
-    height: 100%;
-    width: auto;
     max-width: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
-    cursor: pointer;
+  }
+
+  /* Landscape → apply height limit */
+  .heroImage.landscape {
     max-height: var(--max-image-height);
   }
 
+  /* Portrait → width is the constraint */
+  .heroImage.portrait {
+    max-width: 90vw;
+  }
   /* Force images to respect scaled width on mobile */
   @media (max-aspect-ratio: 1/1) {
     .heroImage {
