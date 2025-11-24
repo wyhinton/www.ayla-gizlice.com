@@ -129,7 +129,7 @@
   nav ul li {
     display: inline-block;
     line-height: 4rem;
-    /* margin: 0 1rem; */
+    margin: 0 1rem;
   }
 
   nav ul li a {

@@ -81,35 +81,12 @@
 </div>
 
 <style>
+  /* Wrapper */
   .scroll-wrapper {
     position: relative;
   }
 
-  .content-wrapper {
-    display: flex;
-  }
-
-  @media (min-aspect-ratio: 1/1) {
-    .scroll-container {
-    }
-    .content-wrapper {
-      margin-right: 0px;
-    }
-  }
-
-  @media (max-aspect-ratio: 1/1) {
-    .content-wrapper {
-      margin-left: 0;
-    }
-  }
-
-  @media (min-width: 567px) {
-    .scroll-wrapper {
-      /* padding-right: 20px; */
-    }
-  }
-
-  /* Default: horizontal scrolling (desktop) */
+  /* Scroll container: default horizontal (desktop) */
   .scroll-container {
     display: flex;
     overflow-x: auto;
@@ -120,29 +97,50 @@
     scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
   }
 
+  /* Scroll container: vertical scrolling on mobile */
+  @media (max-width: 768px) {
+    .scroll-container {
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: auto;
+      max-height: var(--scroll-height);
+      margin-left: 0;
+    }
+  }
+
+  /* Content wrapper */
+  .content-wrapper {
+    display: flex;
+    gap: 1rem; /* matches gap-4 */
+  }
+
+  /* Mobile: column layout */
+  @media (max-width: 768px) {
+    .content-wrapper {
+      flex-direction: column !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+  }
+
+  /* Aspect ratio adjustments */
   @media (min-aspect-ratio: 1/1) {
+    .content-wrapper {
+      margin-right: 0;
+    }
     .scroll-container {
       margin-left: var(--page-margin);
     }
   }
 
-  /* Mobile: vertical scrolling */
-  @media (max-width: 768px) {
-    .scroll-container {
-      overflow-x: hidden;
-      overflow-y: auto;
-      margin-left: 0;
-      height: auto;
-      max-height: var(--scroll-height);
-    }
-
+  @media (max-aspect-ratio: 1/1) {
     .content-wrapper {
-      flex-direction: column !important;
-      margin-right: 0 !important;
+      margin-left: 0;
     }
   }
 
-  /* Scrollbar (Webkit) */
+  /* Webkit scrollbars */
   .scroll-container::-webkit-scrollbar {
     height: var(--scrollbar-height);
     width: var(--scrollbar-height);

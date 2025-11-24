@@ -46,7 +46,13 @@
     scrollbar-color: #2e2e2e99 transparent;
   }
 
-  @media (min-width: 768px) {
+  /* @media (min-aspect-ratio: 1/1) {
+    .gallery-wrapper {
+      overflow-y: auto;
+    }
+  } */
+
+  @media (min-width: 768px) and (min-aspect-ratio: 1/1) {
     .gallery-wrapper {
       width: 100%;
       overflow-y: hidden;
