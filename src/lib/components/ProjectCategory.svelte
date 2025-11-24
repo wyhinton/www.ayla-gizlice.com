@@ -138,7 +138,6 @@
   class:selected-category-item={$appState.selectedCategory == projectName}
   bind:this={categoryElement}
   on:keydown={handleKeydown}
-  tabindex="0"
 >
   {#if !$appState.selectedCategory}
     <!-- Default state: center position -->
@@ -246,7 +245,7 @@
   .categoryTitle {
     margin-top: 0px;
     margin-bottom: 0px;
-    font-size: 40px;
+    font-size: 35px;
   }
 
   @media (min-width: 567px) {
@@ -306,7 +305,7 @@
   }
 
   /* Responsive adjustments */
-  @media (max-width: 768px) {
+  @media (min-width: 768px) {
     .categoryItem {
       padding: 20px 10px;
     }

@@ -31,6 +31,7 @@
 <style>
   .hidden {
     pointer-events: none;
+    padding: 0px !important;
   }
   .gallery-wrapper {
     position: absolute;
@@ -45,7 +46,7 @@
     scrollbar-color: #2e2e2e99 transparent;
   }
 
-  @media (min-width: 567px) {
+  @media (min-width: 768px) {
     .gallery-wrapper {
       width: 100%;
       overflow-y: hidden;

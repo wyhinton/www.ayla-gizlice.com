@@ -36,7 +36,7 @@
 
 <style>
   .descriptionPaddingContainer {
-    min-width: 300px;
+    /* min-width: 375px; */
   }
 
   .descriptionDiv {
@@ -46,7 +46,8 @@
 
   @media (min-width: 568px) {
     .descriptionDiv {
-      max-width: 300px;
+      min-width: 375px;
+      max-width: 375px;
       margin: 0 auto;
     }
   }

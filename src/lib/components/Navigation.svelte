@@ -160,6 +160,9 @@
   }
 
   @media (min-width: 567px) {
+    nav {
+      margin-top: 10px;
+    }
     nav ul li a.active {
       color: black;
       -webkit-text-fill-color: black;
@@ -204,7 +207,7 @@
     opacity: 1;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 567px) {
     .navbar__hamburger-btn {
       display: block;
     }

@@ -48,11 +48,14 @@
     </div>
   {:else}
     {#each $uniqueCategories as projectName, index}
-      <ProjectCategory
-        {projectName}
-        {index}
-        onProjectClick={handleProjectClick}
-      />
+      {#if !$isMobile || ($isMobile && $appState.selectedCategory === null)}
+        <ProjectCategory
+          {projectName}
+          {index}
+          onProjectClick={handleProjectClick}
+        />
+        <!-- content here -->
+      {/if}
     {/each}
     <ProjectGallery></ProjectGallery>
   {/if}
