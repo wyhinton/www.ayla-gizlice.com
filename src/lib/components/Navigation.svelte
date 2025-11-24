@@ -72,7 +72,7 @@
   }
 
   .navbar {
-    background: var(--bg);
+    background: transparent;
     border-bottom: 1px solid black;
   }
   @media (min-width: 567px) {
