@@ -4,7 +4,31 @@
   --page-margin: 56px;
 }
 
+/* md */
+@media (max-width: 992px) {
+:root {
+    --page-margin: 30px;
+  }
+}
 
+/* sm */
+@media (max-width: 576px) {
+  :root {
+    --page-margin: 20px;
+  }
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .ar-column {
+    flex-direction: column !important;
+  }
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .ar-row {
+    flex-direction: row !important;
+  }
+}
 
 body {
   width: 100%;

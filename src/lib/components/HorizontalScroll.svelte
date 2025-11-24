@@ -2,6 +2,8 @@
   import { fade } from "svelte/transition";
   import { onMount } from "svelte";
   import { appState } from "$lib/stores/projectStore";
+  import { isMobile } from "$lib/stores/uiStore";
+  import ScrollToEndButton from "./ScrollToEndButton.svelte";
 
   export let height: string = "200px";
   export let scrollbarHeight: string = "8px";
@@ -13,14 +15,10 @@
   let scrollContainer: HTMLDivElement;
   let showScrollEndBtn = true;
 
-  function isMobile() {
-    return window.innerWidth <= 567;
-  }
-
-  function scrollToEnd() {
+  $: scrollToEnd = () => {
     if (!scrollContainer) return;
 
-    if (isMobile()) {
+    if (isMobile) {
       scrollContainer.scrollTo({
         top: scrollContainer.scrollHeight,
         behavior: "smooth",
@@ -31,12 +29,12 @@
         behavior: "smooth",
       });
     }
-  }
+  };
 
-  function checkScroll() {
+  $: checkScroll = () => {
     if (!scrollContainer) return;
 
-    if (isMobile()) {
+    if (isMobile) {
       showScrollEndBtn =
         scrollContainer.scrollTop + scrollContainer.clientHeight <
         scrollContainer.scrollHeight - 1;
@@ -45,7 +43,7 @@
         scrollContainer.scrollLeft + scrollContainer.clientWidth <
         scrollContainer.scrollWidth - 1;
     }
-  }
+  };
 
   onMount(() => {
     checkScroll();
@@ -71,33 +69,15 @@
       --scroll-padding: {padding};
     "
   >
-    <div class="content-wrapper flex-column flex-md-row gap-4">
+    <div class="content-wrapper ar-column ar-row gap-4">
       <slot />
     </div>
   </div>
 
-  {#if showScrollEndBtn && $appState.selectedCategory !== null}
-    <div
-      in:fade={{ duration: 100 }}
-      out:fade={{ duration: 100 }}
-      class="scroll-end-gradient"
-    >
-      <button class="scroll-end-btn" on:click={scrollToEnd}>
-        <svg
-          class="btn-svg"
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            d="M10 6L8.59 7.41L13.17 12l-4.58 4.59L10 18l6-6z"
-          />
-        </svg>
-      </button>
-    </div>
-  {/if}
+  <ScrollToEndButton
+    show={showScrollEndBtn && $appState.selectedCategory !== null}
+    onClick={scrollToEnd}
+  />
 </div>
 
 <style>
@@ -124,15 +104,20 @@
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    margin-left: 56px;
     height: var(--scroll-height);
     padding: var(--scroll-padding);
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
   }
 
+  @media (min-aspect-ratio: 1/1) {
+    .scroll-container {
+      margin-left: var(--page-margin);
+    }
+  }
+
   /* Mobile: vertical scrolling */
-  @media (max-width: 567px) {
+  @media (max-width: 768px) {
     .scroll-container {
       overflow-x: hidden;
       overflow-y: auto;
@@ -165,54 +150,5 @@
 
   .scroll-container::-webkit-scrollbar-thumb:hover {
     background-color: var(--scrollbar-hover-color);
-  }
-
-  /* Scroll-to-end button */
-  .scroll-end-btn {
-    outline: 2px solid white;
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    border: none;
-    color: white;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    z-index: 10;
-    transition: background 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  }
-
-  .scroll-end-btn:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
-
-  /* fade gradient */
-  .scroll-end-gradient {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      rgba(62, 60, 74, 0) 50%,
-      rgba(211, 211, 211, 0.4)
-    );
-    width: 50px;
-    z-index: 9;
-  }
-
-  /* Hide scroll-to-end button entirely on mobile */
-  @media (max-width: 567px) {
-    .scroll-end-btn,
-    .scroll-end-gradient {
-      display: none !important;
-    }
   }
 </style>

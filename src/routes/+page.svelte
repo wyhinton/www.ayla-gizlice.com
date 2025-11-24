@@ -13,6 +13,7 @@
   } from "$lib/stores/projectStore";
   import ProjectGallery from "$lib/components/ProjectGallery.svelte";
   import { isMobile } from "$lib/stores/uiStore.js";
+  import { fade } from "svelte/transition";
 
   export let data: any;
 
@@ -57,7 +58,15 @@
         <!-- content here -->
       {/if}
     {/each}
-    <ProjectGallery></ProjectGallery>
+    {#if $appState.selectedCategory !== null}
+      <div in:fade={{ duration: 500 }}>
+        <ProjectGallery></ProjectGallery>
+      </div>
+
+      <!-- content here -->
+    {/if}
+
+    <!-- content here -->
   {/if}
 </div>
 

@@ -96,7 +96,7 @@
 
   .navbar__logo {
     line-height: 4rem;
-    margin-left: 3rem;
+    margin-left: var(--page-margin);
     font-family: "Pragati Narrow";
     font-size: 45px;
     text-transform: capitalize;
@@ -110,7 +110,7 @@
   nav ul {
     float: right;
 
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 0;
     position: fixed;
     right: 0;
@@ -121,7 +121,7 @@
 
   @media (min-width: 567px) {
     nav ul {
-      margin-right: 1rem;
+      margin-right: var(--page-margin);
       background-color: transparent;
     }
   }
@@ -129,7 +129,7 @@
   nav ul li {
     display: inline-block;
     line-height: 4rem;
-    margin: 0 1rem;
+    /* margin: 0 1rem; */
   }
 
   nav ul li a {

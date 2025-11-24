@@ -35,16 +35,12 @@
 </div>
 
 <style>
-  .descriptionPaddingContainer {
-    /* min-width: 375px; */
-  }
-
   .descriptionDiv {
     margin: 0 auto;
     text-align: left;
   }
 
-  @media (min-width: 568px) {
+  @media (min-aspect-ratio: 1/1) {
     .descriptionDiv {
       min-width: 375px;
       max-width: 375px;

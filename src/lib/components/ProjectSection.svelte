@@ -75,11 +75,11 @@
     class:visible={isInSelectedProject}
   >
     <div
-      class="d-flex gap-4 flex-column flex-md-row"
+      class="d-flex gap-4 ar-column ar-row"
       id="sectionElementContainer_{index}"
     >
       <ProjectDescription {project} {index} />
-      <div class="d-flex flex-column flex-md-row gap-2">
+      <div class="d-flex ar-column ar-row gap-2">
         {#if hasProjectImages(project) || hasVideo(project)}
           {#each projectImages as image, imageIndex}
             <div>

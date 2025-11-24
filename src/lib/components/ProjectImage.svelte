@@ -5,6 +5,7 @@
   import PhotoSwipe from "photoswipe";
   import "photoswipe/style.css";
   import { appState } from "$lib/stores/projectStore.js";
+  import { isMobile } from "$lib/stores/uiStore.js";
 
   export let image: { small: string; large: string; index: number };
   export let project: Project;
@@ -19,6 +20,7 @@
   function updateMaxImageHeight() {
     // Example: limit image height to 50% of the viewport height
     MAX_IMAGE_HEIGHT = Math.round(window.innerHeight * 0.66);
+    console.log(MAX_IMAGE_HEIGHT);
   }
 
   onMount(() => {
@@ -29,10 +31,6 @@
       window.removeEventListener("resize", updateMaxImageHeight);
     };
   });
-
-  function isMobile() {
-    return window.innerWidth <= 567;
-  }
 
   // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
   function getProxiedImageUrl(originalUrl: string): string {
@@ -59,8 +57,12 @@
     const scaleH = MAX_IMAGE_HEIGHT / small_height;
     const scaleW = MAX_IMAGE_WIDTH / small_width;
     let scale = MAX_IMAGE_HEIGHT / small_height;
+    console.log(scaleH);
+    console.log(scaleW);
     // choose the smaller scale
-    if (isMobile()) {
+    if (isMobile) {
+      console.log(`%cHERE LINE :61 %c`, "color: yellow; font-weight: bold", "");
+
       scale = Math.min(scaleH, scaleW, 1);
     }
     // never upscale
@@ -82,6 +84,7 @@
     // 90% of viewport width on mobile, unlimited on desktop
     if (window.innerWidth < 768) {
       MAX_IMAGE_WIDTH = Math.round(window.innerWidth * 0.9);
+      console.log(MAX_IMAGE_WIDTH);
     } else {
       MAX_IMAGE_WIDTH = Infinity;
     }
@@ -154,15 +157,10 @@
   class:first={imageIndex === 0}
   style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
-  <!-- {#if !smallLoaded}
-    <div style={ghostStyle} class="ghost"></div>
-  {/if} -->
-
   <button class="lightbox-trigger" type="button" on:click={openLightbox}>
     <div class="imager-wrapper">
       <!-- {JSON.stringify(imageSize)} -->
       <!-- {smallLoaded} -->
-
       <div style={ghostStyle} class="ghost">
         <img
           class:hidden={$appState.selectedCategory === null}
@@ -200,6 +198,11 @@
   }
 
   /* Force images to respect scaled width on mobile */
+  @media (max-aspect-ratio: 1/1) {
+    .heroImage {
+      max-width: 90vw;
+    }
+  }
   @media (max-width: 768px) {
     .heroImage {
       max-width: 90vw;
