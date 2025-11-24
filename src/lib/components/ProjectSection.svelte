@@ -91,19 +91,6 @@
               />
             </div>
           {/each}
-
-          <!-- {#if hasVideo(project)}
-              <div class="videoDiv" id="videoDiv_{index}">
-                <iframe
-                  class="videoIframe"
-                  id="videoIframe_{index}"
-                  src={getVideoUrl(project)}
-                  title="Project Video"
-                  frameborder="0"
-                  allowfullscreen
-                ></iframe>
-              </div>
-            {/if} -->
         {/if}
       </div>
     </div>
