@@ -8,6 +8,8 @@
   import HorizontalScroll from "./HorizontalScroll.svelte";
   import ProjectSection from "./ProjectSection.svelte";
   import { isMobile } from "$lib/stores/uiStore";
+  import ProjectNav from "./ProjectNav.svelte";
+  import ScrollToEndButton from "./ScrollToEndButton.svelte";
 
   // $indexOfSelected
 </script>
@@ -22,7 +24,7 @@
   >
     {#each $projectsInSelectedCategory as project, projectIndex}
       <div in:fade={{ duration: 500 }} out:fade={{ duration: 100 }}>
-        <ProjectSection {project} index={0}></ProjectSection>
+        <ProjectSection {project} index={projectIndex}></ProjectSection>
       </div>
     {/each}
   </HorizontalScroll>

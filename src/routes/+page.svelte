@@ -31,6 +31,7 @@
   }
 
   let show = false;
+  let ENABLE_MAP = false;
 
   onMount(() => {
     show = true;
@@ -46,7 +47,7 @@
 
 <!-- Projects List View -->
 <div id="projectsListContainer" style={containerStyle}>
-  {#if show && showVideo}
+  {#if show && showVideo && ENABLE_MAP}
     <VideoOverlay
       on:click={() => {
         showVideo = !showVideo;

@@ -11,6 +11,10 @@
   }
 }
 
+
+.pointer-events-none{
+  pointer-events: none;
+}
 /* sm */
 @media (max-width: 576px) {
   :root {

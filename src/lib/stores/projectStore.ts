@@ -14,6 +14,8 @@ interface AppState {
   showProjectsList: boolean;
   // Project data
   projects: Project[];
+  selectedProjectIndex?: number;
+  lightboxImage?: string;
 }
 
 // Create unified writable store
@@ -28,6 +30,7 @@ export const appState = writable<AppState>({
   showGallery: false,
   galleryVisible: false,
   showProjectsList: false,
+  selectedProjectIndex: undefined,
 });
 
 // Derived stores for convenience
@@ -160,6 +163,7 @@ class ProjectStoreActions {
 
   // Project selection
   selectCategory(category: string, updateUrl: boolean = true) {
+    console.log("SELECTING CATEGORY");
     appState.update((state: AppState) => ({
       ...state,
       selectedCategory: category,
@@ -236,6 +240,12 @@ class ProjectStoreActions {
     }));
   }
 
+  setLightBoxImage(id: string) {
+    appState.update((state) => ({
+      ...state,
+      lightboxImage: id,
+    }));
+  }
   closeGallery() {
     appState.update((state: AppState) => ({
       ...state,
@@ -304,6 +314,7 @@ export const showGallery = () => projectActions.showProjectGallery();
 export const closeGallery = () => projectActions.closeGallery();
 export const setGalleryVisible = (visible: boolean) =>
   projectActions.setGalleryVisible(visible);
-
+export const setLightboxImage = (id: string) =>
+  projectActions.setLightBoxImage(id);
 // Export utility functions
 export { categoryToSlug, slugToCategory };

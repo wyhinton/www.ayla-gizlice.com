@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import type { Project } from "../../types.js";
   import PhotoSwipe from "photoswipe";
   import "photoswipe/style.css";
@@ -12,7 +12,7 @@
   export let project: Project;
   export let sectionIndex: number;
   export let imageIndex: number;
-
+  const imageId = `${sectionIndex}-${imageIndex}`;
   let mounted = false;
   let smallLoaded = false;
 
@@ -39,9 +39,35 @@
     updateMaxImageSizes();
     window.addEventListener("resize", updateMaxImageSizes);
 
+    // --- Auto-open if URL contains this image ---
+    const url = new URL(window.location.href);
+    const param = url.searchParams.get("project-image");
+
     return () => {
       window.removeEventListener("resize", updateMaxImageSizes);
     };
+  });
+
+  let unsubscribe: () => void;
+
+  onMount(() => {
+    unsubscribe = appState.subscribe((state) => {
+      console.log(state);
+      if (state.loading) return;
+      console.log(`%cHERE LINE :57 %c`, "color: brown; font-weight: bold", "");
+
+      if (state.lightboxImage === imageId) {
+        // open the lightbox for THIS image
+        openLightbox();
+
+        // clear the trigger so it doesn't repeat
+        appState.update((s) => ({ ...s, lightboxImage: undefined }));
+      }
+    });
+  });
+
+  onDestroy(() => {
+    unsubscribe?.();
   });
 
   // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
@@ -54,6 +80,13 @@
     }
     return originalUrl;
   }
+
+  function setUrlParam(key: string, value: string) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(key, value);
+    window.history.pushState({}, "", url);
+  }
+
   $: isLandscape = window.innerWidth > window.innerHeight;
   $: proxyImageUrl = getProxiedImageUrl(image.small);
   $: proxyLargeUrl = getProxiedImageUrl(image.large);
@@ -143,8 +176,14 @@
         mouseMovePan: true,
         loop: false,
       });
-
+      console.log(imageId);
       console.log("Initializing PhotoSwipe lightbox");
+      setUrlParam("project-image", imageId);
+      lightbox.on("close", () => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("project-image");
+        window.history.pushState({}, "", url);
+      });
       lightbox.init();
     } catch (error) {
       console.error("Error opening PhotoSwipe:", error);

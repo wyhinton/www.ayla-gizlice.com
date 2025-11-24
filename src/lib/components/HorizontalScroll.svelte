@@ -126,17 +126,22 @@
 
   /* Aspect ratio adjustments */
   @media (min-aspect-ratio: 1/1) {
-    .content-wrapper {
-      margin-right: 0;
-    }
     .scroll-container {
       margin-left: var(--page-margin);
+    }
+
+    .content-wrapper {
+      margin-right: 20px;
     }
   }
 
   @media (max-aspect-ratio: 1/1) {
     .content-wrapper {
       margin-left: 0;
+    }
+
+    .content-wrapper {
+      margin-right: 0;
     }
   }
 

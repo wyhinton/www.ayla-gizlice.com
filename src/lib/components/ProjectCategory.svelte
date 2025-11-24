@@ -11,11 +11,9 @@
     isGalleryOpen,
   } from "$lib/stores/projectStore";
   import type { Project } from "../../types.js";
-  import ProjectSection from "./ProjectSection.svelte";
-  import { Svrollbar } from "svrollbar";
-  import HorizontalScroll from "./HorizontalScroll.svelte";
   import { get } from "svelte/store";
   import { isMobile } from "$lib/stores/uiStore.js";
+  import ProjectNav from "./ProjectNav.svelte";
 
   let categoryElement: HTMLElement;
   let titleElement: HTMLElement;
@@ -74,12 +72,19 @@
     }
   }
 
-  function handleCategoryTitleClick() {
+  $: handleCategoryTitleClick = () => {
     console.log(`%cHERE LINE :12 %c`, "color: yellow; font-weight: bold", "");
+    console.log(projectName);
+    console.log($appState.selectedCategory);
+    if (projectName !== $appState.selectedCategory) {
+      console.log(`%cHERE LINE :81 %c`, "color: yellow; font-weight: bold", "");
 
-    selectCategory(projectName);
+      selectCategory(projectName);
+    } else {
+      closeGallery();
+    }
     // onProjectClick(project, index);
-  }
+  };
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === "Enter") {
@@ -88,6 +93,8 @@
   }
 
   function handleClickOutside(event: MouseEvent) {
+    console.log(`%cHERE LINE :97 %c`, "color: yellow; font-weight: bold", "");
+
     if (
       $isGalleryOpen &&
       categoryElement &&
@@ -157,12 +164,14 @@
       <h1
         in:receive={{ key: titleKey }}
         out:send={{ key: titleKey }}
-        on:click={handleCategoryTitleClick}
-        class="categoryTitle selected-position"
+        class="categoryTitle selected-position d-flex pointer-events-none"
         bind:this={titleElement}
         on:mouseenter={handleMouseEnter}
       >
         {projectName || `Project ${index + 1}`}
+        <div>
+          <!-- <ProjectNav projects={$projectsInSelectedCategory}></ProjectNav> -->
+        </div>
       </h1>
     {/if}
   {:else}
