@@ -2,16 +2,10 @@
   import {
     appState,
     projectsInSelectedCategory,
-    uniqueCategories,
   } from "$lib/stores/projectStore";
-  import { fade, fly } from "svelte/transition";
+  import { fade } from "svelte/transition";
   import HorizontalScroll from "./HorizontalScroll.svelte";
   import ProjectSection from "./ProjectSection.svelte";
-  import { isMobile } from "$lib/stores/uiStore";
-  import ProjectNav from "./ProjectNav.svelte";
-  import ScrollToEndButton from "./ScrollToEndButton.svelte";
-
-  // $indexOfSelected
 </script>
 
 <div class:hidden={$appState.selectedCategory === null} class="gallery-wrapper">
@@ -37,7 +31,7 @@
   }
   .gallery-wrapper {
     position: absolute;
-    top: 0px;
+    top: 90px;
     height: -webkit-fill-available;
     overflow-y: auto;
     background: var(--bg);
@@ -47,19 +41,11 @@
     scrollbar-width: thin;
     scrollbar-color: #2e2e2e99 transparent;
   }
-
-  /* @media (min-aspect-ratio: 1/1) {
-    .gallery-wrapper {
-      overflow-y: auto;
-    }
-  } */
-
   @media (min-width: 768px) and (min-aspect-ratio: 1/1) {
     .gallery-wrapper {
       width: 100%;
       overflow-y: hidden;
-      top: 140px;
-      top: 100px;
+      top: 200px;
       z-index: 100;
       padding-left: 0px;
       padding-right: 0px;

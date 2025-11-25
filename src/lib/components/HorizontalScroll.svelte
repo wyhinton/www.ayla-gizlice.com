@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { appState } from "$lib/stores/projectStore";
   import { isMobile } from "$lib/stores/uiStore";
   import ScrollToEndButton from "./ScrollToEndButton.svelte";
@@ -18,7 +18,7 @@
   $: scrollToEnd = () => {
     if (!scrollContainer) return;
 
-    if (isMobile) {
+    if ($isMobile) {
       scrollContainer.scrollTo({
         top: scrollContainer.scrollHeight,
         behavior: "smooth",
@@ -34,7 +34,7 @@
   $: checkScroll = () => {
     if (!scrollContainer) return;
 
-    if (isMobile) {
+    if ($isMobile) {
       showScrollEndBtn =
         scrollContainer.scrollTop + scrollContainer.clientHeight <
         scrollContainer.scrollHeight - 1;
@@ -46,10 +46,18 @@
   };
 
   onMount(() => {
-    checkScroll();
+    // async work inside a nested function
+    const init = async () => {
+      await tick(); // wait for DOM to render
+      checkScroll(); // your scroll check
+    };
+
+    init(); // call it, but onMount itself stays sync
+
     scrollContainer.addEventListener("scroll", checkScroll);
     window.addEventListener("resize", checkScroll);
 
+    // synchronous cleanup
     return () => {
       scrollContainer.removeEventListener("scroll", checkScroll);
       window.removeEventListener("resize", checkScroll);
@@ -73,7 +81,6 @@
       <slot />
     </div>
   </div>
-
   <ScrollToEndButton
     show={showScrollEndBtn && $appState.selectedCategory !== null}
     onClick={scrollToEnd}

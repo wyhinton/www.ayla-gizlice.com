@@ -19,6 +19,11 @@
 .pointer-events-none{
   pointer-events: none;
 }
+
+.h-100-vh{
+  height: 100vh;
+}
+
 /* sm */
 @media (max-width: 576px) {
   :root {

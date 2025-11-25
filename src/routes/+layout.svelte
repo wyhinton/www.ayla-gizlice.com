@@ -52,27 +52,6 @@
       return () => window.removeEventListener("popstate", handlePopState);
     }
   });
-
-  // beforeNavigate((nav) => {
-  //   console.log(nav.to);
-  //   console.log(nav.to?.route.id);
-  //   console.log(nav);
-  //   console.log(nav.type === "popstate" && nav.to?.route.id === "/");
-  //   if (nav.type === "popstate" && nav.to?.route.id === "/") {
-  //     const url = nav.to?.url;
-  //     if (!url) return;
-  //     console.log(url);
-  //     const category = url.searchParams.get("category");
-
-  //     console.log("Back/forward nav detected. Category:", category);
-
-  //     if (category) {
-  //       selectCategory(category);
-  //     } else {
-  //       closeGallery();
-  //     }
-  //   }
-  // });
 </script>
 
 <svelte:head>

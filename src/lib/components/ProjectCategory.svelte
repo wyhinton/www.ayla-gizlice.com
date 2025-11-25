@@ -192,59 +192,11 @@
     user-select: none;
   }
 
-  .fade-wrapper {
-    position: relative;
-    width: 100%;
-  }
-  .last-section {
-    padding-right: 50px;
-  }
-
-  .section-wrapper {
-    position: absolute;
-    flex-wrap: nowrap;
-    padding-right: 20px;
-    /* white-space: nowrap; */
-  }
-
-  .scroll-wrapper {
-    width: 100%;
-    position: absolute;
-    top: 140px;
-    z-index: 100;
-    /* margin-left: var(--page-margin); */
-    margin-right: 140px;
-    /* --svrollbar-track-width: 20px;
-    --svrollbar-track-background: #ec4f27;
-    --svrollbar-track-opacity: 1;
-
-    --svrollbar-thumb-width: 10px;
-    --svrollbar-thumb-background: orange;
-    --svrollbar-thumb-opacity: 1; */
-  }
-
-  /* .scroll-viewport {
-    position: relative;
-    width: 100%;
-    height: 800px;
-    overflow: scroll;
-    box-sizing: border-box;
-
-    /* hide scrollbar */
-
-  .scroll-contents {
-    /* This will contain the actual scrollable content */
-    min-width: max-content;
-  }
   .categoryItem {
-    /* padding: 40px 20px; */
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
-    /* width: 100vw; */
     width: 100%;
-    /* overflow: scroll; */
-    /* margin-left: var(--page-margin); */
   }
 
   .categoryItem:hover {
@@ -289,14 +241,8 @@
   .categoryTitle.selected-position {
     text-align: left;
     position: absolute;
-    top: 0;
+    top: 90px;
     left: var(--page-margin);
-
-    /* width: auto;
-    margin-left: 2rem;
-    margin-bottom: 2rem;
-    transform: scale(0.7);
-    transform-origin: left center; */
   }
 
   .categoryTitle.blurred {
