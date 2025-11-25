@@ -1,6 +1,7 @@
 import { writable, derived, get } from "svelte/store";
 import Papa from "papaparse";
 import type { Project } from "../../types.js";
+import { pushState } from "$app/navigation";
 
 // Unified state interface
 interface AppState {
@@ -52,12 +53,10 @@ export const showProjectsList = derived(
 );
 
 export const projectsInSelectedCategory = derived(appState, ($state) => {
-  console.log($state.selectedCategory?.toUpperCase());
   const sel = $state.projects.filter(
     (p: Project) =>
       p.category?.toUpperCase() === $state.selectedCategory?.toUpperCase()
   );
-  console.log(sel);
   return sel;
 });
 
@@ -88,7 +87,7 @@ function categoryToSlug(category: string): string {
     .replace(/[^\w-]/g, "");
 }
 
-function slugToCategory(slug: string): string {
+export function slugToCategory(slug: string): string {
   // Convert slug back to title case
   return slug
     .split("-")
@@ -113,7 +112,6 @@ class ProjectStoreActions {
         Image_Sizes: JSON.parse(p.Image_Sizes),
       }));
 
-      console.log(projects);
       appState.update((state: AppState) => ({
         ...state,
         projects,
@@ -163,7 +161,6 @@ class ProjectStoreActions {
 
   // Project selection
   selectCategory(category: string, updateUrl: boolean = true) {
-    console.log("SELECTING CATEGORY");
     appState.update((state: AppState) => ({
       ...state,
       selectedCategory: category,
@@ -176,7 +173,7 @@ class ProjectStoreActions {
       const slug = categoryToSlug(category);
       const url = new URL(window.location.href);
       url.searchParams.set("category", slug);
-      window.history.pushState({ category }, "", url.toString());
+      pushState(url, { category });
     }
   }
 
@@ -317,4 +314,3 @@ export const setGalleryVisible = (visible: boolean) =>
 export const setLightboxImage = (id: string) =>
   projectActions.setLightBoxImage(id);
 // Export utility functions
-export { categoryToSlug, slugToCategory };

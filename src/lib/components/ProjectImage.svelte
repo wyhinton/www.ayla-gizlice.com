@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
   import { onDestroy, onMount } from "svelte";
   import type { Project } from "../../types.js";
   import PhotoSwipe from "photoswipe";
   import "photoswipe/style.css";
   import { appState } from "$lib/stores/projectStore.js";
-  import { isMobile } from "$lib/stores/uiStore.js";
-  import CloseButton from "./CloseButton.svelte";
+  import { pushState } from "$app/navigation";
 
   export let image: { small: string; large: string; index: number };
   export let project: Project;
@@ -27,7 +25,6 @@
     if (isLandscape) {
       // Landscape → height limited to 66% of viewport
       MAX_IMAGE_HEIGHT = Math.round(h * 0.66);
-      console.log(MAX_IMAGE_HEIGHT);
       MAX_IMAGE_WIDTH = Infinity; // width shouldn't constrain
     } else {
       // Portrait → no height limit, images just fill width
@@ -52,9 +49,7 @@
 
   onMount(() => {
     unsubscribe = appState.subscribe((state) => {
-      console.log(state);
       if (state.loading) return;
-      console.log(`%cHERE LINE :57 %c`, "color: brown; font-weight: bold", "");
 
       if (state.lightboxImage === imageId) {
         // open the lightbox for THIS image
@@ -84,7 +79,7 @@
   function setUrlParam(key: string, value: string) {
     const url = new URL(window.location.href);
     url.searchParams.set(key, value);
-    window.history.pushState({}, "", url);
+    pushState(url, {});
   }
 
   $: isLandscape = window.innerWidth > window.innerHeight;
@@ -182,7 +177,7 @@
       lightbox.on("close", () => {
         const url = new URL(window.location.href);
         url.searchParams.delete("project-image");
-        window.history.pushState({}, "", url);
+        pushState(url, {});
       });
       lightbox.init();
     } catch (error) {

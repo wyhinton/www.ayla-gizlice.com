@@ -5,13 +5,17 @@
   import { onMount } from "svelte";
   import {
     appState,
+    closeGallery,
     loadProjects,
+    selectCategory,
     setLightboxImage,
+    slugToCategory,
   } from "$lib/stores/projectStore";
   import { page } from "$app/stores";
+  import { afterNavigate, beforeNavigate } from "$app/navigation";
+  console.log("Layout script executed");
 
   const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
-
   onMount(async () => {
     // Load projects globally so they're available for all routes
     await loadProjects(GOOGLE_SHEETS_URL);
@@ -32,7 +36,43 @@
       console.log(id);
       setLightboxImage(id);
     }
+    if (window.location.pathname === "/") {
+      const handlePopState = () => {
+        const url = new URL(window.location.href);
+        const category = url.searchParams.get("category");
+        if (category === null) {
+          closeGallery();
+        } else {
+          selectCategory(slugToCategory(category));
+        }
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
   });
+
+  // beforeNavigate((nav) => {
+  //   console.log(nav.to);
+  //   console.log(nav.to?.route.id);
+  //   console.log(nav);
+  //   console.log(nav.type === "popstate" && nav.to?.route.id === "/");
+  //   if (nav.type === "popstate" && nav.to?.route.id === "/") {
+  //     const url = nav.to?.url;
+  //     if (!url) return;
+  //     console.log(url);
+  //     const category = url.searchParams.get("category");
+
+  //     console.log("Back/forward nav detected. Category:", category);
+
+  //     if (category) {
+  //       selectCategory(category);
+  //     } else {
+  //       closeGallery();
+  //     }
+  //   }
+  // });
 </script>
 
 <svelte:head>

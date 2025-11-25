@@ -29,8 +29,8 @@
 
 <style>
   .close-button {
-    /* position: fixed; */
-    /* top: 80px; */
+    position: fixed;
+    top: 80px;
     right: 30px;
     width: 25px;
     height: 25px;

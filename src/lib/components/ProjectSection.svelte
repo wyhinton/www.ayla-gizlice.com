@@ -9,6 +9,8 @@
   import ProjectDescription from "./ProjectDescription.svelte";
   import ProjectImage from "./ProjectImage.svelte";
   import { closeGallery, appState } from "$lib/stores/projectStore.js";
+  import CloseButton from "./CloseButton.svelte";
+  import { isMobile } from "$lib/stores/uiStore.js";
 
   export let project: Project;
   export let index: number;
@@ -34,8 +36,13 @@
 
 <div class="projectSectionWrapper">
   <!-- Close button - only show when a category is selected -->
-  {#if $appState.selectedCategory !== null}
-    <button
+  {#if $appState.selectedCategory !== null && !$isMobile}
+    <CloseButton
+      onClick={(e) => {
+        closeGallery();
+      }}
+    ></CloseButton>
+    <!-- <button
       class="close-button"
       on:click={(e) => {
         e.preventDefault();
@@ -43,6 +50,7 @@
       }}
       aria-label="Close gallery"
     >
+
       <svg
         width="24"
         height="24"
@@ -65,7 +73,7 @@
           stroke-linejoin="round"
         />
       </svg>
-    </button>
+    </button> -->
   {/if}
 
   <section

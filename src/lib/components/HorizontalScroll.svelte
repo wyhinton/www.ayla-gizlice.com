@@ -93,7 +93,7 @@
     overflow-y: hidden;
     height: var(--scroll-height);
     padding: var(--scroll-padding);
-    scrollbar-width: thin;
+    /* scrollbar-width: thin; */
     scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
   }
 

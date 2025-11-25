@@ -10,11 +10,14 @@
     loadProjects,
     uniqueCategories,
     appState,
+    closeGallery,
+    selectCategory,
   } from "$lib/stores/projectStore";
   import ProjectGallery from "$lib/components/ProjectGallery.svelte";
   import { isMobile } from "$lib/stores/uiStore.js";
   import { fade } from "svelte/transition";
   import VideoOverlay from "$lib/components/VideoOverlay.svelte";
+  import { afterNavigate, beforeNavigate } from "$app/navigation";
 
   export let data: any;
 
@@ -35,6 +38,29 @@
 
   onMount(() => {
     show = true;
+  });
+  afterNavigate((nav) => {
+    console.log(`%cHERE LINE :43 %c`, "color: blue; font-weight: bold", "");
+  });
+  beforeNavigate((nav) => {
+    console.log(nav.to);
+    console.log(nav.to?.route.id);
+    console.log(nav);
+    console.log(nav.type === "popstate" && nav.to?.route.id === "/");
+    if (nav.type === "popstate" && nav.to?.route.id === "/") {
+      const url = nav.to?.url;
+      if (!url) return;
+      console.log(url);
+      const category = url.searchParams.get("category");
+
+      console.log("Back/forward nav detected. Category:", category);
+
+      if (category) {
+        selectCategory(category);
+      } else {
+        closeGallery();
+      }
+    }
   });
 </script>
 
