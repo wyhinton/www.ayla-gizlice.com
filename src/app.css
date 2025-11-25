@@ -2,8 +2,14 @@
   --bg: lightgrey;
   --green: rgb(33, 116, 107);
   --page-margin: 56px;
+  --name-color: #a97a53;
 }
 
+
+::selection{
+  color: var(--name-color);
+  background-color: brown;
+}
 * {
   scrollbar-color: #2e2e2e99 transparent;
 }
@@ -15,9 +21,16 @@
   }
 }
 
+.background-fill{
+  background: var(--bg) !important;
+}
 
 .pointer-events-none{
   pointer-events: none;
+}
+
+.name-color{
+  color: var(--name-color) !important;
 }
 
 .h-100-vh{

@@ -1,6 +1,7 @@
 <script>
   import { page } from "$app/stores";
   import { closeGallery } from "$lib/stores/projectStore";
+  import { isMobile } from "$lib/stores/uiStore";
   import { onMount } from "svelte";
 
   let mobileMenuOpen = false;
@@ -12,10 +13,10 @@
 
 <div id="navContainer" on:click={(e) => console.log(e)}>
   <div class="navBarSection">
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" class:background-fill={$isMobile} id="navbar">
       <a
         on:click={() => closeGallery()}
-        class="navbar__logo"
+        class="navbar__logo name-color"
         id="logoMark"
         href="/">Ayla Gizlice</a
       >

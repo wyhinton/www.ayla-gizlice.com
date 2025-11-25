@@ -31,7 +31,7 @@
   }
   .gallery-wrapper {
     position: absolute;
-    top: 90px;
+    top: 65px;
     height: -webkit-fill-available;
     overflow-y: auto;
     background: var(--bg);
@@ -40,6 +40,7 @@
     padding-bottom: 125px;
     scrollbar-width: thin;
     scrollbar-color: #2e2e2e99 transparent;
+    padding-top: 20px;
   }
   @media (min-width: 768px) and (min-aspect-ratio: 1/1) {
     .gallery-wrapper {
@@ -52,6 +53,7 @@
       margin-right: 140px;
       background: transparent;
       padding-bottom: 0px;
+      padding-top: 0px;
     }
   }
 </style>
