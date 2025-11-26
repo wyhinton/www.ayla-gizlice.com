@@ -45,6 +45,27 @@
     }
   };
 
+  const smoothScroll = () => {
+    if (!scrollContainer) return;
+
+    const current = scrollContainer.scrollLeft;
+    const diff = targetScrollLeft - current;
+
+    // If close enough, stop the animation
+    if (Math.abs(diff) < 0.5) {
+      scrollContainer.scrollLeft = targetScrollLeft;
+      isAnimating = false;
+      return;
+    }
+
+    // Easing: move 20% toward target per frame
+    scrollContainer.scrollLeft = current + diff * 0.2;
+
+    requestAnimationFrame(smoothScroll);
+  };
+
+  let targetScrollLeft = 0;
+  let isAnimating = false;
   onMount(() => {
     // async work inside a nested function
     const init = async () => {
@@ -57,10 +78,37 @@
     scrollContainer.addEventListener("scroll", checkScroll);
     window.addEventListener("resize", checkScroll);
 
+    // --- horizontal wheel scrolling on desktop ---
+    const onWheel = (e: WheelEvent) => {
+      if ($isMobile) return;
+
+      e.preventDefault();
+
+      // Set new target
+      targetScrollLeft += e.deltaY;
+
+      // Clamp within bounds
+      targetScrollLeft = Math.max(
+        0,
+        Math.min(
+          targetScrollLeft,
+          scrollContainer.scrollWidth - scrollContainer.clientWidth
+        )
+      );
+
+      // Start animation if not running
+      if (!isAnimating) {
+        isAnimating = true;
+        requestAnimationFrame(smoothScroll);
+      }
+    };
+    scrollContainer.addEventListener("wheel", onWheel, { passive: false });
+
     // synchronous cleanup
     return () => {
       scrollContainer.removeEventListener("scroll", checkScroll);
       window.removeEventListener("resize", checkScroll);
+      window.removeEventListener("wheel", checkScroll);
     };
   });
 </script>
@@ -83,7 +131,9 @@
   </div>
   <ScrollToEndButton
     show={showScrollEndBtn && $appState.selectedCategory !== null}
-    onClick={scrollToEnd}
+    onClick={() => {
+      scrollToEnd();
+    }}
   />
 </div>
 
