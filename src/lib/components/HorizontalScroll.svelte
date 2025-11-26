@@ -14,7 +14,8 @@
 
   let scrollContainer: HTMLDivElement;
   let showScrollEndBtn = true;
-
+  let isTrackpad = false;
+  let trackpadTimer: number;
   $: scrollToEnd = () => {
     if (!scrollContainer) return;
 
@@ -82,12 +83,28 @@
     const onWheel = (e: WheelEvent) => {
       if ($isMobile) return;
 
-      e.preventDefault();
+      // Heuristic: small deltaY = trackpad
+      const absDelta = Math.abs(e.deltaY);
+      if (absDelta < 15) {
+        isTrackpad = true;
+      } else {
+        isTrackpad = false;
+      }
 
-      // Set new target
+      // Optional: reset trackpad detection after a short pause
+      clearTimeout(trackpadTimer);
+      trackpadTimer = setTimeout(() => {
+        isTrackpad = false;
+      }, 50);
+
+      // If trackpad, do nothing; let default behavior happen
+      if (isTrackpad) return;
+
+      e.preventDefault(); // only prevent default for mouse wheel
+
       targetScrollLeft += e.deltaY;
 
-      // Clamp within bounds
+      // Clamp target
       targetScrollLeft = Math.max(
         0,
         Math.min(
@@ -96,7 +113,6 @@
         )
       );
 
-      // Start animation if not running
       if (!isAnimating) {
         isAnimating = true;
         requestAnimationFrame(smoothScroll);
