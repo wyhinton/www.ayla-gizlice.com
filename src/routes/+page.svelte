@@ -65,7 +65,7 @@
       </div>
     {:else if $projects.length === 0}
       <div class="project-list-item empty">
-        <h1 class="project-title">No projects found</h1>
+        <!-- <h1 class="project-title">No projects found</h1> -->
       </div>
     {:else}
       {#each $uniqueCategories as projectName, index}
