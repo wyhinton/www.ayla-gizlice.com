@@ -11,7 +11,8 @@
     "dpreview": "npm run build && firebase hosting:channel:deploy preview",
     "functions": "firebase deploy --only functions",
     "ssr": "firebase deploy --only functions:ssr_preview",
-    "ssrlog": "firebase functions:log --only ssr_preview"
+    "ssrlog": "firebase functions:log --only ssr_preview",
+    "deploy": "npm run build && firebase deploy"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
