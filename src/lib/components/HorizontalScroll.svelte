@@ -52,14 +52,13 @@
     const current = scrollContainer.scrollLeft;
     const diff = targetScrollLeft - current;
 
-    // If close enough, stop the animation
     if (Math.abs(diff) < 0.5) {
       scrollContainer.scrollLeft = targetScrollLeft;
       isAnimating = false;
       return;
     }
 
-    // Easing: move 20% toward target per frame
+    // Move 20% toward target per frame
     scrollContainer.scrollLeft = current + diff * 0.2;
 
     requestAnimationFrame(smoothScroll);
@@ -83,28 +82,13 @@
     const onWheel = (e: WheelEvent) => {
       if ($isMobile) return;
 
-      // Heuristic: small deltaY = trackpad
-      const absDelta = Math.abs(e.deltaY);
-      if (absDelta < 15) {
-        isTrackpad = true;
-      } else {
-        isTrackpad = false;
-      }
+      // Prevent default scrolling (both vertical and horizontal)
+      e.preventDefault();
 
-      // Optional: reset trackpad detection after a short pause
-      clearTimeout(trackpadTimer);
-      trackpadTimer = setTimeout(() => {
-        isTrackpad = false;
-      }, 50);
+      // Add both deltaX and deltaY to the horizontal target
+      targetScrollLeft += e.deltaY + e.deltaX;
 
-      // If trackpad, do nothing; let default behavior happen
-      if (isTrackpad) return;
-
-      e.preventDefault(); // only prevent default for mouse wheel
-
-      targetScrollLeft += e.deltaY;
-
-      // Clamp target
+      // Clamp within scroll bounds
       targetScrollLeft = Math.max(
         0,
         Math.min(
@@ -113,6 +97,7 @@
         )
       );
 
+      // Start the animation if not already running
       if (!isAnimating) {
         isAnimating = true;
         requestAnimationFrame(smoothScroll);
