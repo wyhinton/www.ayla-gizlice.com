@@ -1,4 +1,11 @@
 {
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.profiles.windows": {
+    "Git Bash": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "args": ["--login", "-i"]
+    }
+  },
   "workbench.colorCustomizations": {
     "panelStickyScroll.background": "#0b5ad8",
     "sideBarStickyScroll.background": "#005ff7"
