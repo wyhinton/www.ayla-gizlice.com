@@ -43,6 +43,31 @@
       showScrollEndBtn =
         scrollContainer.scrollLeft + scrollContainer.clientWidth <
         scrollContainer.scrollWidth - 1;
+      
+      // Detect manual scrolling: if scroll changed but we're not animating it
+      if (isAnimating && !isManualScroll) {
+        const scrollDiff = Math.abs(scrollContainer.scrollLeft - lastScrollLeft);
+        const expectedDiff = Math.abs((targetScrollLeft - lastScrollLeft) * 0.2);
+        
+        // If scroll changed significantly different from our animation, user is dragging
+        // Use a wider tolerance to avoid false positives during smooth scrolling
+        if (scrollDiff > expectedDiff * 5 || (expectedDiff > 1 && scrollDiff < expectedDiff * 0.1)) {
+          console.log('[checkScroll] Manual scroll detected! Canceling animation. scrollDiff:', scrollDiff, 'expectedDiff:', expectedDiff);
+          isAnimating = false;
+          isManualScroll = true;
+        }
+      }
+      
+      lastScrollLeft = scrollContainer.scrollLeft;
+      
+      // Sync targetScrollLeft to prevent flickering when manually scrolling
+      if (!isAnimating) {
+        console.log('[checkScroll] Syncing targetScrollLeft from', targetScrollLeft, 'to', scrollContainer.scrollLeft);
+        targetScrollLeft = scrollContainer.scrollLeft;
+        isManualScroll = false;
+      } else {
+        console.log('[checkScroll] Animation running, NOT syncing. Current:', scrollContainer.scrollLeft, 'Target:', targetScrollLeft);
+      }
     }
   };
 
@@ -52,9 +77,12 @@
     const current = scrollContainer.scrollLeft;
     const diff = targetScrollLeft - current;
 
+    console.log('[smoothScroll] Current:', current, 'Target:', targetScrollLeft, 'Diff:', diff);
+
     if (Math.abs(diff) < 0.5) {
       scrollContainer.scrollLeft = targetScrollLeft;
       isAnimating = false;
+      console.log('[smoothScroll] Animation complete. Final position:', targetScrollLeft);
       return;
     }
 
@@ -66,6 +94,9 @@
 
   let targetScrollLeft = 0;
   let isAnimating = false;
+  let lastScrollLeft = 0;
+  let isManualScroll = false;
+  
   onMount(() => {
     // async work inside a nested function
     const init = async () => {
@@ -97,9 +128,13 @@
         )
       );
 
+      console.log('[onWheel] New targetScrollLeft:', targetScrollLeft, 'deltaY:', e.deltaY, 'deltaX:', e.deltaX);
+
       // Start the animation if not already running
       if (!isAnimating) {
         isAnimating = true;
+        isManualScroll = false;
+        console.log('[onWheel] Starting animation');
         requestAnimationFrame(smoothScroll);
       }
     };
