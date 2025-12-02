@@ -6,16 +6,19 @@
   import { appState } from "$lib/stores/projectStore.js";
   import { pushState } from "$app/navigation";
 
-  export let image: { small: string; large: string; index: number };
+  export let image: { src: string; index: number };
   export let project: Project;
   export let sectionIndex: number;
   export let imageIndex: number;
   const imageId = `${sectionIndex}-${imageIndex}`;
   let mounted = false;
-  let smallLoaded = false;
+  let imageLoaded = false;
+  let imageLoadError = false; // Flag to prevent infinite retries
+  let imgElement: HTMLImageElement;
 
   let MAX_IMAGE_HEIGHT: number;
   let MAX_IMAGE_WIDTH: number;
+
   function updateMaxImageSizes() {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -32,13 +35,10 @@
       MAX_IMAGE_WIDTH = Math.round(w * 0.9);
     }
   }
+
   onMount(() => {
     updateMaxImageSizes();
     window.addEventListener("resize", updateMaxImageSizes);
-
-    // --- Auto-open if URL contains this image ---
-    const url = new URL(window.location.href);
-    const param = url.searchParams.get("project-image");
 
     return () => {
       window.removeEventListener("resize", updateMaxImageSizes);
@@ -65,15 +65,32 @@
     unsubscribe?.();
   });
 
-  // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
-  function getProxiedImageUrl(originalUrl: string): string {
-    if (
-      originalUrl.includes("googleusercontent.com") ||
-      originalUrl.includes("googleapis.com")
-    ) {
-      return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
+  /**
+   * Generate Cloudflare Image Resizing URL
+   * @param imagePath - Path to the image (e.g., /images/artworks/image.jpg)
+   * @param width - Desired width
+   * @param quality - Image quality (default: 85)
+   */
+  function getCloudflareImageUrl(
+    imagePath: string,
+    width?: number,
+    quality: number = 85
+  ): string {
+    const options = [];
+
+    if (width) {
+      options.push(`width=${width}`);
     }
-    return originalUrl;
+    options.push(`quality=${quality}`);
+    options.push("format=auto"); // Automatically choose best format (WebP, AVIF, etc.)
+
+    // Always use production domain for images
+    const productionDomain = "https://ayla-gizlice.com";
+    const cloudFlareImageUrl = `${productionDomain}/cdn-cgi/image/${options.join(",")}${imagePath}`;
+    // Cloudflare Image Resizing format: /cdn-cgi/image/[options]/[image-path]
+    console.log(imagePath);
+    console.log(cloudFlareImageUrl);
+    return cloudFlareImageUrl;
   }
 
   function setUrlParam(key: string, value: string) {
@@ -83,8 +100,14 @@
   }
 
   $: isLandscape = window.innerWidth > window.innerHeight;
-  $: proxyImageUrl = getProxiedImageUrl(image.small);
-  $: proxyLargeUrl = getProxiedImageUrl(image.large);
+
+  // Use Cloudflare image resizing for optimal loading
+  $: thumbnailUrl = getCloudflareImageUrl(
+    image.src,
+    isLandscape ? undefined : 800
+  );
+  $: fullResUrl = getCloudflareImageUrl(image.src, 2000, 90); // High quality for lightbox
+
   $: imageSize = project.Image_Sizes?.[imageIndex];
 
   $: scaledImageSize = (() => {
@@ -117,7 +140,7 @@
   })();
 
   $: ghostStyle = scaledImageSize
-    ? `height: ${MAX_IMAGE_HEIGHT}px; width: ${scaledImageSize.small_width}px`
+    ? `width: ${scaledImageSize.small_width}px; height: ${scaledImageSize.small_height}px;`
     : "";
 
   onMount(() => {
@@ -126,6 +149,18 @@
     window.addEventListener("resize", updateMaxImageSizes);
     return () => window.removeEventListener("resize", updateMaxImageSizes);
   });
+
+  async function getImageDimensions(
+    src: string
+  ): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () =>
+        resolve({ width: img.naturalWidth, height: img.naturalHeight });
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
 
   async function openLightbox() {
     console.log(
@@ -137,20 +172,20 @@
 
     if (!mounted) {
       console.log("Component not mounted yet, opening in new tab");
-      window.open(proxyLargeUrl, "_blank");
+      window.open(fullResUrl, "_blank");
       return;
     }
 
     try {
       // Get actual image dimensions
-      // const dimensions = await getImageDimensions(proxyLargeUrl);
-      // console.log("Image dimensions:", dimensions);
+      const dimensions = await getImageDimensions(fullResUrl);
+      console.log("Image dimensions:", dimensions);
 
       const items = [
         {
-          src: proxyLargeUrl,
-          width: imageSize.large_width,
-          height: imageSize.large_height,
+          src: fullResUrl,
+          width: dimensions.width,
+          height: dimensions.height,
           alt: project.project_name || "Ayla Gizlice Art",
         },
       ];
@@ -183,35 +218,64 @@
     } catch (error) {
       console.error("Error opening PhotoSwipe:", error);
       // Fallback to new tab if there's an error
-      window.open(proxyLargeUrl, "_blank");
+      window.open(fullResUrl, "_blank");
     }
   }
 </script>
 
+<!-- {JSON.stringify(scaledImageSize)} -->
+<!-- {JSON.stringify(scaledImageSize)} -->
 <div
-  class=" position-relative d-flex align-items-center justify-content-center"
+  class="position-relative d-flex align-items-center justify-content-center"
   class:first={imageIndex === 0}
   style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
   <button class="lightbox-trigger" type="button" on:click={openLightbox}>
-    <div class="imager-wrapper">
-      <!-- {JSON.stringify(imageSize)} -->
-      <!-- {smallLoaded} -->
-      <div style={ghostStyle} class="ghost">
+    <div class="ghost" style={ghostStyle}>
+      <div class="image-wrapper">
+        <!-- Loading skeleton/ghost -->
+
         <img
-          class:hidden={$appState.selectedCategory === null}
-          class:visible={smallLoaded}
+          bind:this={imgElement}
+          class:hidden={$appState.selectedCategory === null || imageLoadError}
+          class:visible={imageLoaded && !imageLoadError}
           class:landscape={isLandscape}
           class:portrait={!isLandscape}
           class="heroImage"
           style={`height: ${scaledImageSize?.small_height}px; width: ${scaledImageSize?.small_width}px;`}
           id="lightBoxImage_{sectionIndex}_{image.index}"
-          src={proxyImageUrl}
-          on:load={() => (smallLoaded = true)}
+          src={thumbnailUrl}
+          on:load={() => {
+            imageLoaded = true;
+            imageLoadError = false;
+          }}
           alt={project.project_name || "Ayla Gizlice Art"}
-          referrerPolicy="no-referrer"
-          on:error={() => {
-            console.warn("Image failed to load:", proxyImageUrl);
+          loading="lazy"
+          on:error={(e) => {
+            if (imageLoadError) {
+              // Already tried fallback, stop retrying
+              console.error(
+                "Image failed to load even with fallback. Faulty image.src:",
+                image.src,
+                "\nProject:",
+                project.project_name,
+                "\nImage index:",
+                imageIndex
+              );
+              return;
+            }
+
+            console.warn(
+              "Image failed to load:",
+              thumbnailUrl,
+              "\nFaulty image.src:",
+              image.src
+            );
+            imageLoadError = true;
+
+            // Try fallback to original image path from production domain without Cloudflare processing
+            const target = e.currentTarget as HTMLImageElement;
+            target.src = `https://ayla-gizlice.com${image.src}`;
           }}
         />
       </div>
@@ -223,14 +287,17 @@
   .hidden {
     opacity: 0;
   }
+
   img.heroImage:not(.visible) {
     visibility: hidden;
   }
+
   .heroImage {
     max-width: 100%;
     width: auto;
     height: auto;
     object-fit: contain;
+    transition: opacity 0.25s ease;
   }
 
   /* Landscape → apply height limit */
@@ -242,12 +309,14 @@
   .heroImage.portrait {
     max-width: 90vw;
   }
+
   /* Force images to respect scaled width on mobile */
   @media (max-aspect-ratio: 1/1) {
     .heroImage {
       max-width: 90vw;
     }
   }
+
   @media (max-width: 768px) {
     .heroImage {
       max-width: 90vw;
@@ -269,8 +338,6 @@
 
   .image-wrapper {
     position: relative;
-    width: 200px; /* or dynamic */
-    height: 200px; /* or dynamic */
   }
 
   .ghost {
@@ -288,17 +355,5 @@
 
   img.visible {
     opacity: 1;
-  }
-
-  @keyframes pulse {
-    0% {
-      background-color: #eee;
-    }
-    50% {
-      background-color: #ddd;
-    }
-    100% {
-      background-color: #eee;
-    }
   }
 </style>

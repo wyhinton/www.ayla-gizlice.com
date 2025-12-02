@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import {
-    cleanGooglePhotosUrl,
     getProjectImages,
     hasProjectImages,
     type Project,
@@ -11,6 +10,7 @@
   import { closeGallery, appState } from "$lib/stores/projectStore.js";
   import CloseButton from "./CloseButton.svelte";
   import { isMobile } from "$lib/stores/uiStore.js";
+  import { json } from "@sveltejs/kit";
 
   export let project: Project;
   export let index: number;
@@ -21,8 +21,7 @@
   $: isInSelectedProject = project.category == $appState.selectedCategory;
 
   function getVideoUrl(project: Project): string {
-    const videoUrl = project.Video_Link || "";
-    return cleanGooglePhotosUrl(videoUrl);
+    return project.Video_Link || "";
   }
 
   function hasVideo(project: Project): boolean {
@@ -88,18 +87,13 @@
     >
       <ProjectDescription {project} {index} />
       <div class="d-flex ar-column ar-row gap-2">
-        {#if hasProjectImages(project) || hasVideo(project)}
-          {#each projectImages as image, imageIndex}
-            <div>
-              <ProjectImage
-                {image}
-                {project}
-                sectionIndex={index}
-                {imageIndex}
-              />
-            </div>
-          {/each}
-        {/if}
+        <!-- {#if hasProjectImages(project) || hasVideo(project)} -->
+        {#each projectImages as image, imageIndex}
+          <div>
+            <ProjectImage {image} {project} sectionIndex={index} {imageIndex} />
+          </div>
+        {/each}
+        <!-- {/if} -->
       </div>
     </div>
   </section>
