@@ -19,6 +19,8 @@
   let MAX_IMAGE_HEIGHT: number;
   let MAX_IMAGE_WIDTH: number;
 
+  const MAX_VH = 0.75;
+
   function updateMaxImageSizes() {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -27,7 +29,7 @@
 
     if (isLandscape) {
       // Landscape → height limited to 66% of viewport
-      MAX_IMAGE_HEIGHT = Math.round(h * 0.66);
+      MAX_IMAGE_HEIGHT = Math.round(h * MAX_VH);
       MAX_IMAGE_WIDTH = Infinity; // width shouldn't constrain
     } else {
       // Portrait → no height limit, images just fill width
