@@ -4,15 +4,14 @@
   import { browser } from "$app/environment";
   import { dev } from "$app/environment";
   import { appState } from "../stores/projectStore.js";
-  import Prism from "prismjs";
   // Import Prism CSS and JavaScript language support
-  import "prismjs/themes/prism-tomorrow.css";
-  import "prismjs/components/prism-json.min.js";
-
+  // import "prismjs/themes/prism-tomorrow.css";
+  // import "prismjs/components/prism-json.min.js";
+  // import Prism from "prismjs";
   let isVisible = false;
   let appStateValue: any = {};
   let unsubscribeApp: (() => void) | null = null;
-
+  let Prism: any = null;
   // Subscribe to store changes
   function subscribeToStores() {
     if (unsubscribeApp) unsubscribeApp();
@@ -44,9 +43,14 @@
     return JSON.stringify(state, null, 2);
   }
 
-  onMount(() => {
-    // Only enable in development mode
+  onMount(async () => {
     if (dev && browser) {
+      const module = await import("prismjs");
+      Prism = module.default ?? module;
+      await import("prismjs/themes/prism-tomorrow.css");
+      //@ts-ignore
+      await import("prismjs/components/prism-json.min.js");
+
       subscribeToStores();
       document.addEventListener("keydown", handleKeydown);
     }
