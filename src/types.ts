@@ -71,7 +71,12 @@ export function getProjectImages(project: Project): ProjectImage[] {
       // Instead of using Google Photos URLs, use local static images
       // The image path will be handled by Cloudflare Image Resizing in the component
       images.push({
-        src: safeUrl(`/images/artworks/${project.project_name.replaceAll(" ", "_")}_Picture_Large_${i}.webp`),
+        src: safeUrl(
+          `/images/artworks/${project.project_name.replaceAll(
+            " ",
+            "_"
+          )}_Picture_Large_${i}.webp`
+        ),
         index: i,
       });
     }

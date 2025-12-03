@@ -27,9 +27,13 @@
         on:keydown={toggleMobileMenu}
       >
         <i id="navButton">
-          <div id="navSymbolContainer">
+          <div class="hamburger-container" id="navSymbolContainer">
             <div id="innerNavButtonCircle"></div>
-            <img src="data/menu-24px.svg" />
+            <img
+              src="data/menu-24px.svg"
+              alt="menu"
+              style="width: 30px; height: 30px;"
+            />
             <i class="fas fa-times" id="newCloseButton" aria-hidden="true"></i>
           </div>
         </i>
@@ -93,7 +97,7 @@
     color: #7f7f7f;
     float: right;
     line-height: 4rem;
-    margin-right: 2rem;
+    margin-right: var(--page-margin);
     cursor: pointer;
     display: none;
     position: absolute;
@@ -217,6 +221,10 @@
   @media (max-width: 567px) {
     .navbar__hamburger-btn {
       display: block;
+    }
+
+    .hamburger-container {
+      padding-top: 5px;
     }
 
     nav ul {
