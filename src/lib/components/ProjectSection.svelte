@@ -9,7 +9,7 @@
   import ProjectImage from "./ProjectImage.svelte";
   import { closeGallery, appState } from "$lib/stores/projectStore.js";
   import CloseButton from "./CloseButton.svelte";
-  import { isMobile } from "$lib/stores/uiStore.js";
+  import { isMobile, isPortrait } from "$lib/stores/uiStore.js";
   import { json } from "@sveltejs/kit";
 
   export let project: Project;
@@ -35,7 +35,7 @@
 
 <div class="projectSectionWrapper">
   <!-- Close button - only show when a category is selected -->
-  {#if $appState.selectedCategory !== null && !$isMobile}
+  {#if $appState.selectedCategory !== null && !$isMobile && !$isPortrait}
     <CloseButton
       onClick={(e) => {
         closeGallery();
