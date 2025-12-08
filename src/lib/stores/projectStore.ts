@@ -239,15 +239,12 @@ class ProjectStoreActions {
   }
 
   setLightBoxImage(id: string | null) {
-    console.log(id);
     appState.update((state) => ({
       ...state,
       lightboxImage: id,
     }));
   }
   closeGallery() {
-    console.log(`%cHERE LINE :249 %c`, "color: yellow; font-weight: bold", "");
-
     appState.update((state: AppState) => ({
       ...state,
       showGallery: false,

@@ -73,12 +73,7 @@
   }
 
   $: handleCategoryTitleClick = () => {
-    console.log(`%cHERE LINE :12 %c`, "color: yellow; font-weight: bold", "");
-    console.log(projectName);
-    console.log($appState.selectedCategory);
     if (projectName !== $appState.selectedCategory) {
-      console.log(`%cHERE LINE :81 %c`, "color: yellow; font-weight: bold", "");
-
       selectCategory(projectName);
     } else {
       closeGallery();
@@ -93,8 +88,6 @@
   }
 
   function handleClickOutside(event: MouseEvent) {
-    console.log(`%cHERE LINE :97 %c`, "color: yellow; font-weight: bold", "");
-
     if (
       $isGalleryOpen &&
       categoryElement &&
@@ -114,22 +107,11 @@
       const clickedButton =
         clickedElement.classList.contains("scroll-end-btn") ||
         clickedElement.classList.contains("btn-svg");
-      console.log(clickedElement.classList);
-      console.log(clickedElement);
       const isClickInLightBox =
         clickedElement.closest(".lightbox-overlay") !== null;
-      console.log(isClickInLightBox);
       // Only close gallery if not clicking within a project section
       if (!isWithinProjectSection && !clickedButton && !isClickInLightBox) {
-        console.log(
-          `%cHERE LINE :121 %c`,
-          "color: blue; font-weight: bold",
-          ""
-        );
-
         closeGallery();
-        //is null as expected
-        console.log(get(appState).selectedCategory);
       }
     }
   }

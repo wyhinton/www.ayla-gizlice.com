@@ -102,8 +102,6 @@
   }
 
   function close() {
-    console.log(`%cHERE LINE :104 %c`, "color: yellow; font-weight: bold", "");
-
     // Don't close if user was just panning
     if (wasPanning) {
       wasPanning = false;

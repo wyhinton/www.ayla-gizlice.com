@@ -6,9 +6,7 @@
 
   // Scroll to the project section
   function scrollToProject(i: number) {
-    console.log(`descriptionDiv_${i}`);
     const el = document.getElementById(`descriptionDiv_${i}`);
-    console.log(el);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
       //   appState.update((s) => ({ ...s, selectedProjectIndex: i }));

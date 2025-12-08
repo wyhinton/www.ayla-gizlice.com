@@ -14,7 +14,6 @@
   } from "$lib/stores/projectStore";
   import { page } from "$app/stores";
   import { afterNavigate, beforeNavigate } from "$app/navigation";
-  console.log("Layout script executed");
 
   const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
   onMount(async () => {
@@ -33,7 +32,6 @@
     const url = new URL(window.location.href);
     const id = url.searchParams.get("project-image");
     if (id) {
-      console.log(id);
       setLightboxImage(id);
     } else {
     }

@@ -2,14 +2,12 @@
 <script lang="ts">
   import ProjectCategory from "$lib/components/ProjectCategory.svelte";
   import { onMount } from "svelte";
-  import { getProjectImages, type Project } from "../types.js";
   import {
     projects,
     loading,
     error,
     uniqueCategories,
     appState,
-    projectsInSelectedCategory,
   } from "$lib/stores/projectStore";
   import ProjectGallery from "$lib/components/ProjectGallery.svelte";
   import { isMobile } from "$lib/stores/uiStore.js";
@@ -24,10 +22,6 @@
     : $isMobile && $appState.selectedCategory === null
       ? "margin-top: 90px"
       : `margin-top: 80px`;
-  function handleProjectClick(project: Project, index: number) {
-    console.log("Project clicked:", project.project_name);
-    // Add project click logic here if needed
-  }
 
   let show = false;
   let ENABLE_MAP = false;
@@ -72,11 +66,7 @@
     {:else}
       {#each $uniqueCategories as projectName, index}
         {#if !$isMobile || ($isMobile && $appState.selectedCategory === null)}
-          <ProjectCategory
-            {projectName}
-            {index}
-            onProjectClick={handleProjectClick}
-          />
+          <ProjectCategory {projectName} {index} />
         {/if}
       {/each}
       {#if $appState.selectedCategory !== null}
