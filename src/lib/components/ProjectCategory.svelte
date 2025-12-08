@@ -116,8 +116,17 @@
         clickedElement.classList.contains("btn-svg");
       console.log(clickedElement.classList);
       console.log(clickedElement);
+      const isClickInLightBox =
+        clickedElement.closest(".lightbox-overlay") !== null;
+      console.log(isClickInLightBox);
       // Only close gallery if not clicking within a project section
-      if (!isWithinProjectSection && !clickedButton) {
+      if (!isWithinProjectSection && !clickedButton && !isClickInLightBox) {
+        console.log(
+          `%cHERE LINE :121 %c`,
+          "color: blue; font-weight: bold",
+          ""
+        );
+
         closeGallery();
         //is null as expected
         console.log(get(appState).selectedCategory);

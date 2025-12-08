@@ -16,7 +16,7 @@ interface AppState {
   // Project data
   projects: Project[];
   selectedProjectIndex?: number;
-  lightboxImage?: string;
+  lightboxImage: string | null;
 }
 
 // Create unified writable store
@@ -32,6 +32,7 @@ export const appState = writable<AppState>({
   galleryVisible: false,
   showProjectsList: false,
   selectedProjectIndex: undefined,
+  lightboxImage: null,
 });
 
 // Derived stores for convenience
@@ -237,13 +238,16 @@ class ProjectStoreActions {
     }));
   }
 
-  setLightBoxImage(id: string) {
+  setLightBoxImage(id: string | null) {
+    console.log(id);
     appState.update((state) => ({
       ...state,
       lightboxImage: id,
     }));
   }
   closeGallery() {
+    console.log(`%cHERE LINE :249 %c`, "color: yellow; font-weight: bold", "");
+
     appState.update((state: AppState) => ({
       ...state,
       showGallery: false,
@@ -289,6 +293,7 @@ class ProjectStoreActions {
       showGallery: false,
       galleryVisible: false,
       showProjectsList: false,
+      lightboxImage: null,
     });
   }
 }
@@ -311,6 +316,6 @@ export const showGallery = () => projectActions.showProjectGallery();
 export const closeGallery = () => projectActions.closeGallery();
 export const setGalleryVisible = (visible: boolean) =>
   projectActions.setGalleryVisible(visible);
-export const setLightboxImage = (id: string) =>
+export const setLightboxImage = (id: string | null) =>
   projectActions.setLightBoxImage(id);
 // Export utility functions

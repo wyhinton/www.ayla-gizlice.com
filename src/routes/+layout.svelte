@@ -2,6 +2,7 @@
   import "../app.css";
   import Navigation from "$lib/components/Navigation.svelte";
   import DebugPanel from "$lib/components/DebugPanel.svelte";
+  import Lightbox from "$lib/components/Lightbox.svelte";
   import { onMount } from "svelte";
   import {
     appState,
@@ -31,10 +32,10 @@
     }
     const url = new URL(window.location.href);
     const id = url.searchParams.get("project-image");
-
     if (id) {
       console.log(id);
       setLightboxImage(id);
+    } else {
     }
     if (window.location.pathname === "/") {
       const handlePopState = () => {
