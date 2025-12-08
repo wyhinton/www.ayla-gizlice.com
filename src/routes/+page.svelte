@@ -2,18 +2,20 @@
 <script lang="ts">
   import ProjectCategory from "$lib/components/ProjectCategory.svelte";
   import { onMount } from "svelte";
-  import type { Project } from "../types.js";
+  import { getProjectImages, type Project } from "../types.js";
   import {
     projects,
     loading,
     error,
     uniqueCategories,
     appState,
+    projectsInSelectedCategory,
   } from "$lib/stores/projectStore";
   import ProjectGallery from "$lib/components/ProjectGallery.svelte";
   import { isMobile } from "$lib/stores/uiStore.js";
   import { fade } from "svelte/transition";
   import VideoOverlay from "$lib/components/VideoOverlay.svelte";
+  import Lightbox from "$lib/components/Lightbox.svelte";
 
   let showVideo = true;
   // Projects are now loaded globally in +layout.svelte
@@ -83,6 +85,7 @@
         </div>
       {/if}
     {/if}
+    <Lightbox></Lightbox>
   </div>
 </div>
 

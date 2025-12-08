@@ -5,7 +5,9 @@ const initialIsMobile =
   typeof window !== "undefined" ? window.innerWidth < 768 : false;
 
 const initialIsPortrait =
-  typeof window !== "undefined" ? window.innerHeight > window.innerWidth : false;
+  typeof window !== "undefined"
+    ? window.innerHeight > window.innerWidth
+    : false;
 
 export const isMobile = writable(initialIsMobile);
 export const isPortrait = writable(initialIsPortrait);
