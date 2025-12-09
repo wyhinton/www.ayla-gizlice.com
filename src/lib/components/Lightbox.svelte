@@ -621,10 +621,11 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    z-index: 1000;
   }
 
   .zoom-button {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.6);
     border: none;
     border-radius: 6px;
     width: 36px;
