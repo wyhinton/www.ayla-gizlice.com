@@ -16,60 +16,150 @@
   let showScrollEndBtn = true;
   let isTrackpad = false;
   let trackpadTimer: number;
+  let currentSectionIndex = 0;
+  let totalSections = 0;
+
   $: scrollToEnd = () => {
     if (!scrollContainer) return;
 
+    // Get all direct children (sections) of the content wrapper
+    const contentWrapper = scrollContainer.querySelector(".content-wrapper");
+    if (!contentWrapper) return;
+
+    const sections = Array.from(contentWrapper.children) as HTMLElement[];
+    totalSections = sections.length;
+
+    if (totalSections === 0) return;
+
+    // Calculate next section index
+    const nextSectionIndex = Math.min(
+      currentSectionIndex + 1,
+      totalSections - 1
+    );
+    const nextSection = sections[nextSectionIndex];
+    if (!nextSection) return;
+
     if ($isMobile) {
+      // Mobile: scroll vertically to next section
+      const sectionTop = nextSection.offsetTop;
       scrollContainer.scrollTo({
-        top: scrollContainer.scrollHeight,
+        top: sectionTop,
         behavior: "smooth",
       });
     } else {
-      scrollContainer.scrollTo({
-        left: scrollContainer.scrollWidth,
-        behavior: "smooth",
-      });
+      const sectionLeft = nextSection.offsetLeft;
+
+      const SCROLL_PADDING = 75; // 🔧 tune this (8–20 feels good)
+      const start = targetScrollLeft;
+      const end = sectionLeft - SCROLL_PADDING;
+
+      const distance = Math.abs(end - start);
+      const speed = 3.0; // px per ms
+      const minDuration = 180;
+      const maxDuration = 1500;
+
+      const duration = Math.min(
+        maxDuration,
+        Math.max(minDuration, distance / speed)
+      );
+
+      const startTime = performance.now();
+
+      const ease = (t: number) =>
+        t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+      const animateTarget = (now: number) => {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / duration, 1);
+
+        targetScrollLeft = start + (end - start) * ease(t);
+
+        if (!isAnimating) {
+          isAnimating = true;
+          requestAnimationFrame(smoothScroll);
+        }
+
+        if (t < 1) requestAnimationFrame(animateTarget);
+      };
+
+      requestAnimationFrame(animateTarget);
+      9;
     }
   };
 
   $: checkScroll = () => {
     if (!scrollContainer) return;
 
-    if ($isMobile) {
-      showScrollEndBtn =
-        scrollContainer.scrollTop + scrollContainer.clientHeight <
-        scrollContainer.scrollHeight - 1;
-    } else {
-      showScrollEndBtn =
-        scrollContainer.scrollLeft + scrollContainer.clientWidth <
-        scrollContainer.scrollWidth - 1;
+    // Get all sections to determine which one is in view
+    const contentWrapper = scrollContainer.querySelector(".content-wrapper");
+    if (contentWrapper) {
+      const sections = Array.from(contentWrapper.children) as HTMLElement[];
+      totalSections = sections.length;
 
-      // Detect manual scrolling: if scroll changed but we're not animating it
-      if (isAnimating && !isManualScroll) {
-        const scrollDiff = Math.abs(
-          scrollContainer.scrollLeft - lastScrollLeft
-        );
-        const expectedDiff = Math.abs(
-          (targetScrollLeft - lastScrollLeft) * 0.2
-        );
+      if ($isMobile) {
+        // Find which section is currently most visible (vertically)
+        const scrollTop = scrollContainer.scrollTop;
+        const containerHeight = scrollContainer.clientHeight;
+        const scrollCenter = scrollTop + containerHeight / 2;
 
-        // If scroll changed significantly different from our animation, user is dragging
-        // Use a wider tolerance to avoid false positives during smooth scrolling
-        if (
-          scrollDiff > expectedDiff * 5 ||
-          (expectedDiff > 1 && scrollDiff < expectedDiff * 0.1)
-        ) {
-          isAnimating = false;
-          isManualScroll = true;
+        currentSectionIndex = sections.findIndex((section, index) => {
+          const sectionTop = section.offsetTop;
+          const sectionBottom = sectionTop + section.offsetHeight;
+          return scrollCenter >= sectionTop && scrollCenter < sectionBottom;
+        });
+
+        if (currentSectionIndex === -1) currentSectionIndex = 0;
+
+        showScrollEndBtn =
+          scrollContainer.scrollTop + scrollContainer.clientHeight <
+          scrollContainer.scrollHeight - 1;
+      } else {
+        // Find which section is currently most visible (horizontally)
+        const scrollLeft = scrollContainer.scrollLeft;
+        const containerWidth = scrollContainer.clientWidth;
+        const scrollCenter = scrollLeft + containerWidth / 2;
+
+        currentSectionIndex = sections.findIndex((section, index) => {
+          const sectionLeft = section.offsetLeft;
+          const sectionRight = sectionLeft + section.offsetWidth;
+          return scrollCenter >= sectionLeft && scrollCenter < sectionRight;
+        });
+
+        if (currentSectionIndex === -1) currentSectionIndex = 0;
+        let isNotScrolledToEnd =
+          scrollContainer.scrollLeft + scrollContainer.clientWidth <
+          scrollContainer.scrollWidth - 100;
+        // Show button if not at the last section
+        showScrollEndBtn =
+          currentSectionIndex < totalSections - 1 && isNotScrolledToEnd;
+
+        // Detect manual scrolling: if scroll changed but we're not animating it
+        if (isAnimating && !isManualScroll) {
+          const scrollDiff = Math.abs(
+            scrollContainer.scrollLeft - lastScrollLeft
+          );
+          const expectedDiff = Math.abs(
+            (targetScrollLeft - lastScrollLeft) * 0.2
+          );
+
+          // If scroll changed significantly different from our animation, user is dragging
+          // Use a wider tolerance to avoid false positives during smooth scrolling
+          if (
+            scrollDiff > expectedDiff * 5 ||
+            (expectedDiff > 1 && scrollDiff < expectedDiff * 0.1)
+          ) {
+            isAnimating = false;
+            isManualScroll = true;
+          }
         }
-      }
 
-      lastScrollLeft = scrollContainer.scrollLeft;
+        lastScrollLeft = scrollContainer.scrollLeft;
 
-      // Sync targetScrollLeft to prevent flickering when manually scrolling
-      if (!isAnimating) {
-        targetScrollLeft = scrollContainer.scrollLeft;
-        isManualScroll = false;
+        // Sync targetScrollLeft to prevent flickering when manually scrolling
+        if (!isAnimating) {
+          targetScrollLeft = scrollContainer.scrollLeft;
+          isManualScroll = false;
+        }
       }
     }
   };
