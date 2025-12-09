@@ -10,8 +10,9 @@
     in:fade={{ duration: 100 }}
     out:fade={{ duration: 100 }}
     class="scroll-end-gradient"
+    on:click={onClick}
   >
-    <button class="scroll-end-btn" on:click={onClick}>
+    <button class="scroll-end-btn">
       <svg
         class="btn-svg"
         xmlns="http://www.w3.org/2000/svg"

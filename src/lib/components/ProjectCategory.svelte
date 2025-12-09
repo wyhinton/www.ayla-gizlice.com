@@ -109,8 +109,16 @@
         clickedElement.classList.contains("btn-svg");
       const isClickInLightBox =
         clickedElement.closest(".lightbox-overlay") !== null;
+      console.log();
+      const clickedNextSection =
+        clickedElement.closest(".scroll-end-gradient") !== null;
       // Only close gallery if not clicking within a project section
-      if (!isWithinProjectSection && !clickedButton && !isClickInLightBox) {
+      if (
+        !isWithinProjectSection &&
+        !clickedButton &&
+        !isClickInLightBox &&
+        !clickedNextSection
+      ) {
         closeGallery();
       }
     }

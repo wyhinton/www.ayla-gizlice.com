@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import type { Project } from "../../types.js";
-  import { appState, setLightboxImage } from "$lib/stores/projectStore.js";
+  import PhotoSwipe from "photoswipe";
+  import "photoswipe/style.css";
+  import { appState } from "$lib/stores/projectStore.js";
+  import { pushState } from "$app/navigation";
 
-  export let image: { src: string; index: number };
+  export let image: { small: string; large: string; index: number };
   export let project: Project;
   export let sectionIndex: number;
   export let imageIndex: number;
-  let imageLoaded = false;
-  let imageLoadError = false; // Flag to prevent infinite retries
-  let imgElement: HTMLImageElement;
+  const imageId = `${sectionIndex}-${imageIndex}`;
+  let mounted = false;
+  let smallLoaded = false;
 
   let MAX_IMAGE_HEIGHT: number;
   let MAX_IMAGE_WIDTH: number;
-
-  const MAX_VH = 0.75;
-
   function updateMaxImageSizes() {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -24,7 +24,7 @@
 
     if (isLandscape) {
       // Landscape → height limited to 66% of viewport
-      MAX_IMAGE_HEIGHT = Math.round(h * MAX_VH);
+      MAX_IMAGE_HEIGHT = Math.round(h * 0.66);
       MAX_IMAGE_WIDTH = Infinity; // width shouldn't constrain
     } else {
       // Portrait → no height limit, images just fill width
@@ -32,46 +32,59 @@
       MAX_IMAGE_WIDTH = Math.round(w * 0.9);
     }
   }
-
   onMount(() => {
     updateMaxImageSizes();
     window.addEventListener("resize", updateMaxImageSizes);
+
+    // --- Auto-open if URL contains this image ---
+    const url = new URL(window.location.href);
+    const param = url.searchParams.get("project-image");
 
     return () => {
       window.removeEventListener("resize", updateMaxImageSizes);
     };
   });
 
-  /**
-   * Generate Cloudflare Image Resizing URL
-   */
-  function getCloudflareImageUrl(
-    imagePath: string,
-    width?: number,
-    quality: number = 85
-  ): string {
-    const options: string[] = [];
+  let unsubscribe: () => void;
 
-    if (width) options.push(`width=${width}`);
-    options.push(`quality=${quality}`);
-    options.push("format=auto");
+  onMount(() => {
+    unsubscribe = appState.subscribe((state) => {
+      if (state.loading) return;
 
-    const productionDomain = "https://ayla-gizlice.com";
+      if (state.lightboxImage === imageId) {
+        // open the lightbox for THIS image
+        openLightbox();
 
-    // ✅ ADD SLASH AND SANITIZE PATH
-    const safePath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+        // clear the trigger so it doesn't repeat
+        appState.update((s) => ({ ...s, lightboxImage: undefined }));
+      }
+    });
+  });
 
-    return `${productionDomain}/cdn-cgi/image/${options.join(",")}${safePath}`;
+  onDestroy(() => {
+    unsubscribe?.();
+  });
+
+  // Use proxy for Google Photos/Drive images to avoid CORS and enable caching
+  function getProxiedImageUrl(originalUrl: string): string {
+    if (
+      originalUrl.includes("googleusercontent.com") ||
+      originalUrl.includes("googleapis.com")
+    ) {
+      return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
+    }
+    return originalUrl;
+  }
+
+  function setUrlParam(key: string, value: string) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(key, value);
+    pushState(url, {});
   }
 
   $: isLandscape = window.innerWidth > window.innerHeight;
-
-  // Use Cloudflare image resizing for optimal loading
-  $: thumbnailUrl = getCloudflareImageUrl(
-    image.src,
-    isLandscape ? undefined : 800
-  );
-
+  $: proxyImageUrl = getProxiedImageUrl(image.small);
+  $: proxyLargeUrl = getProxiedImageUrl(image.large);
   $: imageSize = project.Image_Sizes?.[imageIndex];
 
   $: scaledImageSize = (() => {
@@ -82,7 +95,9 @@
 
     // --- LANDSCAPE MODE ---
     if (isLandscape) {
+      // Force height = MAX_IMAGE_HEIGHT
       const scale = MAX_IMAGE_HEIGHT / small_height;
+
       return {
         ...imageSize,
         small_height: MAX_IMAGE_HEIGHT,
@@ -91,7 +106,9 @@
     }
 
     // --- PORTRAIT MODE ---
+    // Width should be 90vw (or MAX_IMAGE_WIDTH)
     const scale = MAX_IMAGE_WIDTH / small_width;
+
     return {
       ...imageSize,
       small_width: Math.round(small_width * scale),
@@ -100,66 +117,101 @@
   })();
 
   $: ghostStyle = scaledImageSize
-    ? `width: ${scaledImageSize.small_width}px; height: ${scaledImageSize.small_height}px;`
+    ? `height: ${MAX_IMAGE_HEIGHT}px; width: ${scaledImageSize.small_width}px`
     : "";
 
-  function openLightbox() {
-    setLightboxImage(`${sectionIndex}-${imageIndex}`);
+  onMount(() => {
+    mounted = true;
+    updateMaxImageSizes();
+    window.addEventListener("resize", updateMaxImageSizes);
+    return () => window.removeEventListener("resize", updateMaxImageSizes);
+  });
+
+  async function openLightbox() {
+    console.log(
+      "Opening lightbox, PhotoSwipe available:",
+      !!PhotoSwipe,
+      "mounted:",
+      mounted
+    );
+
+    if (!mounted) {
+      console.log("Component not mounted yet, opening in new tab");
+      window.open(proxyLargeUrl, "_blank");
+      return;
+    }
+
+    try {
+      // Get actual image dimensions
+      // const dimensions = await getImageDimensions(proxyLargeUrl);
+      // console.log("Image dimensions:", dimensions);
+
+      const items = [
+        {
+          src: proxyLargeUrl,
+          width: imageSize.large_width,
+          height: imageSize.large_height,
+          alt: project.project_name || "Ayla Gizlice Art",
+        },
+      ];
+
+      const lightbox = new PhotoSwipe({
+        dataSource: items,
+        index: 0,
+        maxZoomLevel: 3,
+        bgOpacity: 0.9,
+        showHideAnimationType: "fade",
+        showAnimationDuration: 0,
+        hideAnimationDuration: 300,
+        // Add padding around the image
+        padding: { top: 40, bottom: 40, left: 40, right: 40 },
+        // Add some additional options
+        preloaderDelay: 0,
+        closeOnVerticalDrag: true,
+        mouseMovePan: true,
+        loop: false,
+      });
+      console.log(imageId);
+      console.log("Initializing PhotoSwipe lightbox");
+      setUrlParam("project-image", imageId);
+      lightbox.on("close", () => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("project-image");
+        pushState(url, {});
+      });
+      lightbox.init();
+    } catch (error) {
+      console.error("Error opening PhotoSwipe:", error);
+      // Fallback to new tab if there's an error
+      window.open(proxyLargeUrl, "_blank");
+    }
   }
 </script>
 
-<!-- {JSON.stringify(scaledImageSize)} -->
 <div
-  class="position-relative d-flex align-items-center justify-content-center"
+  class=" position-relative d-flex align-items-center justify-content-center"
   class:first={imageIndex === 0}
   style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
   <button class="lightbox-trigger" type="button" on:click={openLightbox}>
-    <div class="ghost" style={ghostStyle}>
-      <div class="image-wrapper">
-        <!-- Loading skeleton/ghost -->
-
+    <div class="imager-wrapper">
+      <!-- {JSON.stringify(imageSize)} -->
+      <!-- {smallLoaded} -->
+      <div style={ghostStyle} class="ghost">
         <img
-          bind:this={imgElement}
-          class:hidden={$appState.selectedCategory === null || imageLoadError}
-          class:visible={imageLoaded && !imageLoadError}
+          class:hidden={$appState.selectedCategory === null}
+          class:visible={smallLoaded}
           class:landscape={isLandscape}
           class:portrait={!isLandscape}
           class="heroImage"
           style={`height: ${scaledImageSize?.small_height}px; width: ${scaledImageSize?.small_width}px;`}
           id="lightBoxImage_{sectionIndex}_{image.index}"
-          src={thumbnailUrl}
-          on:load={() => {
-            imageLoaded = true;
-            imageLoadError = false;
-          }}
+          src={proxyImageUrl}
+          on:load={() => (smallLoaded = true)}
           alt={project.project_name || "Ayla Gizlice Art"}
-          loading="lazy"
-          on:error={(e) => {
-            if (imageLoadError) {
-              // Already tried fallback, stop retrying
-              console.error(
-                "Image failed to load even with fallback. Faulty image.src:",
-                image.src,
-                "\nProject:",
-                project.project_name,
-                "\nImage index:",
-                imageIndex
-              );
-              return;
-            }
-
-            console.warn(
-              "Image failed to load:",
-              thumbnailUrl,
-              "\nFaulty image.src:",
-              image.src
-            );
-            imageLoadError = true;
-
-            // Try fallback to original image path from production domain without Cloudflare processing
-            const target = e.currentTarget as HTMLImageElement;
-            target.src = `https://ayla-gizlice.com${image.src}`;
+          referrerPolicy="no-referrer"
+          on:error={() => {
+            console.warn("Image failed to load:", proxyImageUrl);
           }}
         />
       </div>
@@ -171,17 +223,14 @@
   .hidden {
     opacity: 0;
   }
-
   img.heroImage:not(.visible) {
     visibility: hidden;
   }
-
   .heroImage {
     max-width: 100%;
     width: auto;
     height: auto;
     object-fit: contain;
-    transition: opacity 0.25s ease;
   }
 
   /* Landscape → apply height limit */
@@ -193,14 +242,12 @@
   .heroImage.portrait {
     max-width: 90vw;
   }
-
   /* Force images to respect scaled width on mobile */
   @media (max-aspect-ratio: 1/1) {
     .heroImage {
       max-width: 90vw;
     }
   }
-
   @media (max-width: 768px) {
     .heroImage {
       max-width: 90vw;
@@ -222,6 +269,8 @@
 
   .image-wrapper {
     position: relative;
+    width: 200px; /* or dynamic */
+    height: 200px; /* or dynamic */
   }
 
   .ghost {
@@ -239,5 +288,17 @@
 
   img.visible {
     opacity: 1;
+  }
+
+  @keyframes pulse {
+    0% {
+      background-color: #eee;
+    }
+    50% {
+      background-color: #ddd;
+    }
+    100% {
+      background-color: #eee;
+    }
   }
 </style>
