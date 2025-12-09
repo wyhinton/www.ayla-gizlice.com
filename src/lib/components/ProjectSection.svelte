@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import {
     getProjectImages,
-    hasProjectImages,
     type Project,
   } from "../../types.js";
   import ProjectDescription from "./ProjectDescription.svelte";
@@ -10,24 +8,14 @@
   import { closeGallery, appState } from "$lib/stores/projectStore.js";
   import CloseButton from "./CloseButton.svelte";
   import { isMobile, isPortrait } from "$lib/stores/uiStore.js";
-  import { json } from "@sveltejs/kit";
-
-  export let project: Project;
+  
+export let project: Project;
   export let index: number;
 
   let sectionElement: HTMLElement;
   let visible: boolean = false;
 
   $: isInSelectedProject = project.category == $appState.selectedCategory;
-
-  function getVideoUrl(project: Project): string {
-    return project.Video_Link || "";
-  }
-
-  function hasVideo(project: Project): boolean {
-    const videoUrl = getVideoUrl(project);
-    return !!videoUrl && videoUrl !== "empty";
-  }
 
   // Get all existing images for this project
   $: projectImages = getProjectImages(project);
@@ -41,38 +29,6 @@
         closeGallery();
       }}
     ></CloseButton>
-    <!-- <button
-      class="close-button"
-      on:click={(e) => {
-        e.preventDefault();
-        closeGallery();
-      }}
-      aria-label="Close gallery"
-    >
-
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M18 6L6 18"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M6 6L18 18"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </button> -->
   {/if}
 
   <section
@@ -87,13 +43,11 @@
     >
       <ProjectDescription {project} {index} />
       <div class="d-flex ar-column ar-row gap-2">
-        <!-- {#if hasProjectImages(project) || hasVideo(project)} -->
         {#each projectImages as image, imageIndex}
           <div>
             <ProjectImage {image} {project} sectionIndex={index} {imageIndex} />
           </div>
         {/each}
-        <!-- {/if} -->
       </div>
     </div>
   </section>
@@ -111,81 +65,5 @@
   .section.visible {
     opacity: 1;
     transform: translateX(0);
-  }
-
-  .close-button {
-    position: fixed;
-    top: 80px;
-    right: 30px;
-    width: 25px;
-    height: 25px;
-    border: 2px solid black;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: all 0.3s ease;
-    background: black;
-    color: white;
-  }
-
-  .close-button:hover {
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    transform: scale(1.1);
-  }
-
-  .close-button:active {
-    transform: scale(0.95);
-  }
-
-  .close-button svg {
-    transition: transform 0.2s ease;
-  }
-
-  .close-button:hover svg {
-    transform: rotate(90deg);
-  }
-
-  .videoDiv {
-    width: 333px;
-    height: 100%;
-    padding-left: 15px;
-    padding-right: 15px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .videoIframe {
-    width: 100%;
-    height: 60%;
-    border: none;
-  }
-
-  /* Mobile responsive styles - now handled by Bootstrap utilities */
-  @media (min-width: 768px) {
-    .videoDiv {
-      width: 100%;
-      padding: 10px;
-    }
-
-    .close-button {
-      top: 100px;
-      right: 15px;
-      width: 45px;
-      height: 45px;
-      top: 120px;
-      background: transparent;
-      color: black;
-    }
-
-    .close-button svg {
-      width: 20px;
-      height: 20px;
-    }
   }
 </style>

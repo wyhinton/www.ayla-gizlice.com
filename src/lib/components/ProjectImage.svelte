@@ -1,7 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Project } from "../../types.js";
-  import { appState, setLightboxImage } from "$lib/stores/projectStore.js";
+  import {
+    appState,
+    getCloudflareImageUrl,
+    setLightboxImage,
+  } from "$lib/stores/projectStore.js";
 
   export let image: { src: string; index: number };
   export let project: Project;
@@ -41,28 +45,6 @@
       window.removeEventListener("resize", updateMaxImageSizes);
     };
   });
-
-  /**
-   * Generate Cloudflare Image Resizing URL
-   */
-  function getCloudflareImageUrl(
-    imagePath: string,
-    width?: number,
-    quality: number = 85
-  ): string {
-    const options: string[] = [];
-
-    if (width) options.push(`width=${width}`);
-    options.push(`quality=${quality}`);
-    options.push("format=auto");
-
-    const productionDomain = "https://ayla-gizlice.com";
-
-    // ✅ ADD SLASH AND SANITIZE PATH
-    const safePath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-
-    return `${productionDomain}/cdn-cgi/image/${options.join(",")}${safePath}`;
-  }
 
   $: isLandscape = window.innerWidth > window.innerHeight;
 
@@ -108,7 +90,6 @@
   }
 </script>
 
-<!-- {JSON.stringify(scaledImageSize)} -->
 <div
   class="position-relative d-flex align-items-center justify-content-center"
   class:first={imageIndex === 0}
@@ -225,15 +206,12 @@
   }
 
   .ghost {
-    /* width: 100%; */
-    /* height: 100%; */
     background: #eee;
     border-radius: 8px;
     animation: pulse 1.2s infinite ease-in-out;
   }
 
   img {
-    /* opacity: 0; */
     transition: opacity 0.25s ease;
   }
 

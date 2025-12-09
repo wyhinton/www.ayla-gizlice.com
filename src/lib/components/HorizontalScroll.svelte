@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
   import { onMount, tick } from "svelte";
   import { appState } from "$lib/stores/projectStore";
   import { isMobile } from "$lib/stores/uiStore";

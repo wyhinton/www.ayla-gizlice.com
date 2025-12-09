@@ -431,10 +431,6 @@
               src={fullResUrl}
               alt={currentImage.alt}
               on:load={() => (imageLoaded = true)}
-              on:error={(e) => {
-                // Try fallback to original image path from production domain without Cloudflare processing
-                const target = e.currentTarget as HTMLImageElement;
-              }}
               draggable="false"
               loading="lazy"
               style="transform: scale({zoomLevel}) translate({panOffset.x /

@@ -1,7 +1,7 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
-  import { onMount, onDestroy, tick } from "svelte";
-  import { crossfade, fade, fly } from "svelte/transition";
+  import { onMount, tick } from "svelte";
+  import { crossfade } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import {
     projectsInSelectedCategory,
@@ -11,15 +11,10 @@
     isGalleryOpen,
   } from "$lib/stores/projectStore";
   import type { Project } from "../../types.js";
-  import { get } from "svelte/store";
   import { isMobile } from "$lib/stores/uiStore.js";
-  import ProjectNav from "./ProjectNav.svelte";
 
   let categoryElement: HTMLElement;
   let titleElement: HTMLElement;
-  let scrollContainer: HTMLElement;
-  let viewport: HTMLElement;
-  let contents: HTMLElement;
   // Create crossfade for shared element transitions
   let send: any;
   let receive: any;

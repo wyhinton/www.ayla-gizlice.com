@@ -2,9 +2,8 @@
   import { page } from "$app/stores";
   import { closeGallery } from "$lib/stores/projectStore";
   import { isMobile } from "$lib/stores/uiStore";
-  import { onMount } from "svelte";
-
-  let mobileMenuOpen = false;
+  
+let mobileMenuOpen = false;
 
   function toggleMobileMenu() {
     mobileMenuOpen = !mobileMenuOpen;

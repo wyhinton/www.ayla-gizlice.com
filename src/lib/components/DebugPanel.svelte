@@ -1,13 +1,8 @@
-<!-- @ts-nocheck -->
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { browser } from "$app/environment";
   import { dev } from "$app/environment";
   import { appState } from "../stores/projectStore.js";
-  // Import Prism CSS and JavaScript language support
-  // import "prismjs/themes/prism-tomorrow.css";
-  // import "prismjs/components/prism-json.min.js";
-  // import Prism from "prismjs";
   let isVisible = false;
   let appStateValue: any = {};
   let unsubscribeApp: (() => void) | null = null;

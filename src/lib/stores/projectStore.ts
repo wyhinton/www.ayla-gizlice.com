@@ -295,6 +295,26 @@ class ProjectStoreActions {
   }
 }
 
+
+export  function getCloudflareImageUrl(
+    imagePath: string,
+    width?: number,
+    quality: number = 85
+  ): string {
+    const options: string[] = [];
+
+    if (width) options.push(`width=${width}`);
+    options.push(`quality=${quality}`);
+    options.push("format=auto");
+
+    const productionDomain = "https://ayla-gizlice.com";
+
+    // ✅ ADD SLASH AND SANITIZE PATH
+    const safePath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+
+    return `${productionDomain}/cdn-cgi/image/${options.join(",")}${safePath}`;
+  }
+
 // Export store actions
 export const projectActions = new ProjectStoreActions();
 

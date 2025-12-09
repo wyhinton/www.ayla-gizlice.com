@@ -2,10 +2,8 @@
   import "../app.css";
   import Navigation from "$lib/components/Navigation.svelte";
   import DebugPanel from "$lib/components/DebugPanel.svelte";
-  import Lightbox from "$lib/components/Lightbox.svelte";
   import { onMount } from "svelte";
   import {
-    appState,
     closeGallery,
     loadProjects,
     selectCategory,
@@ -13,9 +11,8 @@
     slugToCategory,
   } from "$lib/stores/projectStore";
   import { page } from "$app/stores";
-  import { afterNavigate, beforeNavigate } from "$app/navigation";
-
-  const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
+  
+const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
   onMount(async () => {
     // Load projects globally so they're available for all routes
     await loadProjects(GOOGLE_SHEETS_URL);

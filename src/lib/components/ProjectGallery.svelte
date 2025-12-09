@@ -3,21 +3,20 @@
     appState,
     projectsInSelectedCategory,
   } from "$lib/stores/projectStore";
-  import { fade } from "svelte/transition";
   import HorizontalScroll from "./HorizontalScroll.svelte";
   import ProjectSection from "./ProjectSection.svelte";
 </script>
 
 <div class:hidden={$appState.selectedCategory === null} class="gallery-wrapper">
   <HorizontalScroll
-    height={"auto"}
-    scrollbarHeight={"20px"}
+    height="auto"
+    scrollbarHeight="20px"
     scrollbarColor="#2e2e2e99"
     scrollbarTrackColor="transparent"
-    padding={"0"}
+    padding="0"
   >
-    {#each $projectsInSelectedCategory as project, projectIndex}
-      <div in:fade={{ duration: 500 }} out:fade={{ duration: 100 }}>
+    {#each $projectsInSelectedCategory as project, projectIndex (project.project_name || projectIndex)}
+      <div>
         <ProjectSection {project} index={projectIndex}></ProjectSection>
       </div>
     {/each}
