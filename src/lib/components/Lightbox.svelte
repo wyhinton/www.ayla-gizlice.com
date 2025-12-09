@@ -445,10 +445,15 @@
             />
           {/if}
 
-          <div class="lightbox-info d-flex w-100 justify-content-between">
-            <div class="lightbox-title">{currentImage.projectName}</div>
+          <div
+            class="lightbox-info d-flex w-100 justify-content-between"
+            class:zoomed={zoomLevel > 1}
+          >
+            <div class="lightbox-title" class:zoomed={zoomLevel > 1}>
+              {currentImage.projectName}
+            </div>
             {#if allImages.length > 1}
-              <div class="lightbox-counter">
+              <div class="lightbox-counter" class:zoomed={zoomLevel > 1}>
                 {currentIndex + 1} / {allImages.length}
               </div>
             {/if}
@@ -513,7 +518,6 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    overflow: hidden;
   }
 
   .lightbox-image {
@@ -564,6 +568,15 @@
   .lightbox-info {
     margin-top: 1rem;
     gap: 0.25rem;
+    transition:
+      background 0.2s ease,
+      padding 0.2s ease;
+  }
+
+  .zoomed {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
   }
 
   .lightbox-title {
