@@ -6,6 +6,7 @@
     getCloudflareImageUrl,
     setLightboxImage,
   } from "$lib/stores/projectStore.js";
+  import GhostLoader from "./GhostLoader.svelte";
 
   export let image: { src: string; index: number };
   export let project: Project;
@@ -96,10 +97,55 @@
   style={`--max-image-height: ${MAX_IMAGE_HEIGHT}`}
 >
   <button class="lightbox-trigger" type="button" on:click={openLightbox}>
-    <div class="ghost" style={ghostStyle}>
-      <div class="image-wrapper">
-        <!-- Loading skeleton/ghost -->
+    <div style={ghostStyle}>
+      <GhostLoader loading={!imageLoaded}>
+        <img
+          bind:this={imgElement}
+          class:hidden={$appState.selectedCategory === null || imageLoadError}
+          class:visible={imageLoaded && !imageLoadError}
+          class:landscape={isLandscape}
+          class:portrait={!isLandscape}
+          class="heroImage"
+          style={`height: ${scaledImageSize?.small_height}px; width: ${scaledImageSize?.small_width}px;`}
+          id="lightBoxImage_{sectionIndex}_{image.index}"
+          src={thumbnailUrl}
+          on:load={() => {
+            imageLoaded = true;
+            imageLoadError = false;
+          }}
+          alt={project.project_name || "Ayla Gizlice Art"}
+          loading="lazy"
+          on:error={(e) => {
+            if (imageLoadError) {
+              // Already tried fallback, stop retrying
+              console.error(
+                "Image failed to load even with fallback. Faulty image.src:",
+                image.src,
+                "\nProject:",
+                project.project_name,
+                "\nImage index:",
+                imageIndex
+              );
+              return;
+            }
 
+            console.warn(
+              "Image failed to load:",
+              thumbnailUrl,
+              "\nFaulty image.src:",
+              image.src
+            );
+            imageLoadError = true;
+
+            // Try fallback to original image path from production domain without Cloudflare processing
+            const target = e.currentTarget as HTMLImageElement;
+            target.src = `https://ayla-gizlice.com${image.src}`;
+          }}
+        />
+      </GhostLoader>
+    </div>
+    <!-- <div class="ghost">
+      <div class="image-wrapper">
         <img
           bind:this={imgElement}
           class:hidden={$appState.selectedCategory === null || imageLoadError}
@@ -144,7 +190,7 @@
           }}
         />
       </div>
-    </div>
+    </div> -->
   </button>
 </div>
 
