@@ -1,7 +1,7 @@
 import { writable, derived, get } from "svelte/store";
-import Papa from "papaparse";
 import type { Project } from "../../types.js";
 import { pushState } from "$app/navigation";
+import { projectsManifest, uniqueCategories as manifestCategories } from "../../generated/projectsManifest.js";
 
 // Unified state interface
 interface AppState {
@@ -61,23 +61,10 @@ export const projectsInSelectedCategory = derived(appState, ($state) => {
   return sel;
 });
 
-// Derived store for unique categories
-export const uniqueCategories = derived(projects, ($projects: Project[]) => {
-  const categories = new Set<string>();
-
-  $projects.forEach((project: Project) => {
-    if (project.category && typeof project.category === "string") {
-      // Split by comma and trim whitespace in case there are multiple categories
-      const projectCategories = project.category
-        .split(",")
-        .map((cat: string) => cat.trim());
-      projectCategories.forEach((cat: string) => {
-        if (cat) categories.add(cat);
-      });
-    }
-  });
-
-  return Array.from(categories);
+// Derived store for unique categories - use the pre-generated categories from manifest
+export const uniqueCategories = derived(projects, () => {
+  // Use the pre-generated categories from the manifest for better performance
+  return manifestCategories;
 });
 
 // URL utility functions
@@ -98,8 +85,8 @@ export function slugToCategory(slug: string): string {
 
 // Actions
 class ProjectStoreActions {
-  // Data fetching
-  async fetchProjects(sheetUrl: string) {
+  // Load projects from the generated manifest
+  loadProjects() {
     appState.update((state: AppState) => ({
       ...state,
       loading: true,
@@ -107,11 +94,8 @@ class ProjectStoreActions {
     }));
 
     try {
-      const projects = (await this.fetchSheet(sheetUrl)).map((p) => ({
-        ...p,
-        //@ts-ignore
-        Image_Sizes: JSON.parse(p.Image_Sizes),
-      }));
+      // Use the pre-generated projects manifest
+      const projects = projectsManifest;
 
       appState.update((state: AppState) => ({
         ...state,
@@ -131,33 +115,6 @@ class ProjectStoreActions {
         projects: [],
       }));
     }
-  }
-
-  private fetchSheet(sheet_url: string): Promise<Project[]> {
-    function parseData(
-      url: string,
-      sheetTitle: string
-    ): Promise<{ rows: any; sheetTitle: string }> {
-      return new Promise((resolve, reject) => {
-        Papa.parse(url, {
-          download: true,
-          header: true,
-          delimiter: ",",
-          dynamicTyping: true,
-          complete: (results: any) => {
-            resolve({ rows: results, sheetTitle: sheetTitle });
-          },
-          error: (error: any) => {
-            reject(error);
-          },
-        });
-      });
-    }
-
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheet_url}/export?format=csv&gid=0`;
-    return parseData(csvUrl, "assets").then(
-      (response) => response.rows.data as Project[]
-    );
   }
 
   // Project selection
@@ -319,8 +276,7 @@ export  function getCloudflareImageUrl(
 export const projectActions = new ProjectStoreActions();
 
 // Export convenience methods for common operations
-export const loadProjects = (sheetUrl: string) =>
-  projectActions.fetchProjects(sheetUrl);
+export const loadProjects = () => projectActions.loadProjects();
 export const selectCategory = (category: string, updateUrl?: boolean) =>
   projectActions.selectCategory(category, updateUrl);
 export const initializeCategoryFromParam = (

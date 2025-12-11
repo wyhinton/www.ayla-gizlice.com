@@ -26,6 +26,7 @@
  * ```
  */
 declare module '$env/static/private' {
+	export const VITE_GOOGLE_SHEET_ID: string;
 	export const ACLOCAL_PATH: string;
 	export const ALLUSERSPROFILE: string;
 	export const AMDRMSDKPATH: string;
@@ -57,6 +58,7 @@ declare module '$env/static/private' {
 	export const FPS_BROWSER_USER_PROFILE_STRING: string;
 	export const genarts_LICENSE: string;
 	export const GIT_ASKPASS: string;
+	export const GIT_PAGER: string;
 	export const golaem_LICENSE: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
@@ -203,6 +205,7 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
+		VITE_GOOGLE_SHEET_ID: string;
 		ACLOCAL_PATH: string;
 		ALLUSERSPROFILE: string;
 		AMDRMSDKPATH: string;
@@ -234,6 +237,7 @@ declare module '$env/dynamic/private' {
 		FPS_BROWSER_USER_PROFILE_STRING: string;
 		genarts_LICENSE: string;
 		GIT_ASKPASS: string;
+		GIT_PAGER: string;
 		golaem_LICENSE: string;
 		HOME: string;
 		HOMEDRIVE: string;

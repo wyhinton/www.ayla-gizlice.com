@@ -11,11 +11,10 @@
     slugToCategory,
   } from "$lib/stores/projectStore";
   import { page } from "$app/stores";
-  
-const GOOGLE_SHEETS_URL = "1ctMIVgrlfw0s9tYHcwuLuGjnrzI1YCaESEF18C4sIxM";
+
   onMount(async () => {
-    // Load projects globally so they're available for all routes
-    await loadProjects(GOOGLE_SHEETS_URL);
+    // Load projects from generated manifest - no need for Google Sheets URL anymore
+    loadProjects();
 
     // Add Google Analytics
     if (typeof window !== "undefined") {

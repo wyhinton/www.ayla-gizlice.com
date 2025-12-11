@@ -35,8 +35,8 @@
   <title>Ayla Gizlice - Projects</title>
 </svelte:head>
 
-<!-- Projects List View -->
 <div
+  transition:fade={{ duration: 1000, delay: 1000 }}
   class:overflow-y-hidden={$appState.selectedCategory !== null}
   class:overflow-y-auto={$appState.selectedCategory === null}
   class=" project-list-wrapper overflow-x-hidden h-100-vh"
