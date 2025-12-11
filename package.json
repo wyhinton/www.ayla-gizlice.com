@@ -14,11 +14,13 @@
     "functions": "firebase deploy --only functions",
     "ssr": "firebase deploy --only functions:ssr_preview",
     "ssrlog": "firebase functions:log --only ssr_preview",
-    "deploy": "npm run build && firebase deploy"
+    "deploy": "npm run build && firebase deploy",
+    "deploy:hosting": "firebase depoly --only hosting"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/adapter-node": "^5.4.0",
+    "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "latest",
     "@sveltejs/vite-plugin-svelte": "latest",
     "eslint": "^9.39.1",
@@ -39,7 +41,6 @@
   "dependencies": {
     "@internationalized/date": "^3.10.0",
     "bits-ui": "^2.14.4",
-    "firebase-functions": "^7.0.0",
     "papaparse": "^5.5.3",
     "prismjs": "^1.30.0",
     "svrollbar": "^0.12.0"

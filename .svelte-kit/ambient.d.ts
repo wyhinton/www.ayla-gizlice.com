@@ -40,8 +40,6 @@ declare module '$env/static/private' {
 	export const COMPUTERNAME: string;
 	export const COMSPEC: string;
 	export const CONFIG_SITE: string;
-	export const CONSOLE_NINJA_PREVIEW_ONLY_SHOWN: string;
-	export const CONSOLE_NINJA_WELCOME_SHOWN: string;
 	export const CUDA_PATH: string;
 	export const CUDA_PATH_V11_7: string;
 	export const DISPLAY: string;
@@ -219,8 +217,6 @@ declare module '$env/dynamic/private' {
 		COMPUTERNAME: string;
 		COMSPEC: string;
 		CONFIG_SITE: string;
-		CONSOLE_NINJA_PREVIEW_ONLY_SHOWN: string;
-		CONSOLE_NINJA_WELCOME_SHOWN: string;
 		CUDA_PATH: string;
 		CUDA_PATH_V11_7: string;
 		DISPLAY: string;
