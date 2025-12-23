@@ -35,7 +35,7 @@
   class=" project-list-wrapper overflow-x-hidden h-100-vh"
 >
   <div id="projects-list-container" style={containerStyle}>
-    {#if showVideo && ENABLE_MAP}
+    {#if showVideo && ENABLE_MAP && !$isMobile}
       <div out:fade={{ duration: 100 }}>
         <VideoOverlay
           on:click={() => {
