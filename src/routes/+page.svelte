@@ -1,7 +1,6 @@
 <!-- @ts-nocheck -->
 <script lang="ts">
   import ProjectCategory from "$lib/components/ProjectCategory.svelte";
-  import { onMount } from "svelte";
   import {
     projects,
     loading,
@@ -23,12 +22,7 @@
       ? "margin-top: 90px"
       : `margin-top: 80px`;
 
-  let show = false;
-  let ENABLE_MAP = false;
-
-  onMount(() => {
-    show = true;
-  });
+  let ENABLE_MAP = true;
 </script>
 
 <svelte:head>
@@ -41,13 +35,15 @@
   class=" project-list-wrapper overflow-x-hidden h-100-vh"
 >
   <div id="projects-list-container" style={containerStyle}>
-    {#if show && showVideo && ENABLE_MAP}
-      <VideoOverlay
-        on:click={() => {
-          showVideo = !showVideo;
-        }}
-        src="data/introVideo.mp4"
-      ></VideoOverlay>
+    {#if showVideo && ENABLE_MAP}
+      <div out:fade={{ duration: 100 }}>
+        <VideoOverlay
+          on:click={() => {
+            showVideo = !showVideo;
+          }}
+          src="data/HOME_VIDEO_LOOPED.webm"
+        ></VideoOverlay>
+      </div>
     {/if}
 
     {#if $loading}
