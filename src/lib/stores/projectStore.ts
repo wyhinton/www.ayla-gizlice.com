@@ -1,7 +1,10 @@
 import { writable, derived, get } from "svelte/store";
 import type { Project } from "../../types.js";
 import { pushState } from "$app/navigation";
-import { projectsManifest, uniqueCategories as manifestCategories } from "../../generated/projectsManifest.js";
+import {
+  projectsManifest,
+  uniqueCategories as manifestCategories,
+} from "../../generated/projectsManifest.js";
 
 // Unified state interface
 interface AppState {
@@ -252,25 +255,24 @@ class ProjectStoreActions {
   }
 }
 
+export function getCloudflareImageUrl(
+  imagePath: string,
+  width?: number,
+  quality: number = 85
+): string {
+  const options: string[] = [];
 
-export  function getCloudflareImageUrl(
-    imagePath: string,
-    width?: number,
-    quality: number = 85
-  ): string {
-    const options: string[] = [];
+  if (width) options.push(`width=${width}`);
+  options.push(`quality=${quality}`);
+  options.push("format=auto");
 
-    if (width) options.push(`width=${width}`);
-    options.push(`quality=${quality}`);
-    options.push("format=auto");
+  const productionDomain = "https://ayla-gizlice.com";
 
-    const productionDomain = "https://ayla-gizlice.com";
+  // ✅ ADD SLASH AND SANITIZE PATH
+  const safePath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
 
-    // ✅ ADD SLASH AND SANITIZE PATH
-    const safePath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-
-    return `${productionDomain}/cdn-cgi/image/${options.join(",")}${safePath}`;
-  }
+  return `${productionDomain}/cdn-cgi/image/${options.join(",")}${safePath}`;
+}
 
 // Export store actions
 export const projectActions = new ProjectStoreActions();
