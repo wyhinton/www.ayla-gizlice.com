@@ -25,28 +25,37 @@
 
   const residencies = [
     {
-      year: "Summer 2024",
+      year: "2026",
+      content: "Residency at ACRE, Steuben, WI",
+    },
+    {
+      year: "2026",
+      content:
+        "Thematic Residency on Nomadisms, Banff Centre for the Arts and Creativity, Banff, AB, Canada",
+    },
+    {
+      year: "2024",
       content: "Skowhegan School of Painting and Sculpture, Skowhegan, ME",
     },
     {
-      year: "Summer 2022",
+      year: "2022",
       content: "Pine Meadow Ranch Residency, Sisters, OR",
     },
     {
-      year: "Spring 2022",
+      year: "2022",
       content: "Bloedel Reserve Residency, Bainbridge Island, WA",
     },
     {
-      year: "Winter 2021",
+      year: "2021",
       content: "Sitka Center for Art and Ecology Residency, Otis, OR",
     },
-    { year: "Fall 2020", content: "Hambidge Center Residency, Rabun Gap, GA" },
+    { year: "2020", content: "Hambidge Center Residency, Rabun Gap, GA" },
     {
-      year: "Fall 2019 - Winter 2020",
+      year: "2019 - 2020",
       content: "Brightwork Fellow at Anchorlight, Raleigh, NC",
     },
     {
-      year: "Summer 2019",
+      year: "2019",
       content:
         "Town of Chapel Hill Community Arts and Culture Summer Residency",
     },

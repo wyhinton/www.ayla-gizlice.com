@@ -3,6 +3,7 @@
   import { appState } from "$lib/stores/projectStore";
   import { isMobile } from "$lib/stores/uiStore";
   import ScrollToEndButton from "./ScrollToEndButton.svelte";
+  import ScrollToStartButton from "./ScrollToStartButton.svelte";
 
   export let height: string = "200px";
   export let scrollbarHeight: string = "8px";
@@ -13,6 +14,7 @@
 
   let scrollContainer: HTMLDivElement;
   let showScrollEndBtn = true;
+  let showScrollStartBtn = false;
   let isTrackpad = false;
   let trackpadTimer: number;
   let currentSectionIndex = 0;
@@ -86,6 +88,68 @@
     }
   };
 
+  $: scrollToStart = () => {
+    if (!scrollContainer) return;
+
+    // Get all direct children (sections) of the content wrapper
+    const contentWrapper = scrollContainer.querySelector(".content-wrapper");
+    if (!contentWrapper) return;
+
+    const sections = Array.from(contentWrapper.children) as HTMLElement[];
+    if (sections.length === 0) return;
+
+    // Calculate previous section index
+    const prevSectionIndex = Math.max(currentSectionIndex - 1, 0);
+    const prevSection = sections[prevSectionIndex];
+    if (!prevSection) return;
+
+    if ($isMobile) {
+      // Mobile: scroll vertically to previous section
+      const sectionTop = prevSection.offsetTop;
+      scrollContainer.scrollTo({
+        top: sectionTop,
+        behavior: "smooth",
+      });
+    } else {
+      const sectionLeft = prevSection.offsetLeft;
+
+      const SCROLL_PADDING = 75;
+      const start = targetScrollLeft;
+      const end = sectionLeft - SCROLL_PADDING;
+
+      const distance = Math.abs(end - start);
+      const speed = 3.0;
+      const minDuration = 180;
+      const maxDuration = 1500;
+
+      const duration = Math.min(
+        maxDuration,
+        Math.max(minDuration, distance / speed)
+      );
+
+      const startTime = performance.now();
+
+      const ease = (t: number) =>
+        t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+      const animateTarget = (now: number) => {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / duration, 1);
+
+        targetScrollLeft = start + (end - start) * ease(t);
+
+        if (!isAnimating) {
+          isAnimating = true;
+          requestAnimationFrame(smoothScroll);
+        }
+
+        if (t < 1) requestAnimationFrame(animateTarget);
+      };
+
+      requestAnimationFrame(animateTarget);
+    }
+  };
+
   $: checkScroll = () => {
     if (!scrollContainer) return;
 
@@ -112,6 +176,9 @@
         showScrollEndBtn =
           scrollContainer.scrollTop + scrollContainer.clientHeight <
           scrollContainer.scrollHeight - 1;
+
+        // Show start button when not at first section and there are more than 1 sections
+        showScrollStartBtn = currentSectionIndex > 0 && totalSections > 1;
       } else {
         // Find which section is currently most visible (horizontally)
         const scrollLeft = scrollContainer.scrollLeft;
@@ -131,6 +198,9 @@
         // Show button if not at the last section
         showScrollEndBtn =
           currentSectionIndex < totalSections - 1 && isNotScrolledToEnd;
+
+        // Show start button when not at first section and there are more than 1 sections
+        showScrollStartBtn = currentSectionIndex > 0 && totalSections > 1;
 
         // Detect manual scrolling: if scroll changed but we're not animating it
         if (isAnimating && !isManualScroll) {
@@ -251,6 +321,12 @@
       <slot />
     </div>
   </div>
+  <ScrollToStartButton
+    show={showScrollStartBtn && $appState.selectedCategory !== null}
+    onClick={() => {
+      scrollToStart();
+    }}
+  />
   <ScrollToEndButton
     show={showScrollEndBtn && $appState.selectedCategory !== null}
     onClick={() => {

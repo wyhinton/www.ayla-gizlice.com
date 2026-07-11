@@ -101,6 +101,7 @@
 
       const clickedButton =
         clickedElement.classList.contains("scroll-end-btn") ||
+        clickedElement.classList.contains("scroll-start-btn") ||
         clickedElement.classList.contains("btn-svg");
       const isClickInLightBox =
         clickedElement.closest(".lightbox-overlay") !== null;

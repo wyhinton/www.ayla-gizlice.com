@@ -1,0 +1,79 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run UI (dev server)",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*generate.*",
+          "endsPattern": "Local:.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Firebase: Deploy",
+      "type": "npm",
+      "script": "deploy",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": "none"
+    },
+    {
+      "label": "Firebase: Deploy Preview Channel",
+      "type": "npm",
+      "script": "dpreview",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": "none"
+    },
+    {
+      "label": "Open Projects Spreadsheet",
+      "type": "npm",
+      "script": "open-sheet",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "group": "none"
+    },
+    {
+      "label": "Git: Quick Commit & Push",
+      "type": "shell",
+      "command": "git add -A && git commit -m \"${input:commitMessage}\" && git push",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": "none",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "commitMessage",
+      "type": "promptString",
+      "description": "Commit message",
+      "default": "Quick update"
+    }
+  ]
+}

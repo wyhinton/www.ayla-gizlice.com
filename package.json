@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "generate": "node scripts/generateProjectsManifest.js",
+    "open-sheet": "node scripts/openProjectsSheet.js",
     "build": "npm run generate && vite build",
     "dev": "npm run generate && vite dev",
     "preview": "vite preview",
