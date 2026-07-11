@@ -51,7 +51,7 @@
       padding-right: 0px;
       margin-right: 140px;
       background: transparent;
-      padding-bottom: 0px;
+      padding-bottom: 110px;
       padding-top: 0px;
     }
   }

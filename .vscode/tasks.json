@@ -57,6 +57,17 @@
       "group": "none"
     },
     {
+      "label": "Open Local Dev Site",
+      "type": "process",
+      "command": "cmd",
+      "args": ["/c", "start", "", "http://localhost:5173"],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "group": "none"
+    },
+    {
       "label": "Git: Quick Commit & Push",
       "type": "shell",
       "command": "git add -A && git commit -m \"${input:commitMessage}\" && git push",

@@ -26,7 +26,7 @@
   const residencies = [
     {
       year: "2026",
-      content: "Residency at ACRE, Steuben, WI",
+      content: "ACRE, Steuben, WI",
     },
     {
       year: "2026",

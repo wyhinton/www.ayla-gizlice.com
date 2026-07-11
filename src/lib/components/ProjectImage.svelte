@@ -20,6 +20,14 @@
   let MAX_IMAGE_WIDTH: number;
 
   const MAX_VH = 0.75;
+  // On the desktop/landscape gallery layout (see ProjectGallery.svelte),
+  // .gallery-wrapper is pinned "top: 200px" with no vertical scroll, so the
+  // image height cap needs to leave room for that offset plus breathing
+  // room at the bottom — a flat percentage of viewport height isn't enough
+  // on shorter laptop screens.
+  const DESKTOP_BREAKPOINT = 768;
+  const GALLERY_TOP_OFFSET = 200;
+  const GALLERY_BOTTOM_PADDING = 110;
 
   function updateMaxImageSizes() {
     const w = window.innerWidth;
@@ -28,8 +36,14 @@
     isLandscape = w > h;
 
     if (isLandscape) {
-      // Landscape → height limited to 66% of viewport
-      MAX_IMAGE_HEIGHT = Math.round(h * MAX_VH);
+      if (w >= DESKTOP_BREAKPOINT) {
+        MAX_IMAGE_HEIGHT = Math.round(
+          Math.max(h - GALLERY_TOP_OFFSET - GALLERY_BOTTOM_PADDING, 200)
+        );
+      } else {
+        // Landscape → height limited to 75% of viewport
+        MAX_IMAGE_HEIGHT = Math.round(h * MAX_VH);
+      }
       MAX_IMAGE_WIDTH = Infinity; // width shouldn't constrain
     } else {
       // Portrait → no height limit, images just fill width

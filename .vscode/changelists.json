@@ -1,0 +1,12 @@
+{
+  "changelists": [
+    {
+      "name": "Default",
+      "files": [
+        ".vscode/tasks.json",
+        "src/routes/about/+page.svelte"
+      ]
+    }
+  ],
+  "active": "Default"
+}
