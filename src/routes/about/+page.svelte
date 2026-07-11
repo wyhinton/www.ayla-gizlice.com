@@ -26,7 +26,7 @@
   const residencies = [
     {
       year: "2026",
-      content: "ACRE, Steuben, WI",
+      content: "ACRE Residency, Steuben, WI",
     },
     {
       year: "2026",
@@ -156,6 +156,10 @@
 
   const workExperience = [
     {
+      year: "2025 - present",
+      content: "Studio Assistant for Gala Porras-Kim, Los Angeles, CA",
+    },
+    {
       year: "2023 - present",
       content:
         "Lab Technician at UCLA Graduate Ceramics Studio, Culver City, CA",
@@ -195,26 +199,6 @@
     },
   ];
 
-  const volunteering = [
-    {
-      year: "2025",
-      content:
-        "Wheel Throwing Demonstrations for Boğaziçi University ceramics students, Istanbul",
-    },
-    {
-      year: "2023",
-      content: "Earthquake Relief Fundraiser, Los Angeles, CA",
-    },
-    {
-      year: "2021 - 2022",
-      content: "Imaging Specimens for UNC Herbarium, Chapel Hill, NC",
-    },
-    {
-      year: "2019",
-      content: "Advisor to Southeast Raleigh High School Art Club, Raleigh, NC",
-    },
-  ];
-
   // Helper function to render a CV section
   function renderCvSection(title, items) {
     return { title, items };
@@ -229,7 +213,6 @@
     renderCvSection("HONORS", honors),
     renderCvSection("PRESS", press),
     renderCvSection("WORK EXPERIENCE", workExperience),
-    renderCvSection("VOLUNTEERING", volunteering),
   ];
 </script>
 

@@ -47,6 +47,16 @@
       "group": "none"
     },
     {
+      "label": "Regenerate Project Manifest",
+      "type": "npm",
+      "script": "generate",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": "none"
+    },
+    {
       "label": "Open Projects Spreadsheet",
       "type": "npm",
       "script": "open-sheet",
