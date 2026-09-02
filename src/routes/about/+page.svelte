@@ -2,8 +2,24 @@
 <script>
   import { onMount } from "svelte";
 
+  // Email is HTML-entity-encoded here and only decoded/inserted client-side
+  // in onMount, so it never appears as plain text in the server-rendered
+  // HTML source (keeps it off basic scrapers that don't execute JS).
+  const encodedEmail =
+    "&#97;&#103;&#105;&#122;&#108;&#105;&#99;&#101;&#49;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;";
+
   onMount(() => {
-    // Page specific setup
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = encodedEmail;
+    const email = textarea.value;
+
+    const link = /** @type {HTMLAnchorElement | null} */ (
+      document.getElementById("contact-email")
+    );
+    if (link) {
+      link.href = "mailto:" + email;
+      link.textContent = email;
+    }
   });
 
   // CV Data
@@ -240,6 +256,9 @@
           ceramics studio technician at UCLA's graduate studio.
         </p>
       </div>
+      <p class="contact-email">
+        <a id="contact-email" rel="nofollow">Loading email…</a>
+      </p>
     </header>
 
     <!-- CV Sections -->
@@ -284,6 +303,15 @@
     letter-spacing: 2px;
     margin: 0 0 1.5rem 0;
     color: #000;
+  }
+
+  .contact-email {
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+  }
+
+  .contact-email a {
+    color: #333;
   }
 
   .bio-text {
