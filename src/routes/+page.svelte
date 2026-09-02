@@ -1,4 +1,11 @@
 <!-- @ts-nocheck -->
+<script context="module">
+  // Module scope is evaluated once per page load (not per component
+  // instance), so this survives client-side navigation away from and
+  // back to "/" — ensuring the intro video only plays the first time.
+  let hasShownIntroVideo = false;
+</script>
+
 <script lang="ts">
   import ProjectCategory from "$lib/components/ProjectCategory.svelte";
   import {
@@ -14,7 +21,7 @@
   import VideoOverlay from "$lib/components/VideoOverlay.svelte";
   import Lightbox from "$lib/components/Lightbox.svelte";
 
-  let showVideo = true;
+  let showVideo = !hasShownIntroVideo;
   // Projects are now loaded globally in +layout.svelte
   $: containerStyle = !$isMobile
     ? `margin-top: 90px`
@@ -39,7 +46,8 @@
       <div out:fade={{ duration: 100 }}>
         <VideoOverlay
           on:click={() => {
-            showVideo = !showVideo;
+            showVideo = false;
+            hasShownIntroVideo = true;
           }}
           src="data/HOME_VIDEO_LOOPED.webm"
         ></VideoOverlay>
