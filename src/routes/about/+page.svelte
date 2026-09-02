@@ -14,6 +14,7 @@
       content:
         "Turkish Language Intensive Program at Boğaziçi University in Istanbul, Turkey",
     },
+    { year: "2026", content: "Pilchuck School of Glass Casting Intensive" },
     { year: "2022", content: "Work-Study at John C. Campbell Folk School" },
     {
       year: "2015-2019",
@@ -31,7 +32,7 @@
     {
       year: "2026",
       content:
-        "Thematic Residency on Nomadisms, Banff Centre for the Arts and Creativity, Banff, AB, Canada",
+        "Banff Centre for the Arts and Creativity, Thematic Residency on Nomadisms, Banff, AB, Canada",
     },
     {
       year: "2024",
@@ -155,9 +156,13 @@
   ];
 
   const workExperience = [
+    // {
+    //   year: "2025 - present",
+    //   content: "Studio Assistant for Gala Porras-Kim, Los Angeles, CA",
+    // },
     {
       year: "2025 - present",
-      content: "Studio Assistant for Gala Porras-Kim, Los Angeles, CA",
+      content: "Studio Assistant, Los Angeles, CA",
     },
     {
       year: "2023 - present",

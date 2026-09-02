@@ -42,8 +42,6 @@ declare module '$env/static/private' {
 	export const COMPUTERNAME: string;
 	export const COMSPEC: string;
 	export const CONFIG_SITE: string;
-	export const CONSOLE_NINJA_PREVIEW_ONLY_SHOWN: string;
-	export const CONSOLE_NINJA_WELCOME_SHOWN: string;
 	export const CUDA_PATH: string;
 	export const CUDA_PATH_V11_7: string;
 	export const DISPLAY: string;
@@ -92,8 +90,11 @@ declare module '$env/static/private' {
 	export const NDI_RUNTIME_DIR_V3: string;
 	export const NDI_RUNTIME_DIR_V4: string;
 	export const nextlimit_LICENSE: string;
+	export const NINJA_ENV: string;
 	export const NODE: string;
 	export const NODE_ENV: string;
+	export const NODE_EXE: string;
+	export const NPM_CLI_JS: string;
 	export const npm_command: string;
 	export const npm_config_cache: string;
 	export const npm_config_globalconfig: string;
@@ -114,6 +115,8 @@ declare module '$env/static/private' {
 	export const npm_package_json: string;
 	export const npm_package_name: string;
 	export const npm_package_version: string;
+	export const NPM_PREFIX_JS: string;
+	export const NPM_PREFIX_NPM_CLI_JS: string;
 	export const NUMBER_OF_PROCESSORS: string;
 	export const NVM_HOME: string;
 	export const NVM_SYMLINK: string;
@@ -226,8 +229,6 @@ declare module '$env/dynamic/private' {
 		COMPUTERNAME: string;
 		COMSPEC: string;
 		CONFIG_SITE: string;
-		CONSOLE_NINJA_PREVIEW_ONLY_SHOWN: string;
-		CONSOLE_NINJA_WELCOME_SHOWN: string;
 		CUDA_PATH: string;
 		CUDA_PATH_V11_7: string;
 		DISPLAY: string;
@@ -276,8 +277,11 @@ declare module '$env/dynamic/private' {
 		NDI_RUNTIME_DIR_V3: string;
 		NDI_RUNTIME_DIR_V4: string;
 		nextlimit_LICENSE: string;
+		NINJA_ENV: string;
 		NODE: string;
 		NODE_ENV: string;
+		NODE_EXE: string;
+		NPM_CLI_JS: string;
 		npm_command: string;
 		npm_config_cache: string;
 		npm_config_globalconfig: string;
@@ -298,6 +302,8 @@ declare module '$env/dynamic/private' {
 		npm_package_json: string;
 		npm_package_name: string;
 		npm_package_version: string;
+		NPM_PREFIX_JS: string;
+		NPM_PREFIX_NPM_CLI_JS: string;
 		NUMBER_OF_PROCESSORS: string;
 		NVM_HOME: string;
 		NVM_SYMLINK: string;

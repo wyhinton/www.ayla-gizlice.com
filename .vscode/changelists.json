@@ -3,7 +3,11 @@
     {
       "name": "Default",
       "files": [
-        "src/routes/about/+page.svelte"
+        "src/routes/about/+page.svelte",
+        ".svelte-kit/ambient.d.ts",
+        ".svelte-kit/generated/server/internal.js",
+        "bundle-stats.html",
+        ".vscode/changelists.json"
       ]
     }
   ],
